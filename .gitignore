@@ -1,8 +1,58 @@
 .claude/
 .aws/
-# Local environment files
-.env
-\n# Begin moved app .gitignore patterns
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Testing
+/coverage
+
+# Next.js
+/.next/
+/out/
+
+# Production/build
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Env files (local only)
+.env*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Amplify local artifacts & outputs
+amplify_outputs.json
+.amplify/
+amplify/data/resource.ts.backup
+
+# Local runtime artifacts
+.dev.log
+.dev.pid
+.sandbox.log
+.sandbox.pid
+
+# Begin moved app .gitignore patterns
 # moved: # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 # moved: 
 # moved: # dependencies
