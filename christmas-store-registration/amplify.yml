@@ -1,0 +1,49 @@
+version: 1
+applications:
+  - backend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - echo "Building for environment $AWS_BRANCH"
+            # Set environment-specific variables based on branch
+            - |
+              if [ "$AWS_BRANCH" = "lewiston" ]; then
+                export NEXT_PUBLIC_LOCATION=location1
+              elif [ "$AWS_BRANCH" = "brunswick" ]; then
+                export NEXT_PUBLIC_LOCATION=location2
+              elif [ "$AWS_BRANCH" = "gray" ]; then
+                export NEXT_PUBLIC_LOCATION=location3
+              else
+                export NEXT_PUBLIC_LOCATION=location1
+              fi
+            - amplify push --yes
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+            # Set location based on branch
+            - |
+              if [ "$AWS_BRANCH" = "lewiston" ]; then
+                export NEXT_PUBLIC_LOCATION=location1
+              elif [ "$AWS_BRANCH" = "brunswick" ]; then
+                export NEXT_PUBLIC_LOCATION=location2
+              elif [ "$AWS_BRANCH" = "gray" ]; then
+                export NEXT_PUBLIC_LOCATION=location3
+              fi
+        build:
+          commands:
+            - echo "Building frontend for $NEXT_PUBLIC_LOCATION"
+            - npm run build
+      artifacts:
+        baseDirectory: .next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+          - .next/cache/**/*
+    appRoot: /

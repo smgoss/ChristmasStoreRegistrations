@@ -1,0 +1,19 @@
+{
+  "locationName": "Pathway Vineyard Lewiston Campus",
+  "shortName": "Lewiston Campus",
+  "locationAddress": "Lewiston, Maine",
+  "timeSlots": ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30"],
+  "defaultCapacity": 20,
+  "contactEmail": "lewiston@pathwayvineyard.com",
+  "fromEmail": "noreply@pathwayvineyard.com",
+  "branding": {
+    "primaryColor": "#7c3aed",
+    "secondaryColor": "#059669",
+    "locationEmoji": "⛪",
+    "campusColor": "purple"
+  },
+  "churchInfo": {
+    "website": "https://pathwayvineyard.com",
+    "phone": "(207) 555-0100"
+  }
+}

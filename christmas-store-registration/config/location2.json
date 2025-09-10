@@ -1,0 +1,19 @@
+{
+  "locationName": "Pathway Vineyard Brunswick Campus",
+  "shortName": "Brunswick Campus", 
+  "locationAddress": "Brunswick, Maine",
+  "timeSlots": ["10:00", "10:30", "11:00", "11:30", "12:00", "12:30"],
+  "defaultCapacity": 25,
+  "contactEmail": "brunswick@pathwayvineyard.com",
+  "fromEmail": "noreply@pathwayvineyard.com",
+  "branding": {
+    "primaryColor": "#059669",
+    "secondaryColor": "#dc2626", 
+    "locationEmoji": "⛪",
+    "campusColor": "green"
+  },
+  "churchInfo": {
+    "website": "https://pathwayvineyard.com",
+    "phone": "(207) 555-0200"
+  }
+}

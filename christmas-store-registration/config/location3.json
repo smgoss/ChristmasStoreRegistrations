@@ -1,0 +1,19 @@
+{
+  "locationName": "Pathway Vineyard Gray-New Gloucester Campus",
+  "shortName": "Gray-New Gloucester Campus",
+  "locationAddress": "Gray-New Gloucester, Maine", 
+  "timeSlots": ["08:30", "09:00", "09:30", "10:00", "10:30", "11:00"],
+  "defaultCapacity": 15,
+  "contactEmail": "gray@pathwayvineyard.com",
+  "fromEmail": "noreply@pathwayvineyard.com",
+  "branding": {
+    "primaryColor": "#dc2626",
+    "secondaryColor": "#f59e0b",
+    "locationEmoji": "⛪",
+    "campusColor": "red"
+  },
+  "churchInfo": {
+    "website": "https://pathwayvineyard.com",
+    "phone": "(207) 555-0300"
+  }
+}

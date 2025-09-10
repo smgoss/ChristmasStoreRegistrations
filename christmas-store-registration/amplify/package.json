@@ -1,0 +1,14 @@
+{
+  "name": "amplify-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && node --loader ts-node/esm.mjs --experimental-specifier-resolution=node backend.ts"
+  },
+  "devDependencies": {
+    "@aws-amplify/backend": "latest",
+    "@aws-amplify/backend-cli": "latest",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  }
+}
