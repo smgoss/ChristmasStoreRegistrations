@@ -1,0 +1,4 @@
+.claude/
+.aws/
+# Local environment files
+.env

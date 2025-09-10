@@ -80,6 +80,6 @@ else
     echo "Press Ctrl+C to stop the server"
     echo ""
     
-    # Start dev server with campus configuration
-    npm run dev
+    # Start dev server with campus configuration on port 3004
+    npm run dev -- -p 3004
 fi

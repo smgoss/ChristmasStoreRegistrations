@@ -38,6 +38,10 @@ applications:
           commands:
             - echo "Building frontend for $NEXT_PUBLIC_LOCATION"
             - npm run build
+        postBuild:
+          commands:
+            - chmod +x scripts/setup-waf-captcha.sh || true
+            - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
       artifacts:
         baseDirectory: .next
         files:

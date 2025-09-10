@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import RegistrationForm from '@/components/RegistrationForm';
+import '@/lib/amplify';
 
 const client = generateClient<Schema>();
 

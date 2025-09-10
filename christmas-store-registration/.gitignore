@@ -44,3 +44,9 @@ next-env.d.ts
 amplify_outputs.json
 .amplify/
 amplify/data/resource.ts.backup
+
+# Local runtime artifacts
+.dev.log
+.dev.pid
+.sandbox.log
+.sandbox.pid

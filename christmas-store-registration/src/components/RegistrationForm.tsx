@@ -2,12 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/data';
-import { Amplify } from 'aws-amplify';
 import type { Schema } from '../../amplify/data/resource';
-import outputs from '../../amplify_outputs.json';
 import { useLocationConfig } from '../hooks/useLocationConfig';
-
-Amplify.configure(outputs);
+import '@/lib/amplify';
 const client = generateClient<Schema>();
 
 interface Child {
@@ -77,6 +74,7 @@ export default function RegistrationForm({
   const [submitted, setSubmitted] = useState(false);
   const [registrationConfig, setRegistrationConfig] = useState<RegistrationConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
+  
 
   useEffect(() => {
     // Load time slot capacities and registration config
@@ -258,44 +256,24 @@ export default function RegistrationForm({
         setLoading(false);
         return;
       }
-
-      // Create registration
-      const registrationResult = await client.models.Registration.create({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        numberOfKids: formData.numberOfKids,
-        timeSlot: formData.timeSlot,
-        needsChildcare: formData.needsChildcare,
-        referredBy: formData.referredBy || undefined,
-        inviteToken: inviteToken,
-        registrationDate: new Date().toISOString()
+      // Create registration via secure server route
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          inviteToken: inviteToken || undefined,
+        }),
       });
 
-      if (registrationResult.data) {
-        // Create child records
-        if (formData.numberOfKids > 0) {
-          await Promise.all(
-            formData.children.map(child =>
-              client.models.Child.create({
-                registrationId: registrationResult.data!.id,
-                age: child.age,
-                gender: child.gender
-              })
-            )
-          );
-        }
-
-        // Note: Time slot capacity is now calculated dynamically, no need to update manually
-
-        setSubmitted(true);
-        
-        // Call completion callback for invite tokens
-        if (onRegistrationComplete) {
-          onRegistrationComplete();
-        }
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: 'Registration failed' }));
+        setErrors({ submit: error || 'An error occurred while submitting your registration.' });
+        return;
       }
+
+      setSubmitted(true);
+      if (onRegistrationComplete) onRegistrationComplete();
     } catch (error) {
       console.error('Error submitting registration:', error);
       setErrors({ submit: 'An error occurred while submitting your registration. Please try again.' });
@@ -624,3 +602,5 @@ export default function RegistrationForm({
     </div>
   );
 }
+
+ 

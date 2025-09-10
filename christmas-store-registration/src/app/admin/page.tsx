@@ -4,15 +4,10 @@ import { useState, useEffect } from 'react';
 import { Authenticator, Theme, ThemeProvider } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { generateClient } from 'aws-amplify/data';
-import { Amplify } from 'aws-amplify';
 import type { Schema } from '../../../amplify/data/resource';
-import outputs from '../../../amplify_outputs.json';
 import { useLocationConfig } from '../../hooks/useLocationConfig';
-
-Amplify.configure(outputs);
-const client = generateClient<Schema>({
-  authMode: 'userPool'
-});
+import '@/lib/amplify';
+const client = generateClient<Schema>({ authMode: 'userPool' });
 
 const christmasTheme: Theme = {
   name: 'christmas-theme',
@@ -439,7 +434,18 @@ function AdminDashboard() {
 
     setLoading(true);
     try {
-      const token = Math.random().toString(36).substr(2, 15);
+      // Use cryptographically strong token generation
+      let token = '';
+      // Prefer strong randomness in the browser
+      if (typeof window !== 'undefined' && (window as any).crypto?.randomUUID) {
+        token = (window as any).crypto.randomUUID().replace(/-/g, '');
+      } else if (typeof window !== 'undefined' && (window as any).crypto?.getRandomValues) {
+        const bytes = (window as any).crypto.getRandomValues(new Uint8Array(16));
+        token = Array.from(bytes).map((b: number) => b.toString(16).padStart(2, '0')).join('');
+      } else {
+        // Fallback (less secure) – should rarely be used
+        token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      }
       
       await client.models.InviteLink.create({
         token,
@@ -450,7 +456,9 @@ function AdminDashboard() {
 
       const inviteUrl = `${window.location.origin}/register/${token}`;
       
-      navigator.clipboard.writeText(inviteUrl);
+      try {
+        await navigator.clipboard.writeText(inviteUrl);
+      } catch {}
       setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);
       setInviteEmail('');
     } catch (error) {

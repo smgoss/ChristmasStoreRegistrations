@@ -36,7 +36,8 @@ const schema = a.schema({
       confirmationToken: a.string(), // Unique token for confirmation links
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read', 'create']),
+      // Public can read available info, but must use server route to create
+      allow.publicApiKey().to(['read']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   
@@ -48,7 +49,8 @@ const schema = a.schema({
       registration: a.belongsTo('Registration', 'registrationId'),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read', 'create']),
+      // Child records are created only via server route / admin
+      allow.publicApiKey().to(['read']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   

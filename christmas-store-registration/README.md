@@ -43,7 +43,7 @@ The registration form collects:
    npm install
    ```
 
-3. Deploy the Amplify backend:
+3. Deploy the Amplify backend (required when schema changes):
    ```bash
    npx ampx sandbox
    ```
@@ -69,6 +69,60 @@ The registration form collects:
 1. Sign up for an admin account through the Cognito User Pool
 2. Add the user to the 'admin' group in AWS Console
 3. Access admin dashboard at `/admin`
+
+### Security and Data Flow
+
+- Client no longer writes directly to Amplify Data for registrations. All registration submissions go through the server route `POST /api/register` which:
+  - Validates payload (Zod schema)
+  - Enforces duplicate email/phone checks
+  - Checks time-slot capacity on the server
+  - Creates the registration and child records server-side
+  - Performs a post-create capacity recheck and rolls back if the slot overfills under race conditions
+- Public API key only allows reads. Admin actions use Cognito User Pools.
+
+Rate limiting:
+- The `POST /api/register` endpoint enforces a simple in-memory rate limit (10 requests/min per IP) to deter abuse in development. For production, use a durable store or upstream WAF.
+
+### CAPTCHA (Anti-bot)
+
+Recommended: AWS WAF CAPTCHA at the edge (no app changes required).
+
+High-level steps:
+- Create a WAFv2 Web ACL (scope: CLOUDFRONT) with rules:
+  - AWS Managed Rule sets (Common, Bot Control optional)
+  - A path-based or rate-based rule that applies CAPTCHA action to `/api/register` (and other sensitive endpoints as desired)
+- Associate the Web ACL with your Amplify Hosting CloudFront distribution(s)
+- Optionally set an immunity time (e.g. 10–60 minutes) after solving
+
+CLI example (sketch):
+1. Create Web ACL (CLOUDFRONT scope).
+2. Add a rule with `Captcha` action where URI path matches `^/api/register`.
+3. Associate: `aws wafv2 associate-web-acl --web-acl-arn <WEB_ACL_ARN> --resource-arn arn:aws:cloudfront::<ACCOUNT_ID>:distribution/<DISTRIBUTION_ID>`
+
+Notes:
+- Use CloudFront (global) scope for Amplify Hosting. Get the distribution ID from the Amplify Console or `aws cloudfront list-distributions`.
+- Remove any reCAPTCHA environment variables; they are no longer used.
+
+### Durable, Atomic Capacity (Optional)
+
+For cross-instance atomic capacity enforcement, a Lambda function `reserve-registration` is scaffolded. To use it:
+1. Set env vars on the function with your DynamoDB table names:
+   - `REGISTRATION_TABLE`
+   - `TIMESLOT_TABLE`
+2. Implement the exact Key schema/UpdateExpression in `amplify/functions/reserve-registration/handler.ts` to match your tables.
+3. Deploy backend: `npx ampx deploy`
+4. Set `RESERVE_FUNCTION_NAME` in the app environment to the function name.
+
+When configured, the server route calls the Lambda to perform a DynamoDB transaction updating the time slot count and creating the registration atomically. If the function is not configured, it falls back to a per-slot server lock with post-create recheck.
+
+If you’re upgrading from a previous version, run:
+```bash
+# Install new dependency
+npm install zod
+
+# Apply backend auth rule changes
+npx ampx deploy
+```
 
 ## Usage
 
@@ -125,7 +179,7 @@ The registration form collects:
 
 ### InviteLink
 - Unique tokens for invite-only registration
-- Usage tracking
+- Usage tracking (secure, random tokens)
 - Email association
 
 ## Deployment
@@ -144,8 +198,17 @@ npm run build
 
 ## Environment Variables
 
-Set the following in your Lambda function environment:
-- `FROM_EMAIL`: Verified SES sender email address
+Local development
+- Copy `.env.example` to `.env.local` (ignored by git) and set local-only values. Next.js loads `.env.local` automatically.
+- Common local vars:
+  - `NEXT_PUBLIC_LOCATION` (e.g., `location1`)
+  - `RESERVE_FUNCTION_NAME` (optional; use if you enable durable capacity Lambda locally)
+
+Amplify / production
+- Set function env vars in Amplify Console (per Lambda), for example:
+  - `FROM_EMAIL` (SES verified sender)
+- Set app env vars for your app/branch in Amplify Console, for example:
+  - `RESERVE_FUNCTION_NAME` (if using the durable capacity Lambda)
 
 ## Security Features
 
