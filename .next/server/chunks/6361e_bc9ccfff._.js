@@ -1,0 +1,4393 @@
+module.exports = [
+"[project]/christmas-store-registration/node_modules/@aws-amplify/data-schema-types/dist/esm/client/symbol.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "__modelMeta__",
+    ()=>__modelMeta__
+]);
+const __modelMeta__ = Symbol();
+;
+ //# sourceMappingURL=symbol.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/data-schema-types/dist/esm/index.mjs [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$data$2d$schema$2d$types$2f$dist$2f$esm$2f$client$2f$symbol$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/data-schema-types/dist/esm/client/symbol.mjs [app-route] (ecmascript)"); //# sourceMappingURL=index.mjs.map
+;
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/is-array-buffer/dist-es/index.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "isArrayBuffer",
+    ()=>isArrayBuffer
+]);
+const isArrayBuffer = (arg)=>typeof ArrayBuffer === "function" && arg instanceof ArrayBuffer || Object.prototype.toString.call(arg) === "[object ArrayBuffer]";
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-utf8/node_modules/@smithy/is-array-buffer/dist-es/index.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "isArrayBuffer",
+    ()=>isArrayBuffer
+]);
+const isArrayBuffer = (arg)=>typeof ArrayBuffer === "function" && arg instanceof ArrayBuffer || Object.prototype.toString.call(arg) === "[object ArrayBuffer]";
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "fromArrayBuffer",
+    ()=>fromArrayBuffer,
+    "fromString",
+    ()=>fromString
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$is$2d$array$2d$buffer$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/is-array-buffer/dist-es/index.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/buffer [external] (buffer, cjs)");
+;
+;
+const fromArrayBuffer = (input, offset = 0, length = input.byteLength - offset)=>{
+    if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$is$2d$array$2d$buffer$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isArrayBuffer"])(input)) {
+        throw new TypeError(`The "input" argument must be ArrayBuffer. Received type ${typeof input} (${input})`);
+    }
+    return __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__["Buffer"].from(input, offset, length);
+};
+const fromString = (input, encoding)=>{
+    if (typeof input !== "string") {
+        throw new TypeError(`The "input" argument must be of type string. Received type ${typeof input} (${input})`);
+    }
+    return encoding ? __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__["Buffer"].from(input, encoding) : __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__["Buffer"].from(input);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-utf8/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "fromArrayBuffer",
+    ()=>fromArrayBuffer,
+    "fromString",
+    ()=>fromString
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$node_modules$2f40$smithy$2f$is$2d$array$2d$buffer$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/node_modules/@smithy/is-array-buffer/dist-es/index.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/buffer [external] (buffer, cjs)");
+;
+;
+const fromArrayBuffer = (input, offset = 0, length = input.byteLength - offset)=>{
+    if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$node_modules$2f40$smithy$2f$is$2d$array$2d$buffer$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isArrayBuffer"])(input)) {
+        throw new TypeError(`The "input" argument must be ArrayBuffer. Received type ${typeof input} (${input})`);
+    }
+    return __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__["Buffer"].from(input, offset, length);
+};
+const fromString = (input, encoding)=>{
+    if (typeof input !== "string") {
+        throw new TypeError(`The "input" argument must be of type string. Received type ${typeof input} (${input})`);
+    }
+    return encoding ? __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__["Buffer"].from(input, encoding) : __TURBOPACK__imported__module__$5b$externals$5d2f$buffer__$5b$external$5d$__$28$buffer$2c$__cjs$29$__["Buffer"].from(input);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/dist-es/fromBase64.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "fromBase64",
+    ()=>fromBase64
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)");
+;
+const BASE64_REGEX = /^[A-Za-z0-9+/]*={0,2}$/;
+const fromBase64 = (input)=>{
+    if (input.length * 3 % 4 !== 0) {
+        throw new TypeError(`Incorrect padding on base64 string.`);
+    }
+    if (!BASE64_REGEX.exec(input)) {
+        throw new TypeError(`Invalid base64 string.`);
+    }
+    const buffer = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromString"])(input, "base64");
+    return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/dist-es/toBase64.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "toBase64",
+    ()=>toBase64
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/index.js [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)");
+;
+;
+const toBase64 = (_input)=>{
+    let input;
+    if (typeof _input === "string") {
+        input = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromUtf8"])(_input);
+    } else {
+        input = _input;
+    }
+    if (typeof input !== "object" || typeof input.byteOffset !== "number" || typeof input.byteLength !== "number") {
+        throw new Error("@smithy/util-base64: toBase64 encoder function only accepts string | Uint8Array.");
+    }
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromArrayBuffer"])(input.buffer, input.byteOffset, input.byteLength).toString("base64");
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/dist-es/index.js [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$dist$2d$es$2f$fromBase64$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/dist-es/fromBase64.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$dist$2d$es$2f$toBase64$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/dist-es/toBase64.js [app-route] (ecmascript)");
+;
+;
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "fromUtf8",
+    ()=>fromUtf8
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)");
+;
+const fromUtf8 = (input)=>{
+    const buf = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromString"])(input, "utf8");
+    return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/toUint8Array.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "toUint8Array",
+    ()=>toUint8Array
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)");
+;
+const toUint8Array = (data)=>{
+    if (typeof data === "string") {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromUtf8"])(data);
+    }
+    if (ArrayBuffer.isView(data)) {
+        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+    }
+    return new Uint8Array(data);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/toUtf8.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "toUtf8",
+    ()=>toUtf8
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)");
+;
+const toUtf8 = (input)=>{
+    if (typeof input === "string") {
+        return input;
+    }
+    if (typeof input !== "object" || typeof input.byteOffset !== "number" || typeof input.byteLength !== "number") {
+        throw new Error("@smithy/util-utf8: toUtf8 encoder function only accepts string | Uint8Array.");
+    }
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromArrayBuffer"])(input.buffer, input.byteOffset, input.byteLength).toString("utf8");
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/index.js [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$toUint8Array$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/toUint8Array.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$base64$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$toUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-base64/node_modules/@smithy/util-utf8/dist-es/toUtf8.js [app-route] (ecmascript)");
+;
+;
+;
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "fromUtf8",
+    ()=>fromUtf8
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)");
+;
+const fromUtf8 = (input)=>{
+    const buf = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromString"])(input, "utf8");
+    return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/toUint8Array.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "toUint8Array",
+    ()=>toUint8Array
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)");
+;
+const toUint8Array = (data)=>{
+    if (typeof data === "string") {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromUtf8"])(data);
+    }
+    if (ArrayBuffer.isView(data)) {
+        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+    }
+    return new Uint8Array(data);
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/toUtf8.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "toUtf8",
+    ()=>toUtf8
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/node_modules/@smithy/util-buffer-from/dist-es/index.js [app-route] (ecmascript)");
+;
+const toUtf8 = (input)=>{
+    if (typeof input === "string") {
+        return input;
+    }
+    if (typeof input !== "object" || typeof input.byteOffset !== "number" || typeof input.byteLength !== "number") {
+        throw new Error("@smithy/util-utf8: toUtf8 encoder function only accepts string | Uint8Array.");
+    }
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$node_modules$2f40$smithy$2f$util$2d$buffer$2d$from$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromArrayBuffer"])(input.buffer, input.byteOffset, input.byteLength).toString("utf8");
+};
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/index.js [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$toUint8Array$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/toUint8Array.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$toUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/toUtf8.js [app-route] (ecmascript)");
+;
+;
+;
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/RestApiError.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "RestApiError",
+    ()=>RestApiError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$errors$2f$APIError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/errors/APIError.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+class RestApiError extends __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$errors$2f$APIError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["ApiError"] {
+    constructor(params){
+        super(params);
+        // TODO: Delete the following 2 lines after we change the build target to >= es2015
+        this.constructor = RestApiError;
+        Object.setPrototypeOf(this, RestApiError.prototype);
+    }
+}
+;
+ //# sourceMappingURL=RestApiError.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/CanceledError.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "CanceledError",
+    ()=>CanceledError,
+    "isCancelError",
+    ()=>isCancelError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/RestApiError.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * Internal-only class for CanceledError.
+ *
+ * @internal
+ */ class CanceledError extends __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiError"] {
+    constructor(params = {}){
+        super({
+            name: 'CanceledError',
+            message: 'Request is canceled by user',
+            ...params
+        });
+        // TODO: Delete the following 2 lines after we change the build target to >= es2015
+        this.constructor = CanceledError;
+        Object.setPrototypeOf(this, CanceledError.prototype);
+    }
+}
+/**
+ * Check if an error is caused by user calling `cancel()` in REST API.
+ *
+ * @note This function works **ONLY** for errors thrown by REST API. For GraphQL APIs, use `client.isCancelError(error)`
+ *   instead. `client` is generated from  `generateClient()` API from `aws-amplify/api`.
+ *
+ * @param {unknown} error The unknown exception to be checked.
+ * @returns - A boolean indicating if the error was from an upload cancellation
+ */ const isCancelError = (error)=>!!error && error instanceof CanceledError;
+;
+ //# sourceMappingURL=CanceledError.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "RestApiValidationErrorCode",
+    ()=>RestApiValidationErrorCode,
+    "validationErrorMap",
+    ()=>validationErrorMap
+]);
+var RestApiValidationErrorCode;
+(function(RestApiValidationErrorCode) {
+    RestApiValidationErrorCode["InvalidApiName"] = "InvalidApiName";
+})(RestApiValidationErrorCode || (RestApiValidationErrorCode = {}));
+const validationErrorMap = {
+    [RestApiValidationErrorCode.InvalidApiName]: {
+        message: 'API name is invalid.',
+        recoverySuggestion: 'Check if the API name matches the one in your configuration or `aws-exports.js`'
+    }
+};
+;
+ //# sourceMappingURL=validation.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/serviceError.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "parseRestApiServiceError",
+    ()=>parseRestApiServiceError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/serde/json.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/RestApiError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+;
+;
+;
+/**
+ * Parses both AWS and non-AWS error responses coming from the users' backend code.
+ * * AWS errors generated by the AWS services(e.g. API Gateway, Bedrock). They can be Signature errors,
+ *   ClockSkew errors, etc. These responses will be parsed to errors with proper name and message from the AWS
+ *   services.
+ * * non-AWS errors thrown by the user code. They can contain any headers or body. Users need to access the
+ *   error.response to get the headers and body and parse them accordingly. The JS error name and message will
+ *   be `UnknownError` and `Unknown error` respectively.
+ */ const parseRestApiServiceError = async (response)=>{
+    if (!response) {
+        // Response is not considered an error.
+        return;
+    }
+    const parsedAwsError = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseJsonError"])(stubErrorResponse(response));
+    if (!parsedAwsError) ;
+    else {
+        const bodyText = await response.body?.text();
+        return buildRestApiError(parsedAwsError, {
+            statusCode: response.statusCode,
+            headers: response.headers,
+            body: bodyText
+        });
+    }
+};
+/**
+ * The response object needs to be stub here because the parseAwsJsonError assumes the response body to be valid JSON.
+ * Although this is true for AWS services, it is not true for responses from user's code. Once the response body is
+ * unwrapped as JSON(and fail), it cannot be read as text again. Therefore, we need to stub the response body here to
+ * make sure we can read the error response body as a JSON, and may fall back to read as text if it is not a valid JSON.
+ */ const stubErrorResponse = (response)=>{
+    let bodyTextPromise;
+    const bodyProxy = new Proxy(response.body, {
+        get (target, prop, receiver) {
+            if (prop === 'json') {
+                // For potential AWS errors, error parser will try to parse the body as JSON first.
+                return async ()=>{
+                    if (!bodyTextPromise) {
+                        bodyTextPromise = target.text();
+                    }
+                    try {
+                        return JSON.parse(await bodyTextPromise);
+                    } catch (error) {
+                        // If response body is not a valid JSON, we stub it to be an empty object and eventually parsed
+                        // as an unknown error
+                        return {};
+                    }
+                };
+            } else if (prop === 'text') {
+                // For non-AWS errors, users can access the body as a string as a fallback.
+                return async ()=>{
+                    if (!bodyTextPromise) {
+                        bodyTextPromise = target.text();
+                    }
+                    return bodyTextPromise;
+                };
+            } else {
+                return Reflect.get(target, prop, receiver);
+            }
+        }
+    });
+    const responseProxy = new Proxy(response, {
+        get (target, prop, receiver) {
+            if (prop === 'body') {
+                return bodyProxy;
+            } else {
+                return Reflect.get(target, prop, receiver);
+            }
+        }
+    });
+    return responseProxy;
+};
+/**
+ * Utility to create a new RestApiError from a service error.
+ */ const buildRestApiError = (error, response)=>{
+    const restApiError = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiError"]({
+        name: error?.name,
+        message: error.message,
+        underlyingError: error,
+        response
+    });
+    // $metadata is only required for backwards compatibility.
+    return Object.assign(restApiError, {
+        $metadata: error.$metadata
+    });
+};
+;
+ //# sourceMappingURL=serviceError.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/logger.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "logger",
+    ()=>logger
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Logger$2f$ConsoleLogger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/Logger/ConsoleLogger.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const logger = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Logger$2f$ConsoleLogger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["ConsoleLogger"]('RestApis');
+;
+ //# sourceMappingURL=logger.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/createCancellableOperation.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "createCancellableOperation",
+    ()=>createCancellableOperation
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$CanceledError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/CanceledError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$serviceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/serviceError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/logger.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * @internal
+ */ function createCancellableOperation(handler, abortController) {
+    const isInternalPost = (targetHandler)=>!!abortController;
+    // For creating a cancellable operation for public REST APIs, we need to create an AbortController
+    // internally. Whereas for internal POST APIs, we need to accept in the AbortController from the
+    // callers.
+    const publicApisAbortController = new AbortController();
+    const publicApisAbortSignal = publicApisAbortController.signal;
+    const internalPostAbortSignal = abortController?.signal;
+    let abortReason;
+    const job = async ()=>{
+        try {
+            const response = await (isInternalPost(handler) ? handler() : handler(publicApisAbortSignal));
+            if (response.statusCode >= 300) {
+                throw await (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$serviceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseRestApiServiceError"])(response);
+            }
+            return response;
+        } catch (error) {
+            const abortSignal = internalPostAbortSignal ?? publicApisAbortSignal;
+            const message = abortReason ?? abortSignal.reason;
+            if (error.name === 'AbortError' || abortSignal?.aborted === true) {
+                const canceledError = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$CanceledError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["CanceledError"]({
+                    ...message && {
+                        message
+                    },
+                    underlyingError: error,
+                    recoverySuggestion: 'The API request was explicitly canceled. If this is not intended, validate if you called the `cancel()` function on the API request erroneously.'
+                });
+                __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["logger"].debug(error);
+                throw canceledError;
+            }
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["logger"].debug(error);
+            throw error;
+        }
+    };
+    if (isInternalPost()) {
+        return job();
+    } else {
+        const cancel = (abortMessage)=>{
+            if (publicApisAbortSignal.aborted === true) {
+                return;
+            }
+            publicApisAbortController.abort(abortMessage);
+            // If abort reason is not supported, set a scoped reasons instead. The reason property inside an
+            // AbortSignal is a readonly property and trying to set it would throw an error.
+            if (abortMessage && publicApisAbortSignal.reason !== abortMessage) {
+                abortReason = abortMessage;
+            }
+        };
+        return {
+            response: job(),
+            cancel
+        };
+    }
+}
+;
+ //# sourceMappingURL=createCancellableOperation.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/constants.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "APIG_HOSTNAME_PATTERN",
+    ()=>APIG_HOSTNAME_PATTERN,
+    "DEFAULT_APPSYNC_API_SERVICE",
+    ()=>DEFAULT_APPSYNC_API_SERVICE,
+    "DEFAULT_IAM_SIGNING_REGION",
+    ()=>DEFAULT_IAM_SIGNING_REGION,
+    "DEFAULT_REST_IAM_SIGNING_SERVICE",
+    ()=>DEFAULT_REST_IAM_SIGNING_SERVICE
+]);
+const DEFAULT_REST_IAM_SIGNING_SERVICE = 'execute-api';
+const DEFAULT_APPSYNC_API_SERVICE = 'appsync-api';
+const DEFAULT_IAM_SIGNING_REGION = 'us-east-1';
+/**
+ * The REST endpoints generated by API Gateway
+ * @see {@link https://docs.aws.amazon.com/general/latest/gr/apigateway.html#apigateway_region_data_plane}
+ */ const APIG_HOSTNAME_PATTERN = /^.+\.([a-z0-9-]+)\.([a-z0-9-]+)\.amazonaws\.com/;
+;
+ //# sourceMappingURL=constants.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/parseSigningInfo.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "parseSigningInfo",
+    ()=>parseSigningInfo
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/constants.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * Infer the signing service and region from the given URL, and for REST API only, from the Amplify configuration.
+ * It supports raw API Gateway endpoint and AppSync endpoint.
+ *
+ * @internal
+ */ const parseSigningInfo = (url, restApiOptions)=>{
+    const { service: signingService = __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DEFAULT_REST_IAM_SIGNING_SERVICE"], region: signingRegion = __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DEFAULT_IAM_SIGNING_REGION"] } = restApiOptions?.amplify.getConfig()?.API?.REST?.[restApiOptions?.apiName] ?? {};
+    const { hostname } = url;
+    const [, service, region] = __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["APIG_HOSTNAME_PATTERN"].exec(hostname) ?? [];
+    if (service === __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DEFAULT_REST_IAM_SIGNING_SERVICE"]) {
+        // The configured endpoint is an API Gateway endpoint
+        // @see: https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-call-api.html
+        return {
+            service,
+            region: region ?? signingRegion
+        };
+    } else if (service === 'appsync-api') {
+        // AppSync endpoint is internally supported because GraphQL operation will send request using POST handler.
+        // example: https://xxxx.appsync-api.us-east-1.amazonaws.com/graphql
+        return {
+            service: 'appsync',
+            region: region ?? signingRegion
+        };
+    } else {
+        return {
+            service: signingService,
+            region: signingRegion
+        };
+    }
+};
+;
+ //# sourceMappingURL=parseSigningInfo.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/assertValidatonError.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "assertValidationError",
+    ()=>assertValidationError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/RestApiError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * @internal
+ */ function assertValidationError(assertion, name) {
+    const { message, recoverySuggestion } = __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["validationErrorMap"][name];
+    if (!assertion) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiError"]({
+            name,
+            message,
+            recoverySuggestion
+        });
+    }
+}
+;
+ //# sourceMappingURL=assertValidatonError.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/resolveApiUrl.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "resolveApiUrl",
+    ()=>resolveApiUrl
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/amplifyUrl/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/RestApiError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$assertValidatonError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/assertValidatonError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * Resolve the REST API request URL by:
+ * 1. Loading the REST API endpoint from the Amplify configuration with corresponding API name.
+ * 2. Appending the path to the endpoint.
+ * 3. Merge the query parameters from path and the queryParameter argument which is taken from the public REST API
+ *   options.
+ * 4. Validating the resulting URL string.
+ *
+ * @internal
+ */ const resolveApiUrl = (amplify, apiName, path, queryParams)=>{
+    const urlStr = amplify.getConfig()?.API?.REST?.[apiName]?.endpoint;
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$assertValidatonError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertValidationError"])(!!urlStr, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiValidationErrorCode"].InvalidApiName);
+    try {
+        const url = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyUrl"](urlStr + path);
+        if (queryParams) {
+            const mergedQueryParams = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyUrlSearchParams"](url.searchParams);
+            Object.entries(queryParams).forEach(([key, value])=>{
+                mergedQueryParams.set(key, value);
+            });
+            url.search = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyUrlSearchParams"](mergedQueryParams).toString();
+        }
+        return url;
+    } catch (error) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$RestApiError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiError"]({
+            name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiValidationErrorCode"].InvalidApiName,
+            ...__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["validationErrorMap"][__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RestApiValidationErrorCode"].InvalidApiName],
+            recoverySuggestion: `Please make sure the REST endpoint URL is a valid URL string. Got ${urlStr}`
+        });
+    }
+};
+;
+ //# sourceMappingURL=resolveApiUrl.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/isIamAuthApplicable.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * Determines if IAM authentication should be applied for a GraphQL request.
+ *
+ * This function checks the `headers` of the HTTP request to determine if IAM authentication
+ * is applicable. IAM authentication is considered applicable if there is no `authorization`
+ * header, no `x-api-key` header, and `signingServiceInfo` is provided.
+ *
+ * @param request - The HTTP request object containing headers.
+ * @param signingServiceInfo - Optional signing service information,
+ * including service and region.
+ * @returns A boolean `true` if IAM authentication should be applied.
+ *
+ * @internal
+ */ __turbopack_context__.s([
+    "isIamAuthApplicableForGraphQL",
+    ()=>isIamAuthApplicableForGraphQL,
+    "isIamAuthApplicableForRest",
+    ()=>isIamAuthApplicableForRest
+]);
+const isIamAuthApplicableForGraphQL = ({ headers }, signingServiceInfo)=>!headers.authorization && !headers['x-api-key'] && !!signingServiceInfo;
+/**
+ * Determines if IAM authentication should be applied for a REST request.
+ *
+ * This function checks the `headers` of the HTTP request to determine if IAM authentication
+ * is applicable. IAM authentication is considered applicable if there is no `authorization`
+ * header and `signingServiceInfo` is provided.
+ *
+ * @param request - The HTTP request object containing headers.
+ * @param signingServiceInfo - Optional signing service information,
+ * including service and region.
+ * @returns A boolean `true` if IAM authentication should be applied.
+ *
+ * @internal
+ */ const isIamAuthApplicableForRest = ({ headers }, signingServiceInfo)=>!headers.authorization && !!signingServiceInfo;
+;
+ //# sourceMappingURL=isIamAuthApplicable.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/resolveHeaders.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "resolveHeaders",
+    ()=>resolveHeaders
+]);
+const resolveHeaders = (headers, body)=>{
+    const normalizedHeaders = {};
+    for(const key in headers){
+        normalizedHeaders[key.toLowerCase()] = headers[key];
+    }
+    if (body) {
+        const contentType = normalizedHeaders['content-type'];
+        const isJsonCompatible = contentType && (contentType.startsWith('application/json') || contentType.startsWith('application/') && contentType.includes('+json'));
+        if (!isJsonCompatible) {
+            normalizedHeaders['content-type'] = 'application/json; charset=UTF-8';
+        }
+        if (body instanceof FormData) {
+            /**
+             * If body is a FormData we should not allow setting content-type.
+             * It's because runtime HTTP handlers(xhr, fetch, undici, node-fetch,
+             * etc.) will modify the content-type value when setting multipart
+             * boundary.
+             */ delete normalizedHeaders['content-type'];
+        }
+    }
+    return normalizedHeaders;
+};
+;
+ //# sourceMappingURL=resolveHeaders.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/baseHandlers/authenticatedHandler.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "authenticatedHandler",
+    ()=>authenticatedHandler
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$handlers$2f$fetch$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/handlers/fetch.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$userAgent$2f$middleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/userAgent/middleware.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$retryMiddleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/retry/retryMiddleware.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$signing$2f$middleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/signing/middleware.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/internal/composeTransferHandler.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * @internal
+ */ const authenticatedHandler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["composeTransferHandler"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$handlers$2f$fetch$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fetchTransferHandler"], [
+    __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$userAgent$2f$middleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["userAgentMiddlewareFactory"],
+    __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$retryMiddleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["retryMiddlewareFactory"],
+    __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$signing$2f$middleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["signingMiddlewareFactory"]
+]);
+;
+ //# sourceMappingURL=authenticatedHandler.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/baseHandlers/unauthenticatedHandler.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "unauthenticatedHandler",
+    ()=>unauthenticatedHandler
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$handlers$2f$fetch$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/handlers/fetch.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$userAgent$2f$middleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/userAgent/middleware.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$retryMiddleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/retry/retryMiddleware.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/internal/composeTransferHandler.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * @internal
+ */ const unauthenticatedHandler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["composeTransferHandler"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$handlers$2f$fetch$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fetchTransferHandler"], [
+    __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$userAgent$2f$middleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["userAgentMiddlewareFactory"],
+    __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$retryMiddleware$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["retryMiddlewareFactory"]
+]);
+;
+ //# sourceMappingURL=unauthenticatedHandler.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/transferHandler.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "transferHandler",
+    ()=>transferHandler
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$jitteredBackoff$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/retry/jitteredBackoff.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$defaultRetryDecider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/retry/defaultRetryDecider.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$serviceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/serviceError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/logger.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$parseSigningInfo$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/parseSigningInfo.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$resolveHeaders$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/resolveHeaders.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$baseHandlers$2f$authenticatedHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/baseHandlers/authenticatedHandler.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$baseHandlers$2f$unauthenticatedHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/baseHandlers/unauthenticatedHandler.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+;
+;
+/**
+ * Make REST API call with best-effort IAM auth.
+ * @param amplify Amplify instance to to resolve credentials and tokens. Should use different instance in client-side
+ *   and SSR
+ * @param options Options accepted from public API options when calling the handlers.
+ * @param signingServiceInfo Internal-only options enable IAM auth as well as to to overwrite the IAM signing service
+ *   and region. If specified, and NONE of API Key header or Auth header is present, IAM auth will be used.
+ * @param iamAuthApplicable Callback function that is used to determine if IAM Auth should be used or not.
+ *
+ * @internal
+ */ const transferHandler = async (amplify, options, iamAuthApplicable, signingServiceInfo)=>{
+    const { url, method, headers, body, withCredentials, abortSignal, retryStrategy } = options;
+    const resolvedBody = body ? body instanceof FormData ? body : JSON.stringify(body ?? '') : undefined;
+    const resolvedHeaders = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$resolveHeaders$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["resolveHeaders"])(headers, body);
+    const request = {
+        url,
+        headers: resolvedHeaders,
+        method,
+        body: resolvedBody
+    };
+    const baseOptions = {
+        retryDecider: getRetryDeciderFromStrategy(retryStrategy ?? amplify?.libraryOptions?.API?.REST?.retryStrategy),
+        computeDelay: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$jitteredBackoff$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["jitteredBackoff"],
+        withCrossDomainCredentials: withCredentials,
+        abortSignal
+    };
+    const isIamAuthApplicable = iamAuthApplicable(request, signingServiceInfo);
+    let response;
+    const credentials = await resolveCredentials(amplify);
+    if (isIamAuthApplicable && credentials) {
+        const signingInfoFromUrl = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$parseSigningInfo$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseSigningInfo"])(url);
+        const signingService = signingServiceInfo?.service ?? signingInfoFromUrl.service;
+        const signingRegion = signingServiceInfo?.region ?? signingInfoFromUrl.region;
+        response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$baseHandlers$2f$authenticatedHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["authenticatedHandler"])(request, {
+            ...baseOptions,
+            credentials,
+            region: signingRegion,
+            service: signingService
+        });
+    } else {
+        response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$baseHandlers$2f$unauthenticatedHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["unauthenticatedHandler"])(request, {
+            ...baseOptions
+        });
+    }
+    // Clean-up un-modeled properties from response.
+    return {
+        statusCode: response.statusCode,
+        headers: response.headers,
+        body: response.body
+    };
+};
+const getRetryDeciderFromStrategy = (retryStrategy)=>{
+    const strategy = retryStrategy?.strategy;
+    if (strategy === 'no-retry') {
+        return ()=>Promise.resolve({
+                retryable: false
+            });
+    }
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$defaultRetryDecider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getRetryDecider"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$serviceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseRestApiServiceError"]);
+};
+const resolveCredentials = async (amplify)=>{
+    try {
+        const { credentials } = await amplify.Auth.fetchAuthSession();
+        if (credentials) {
+            return credentials;
+        }
+    } catch (e) {
+        __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["logger"].debug('No credentials available, the request will be unsigned.');
+    }
+    return null;
+};
+;
+ //# sourceMappingURL=transferHandler.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/publicApis.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "del",
+    ()=>del,
+    "get",
+    ()=>get,
+    "head",
+    ()=>head,
+    "patch",
+    ()=>patch,
+    "post",
+    ()=>post,
+    "put",
+    ()=>put
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$createCancellableOperation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/createCancellableOperation.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$parseSigningInfo$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/parseSigningInfo.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$resolveApiUrl$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/resolveApiUrl.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/logger.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$isIamAuthApplicable$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/isIamAuthApplicable.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$transferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/transferHandler.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const publicHandler = (amplify, options, method)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$createCancellableOperation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createCancellableOperation"])(async (abortSignal)=>{
+        const { apiName, options: apiOptions = {}, path: apiPath } = options;
+        const url = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$resolveApiUrl$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["resolveApiUrl"])(amplify, apiName, apiPath, apiOptions?.queryParams);
+        const libraryConfigHeaders = await amplify.libraryOptions?.API?.REST?.headers?.({
+            apiName
+        });
+        const { headers: invocationHeaders = {} } = apiOptions;
+        const headers = {
+            // custom headers from invocation options should precede library options
+            ...libraryConfigHeaders,
+            ...invocationHeaders
+        };
+        const signingServiceInfo = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$parseSigningInfo$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseSigningInfo"])(url, {
+            amplify,
+            apiName
+        });
+        __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["logger"].debug(method, url, headers, `IAM signing options: ${JSON.stringify(signingServiceInfo)}`);
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$transferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["transferHandler"])(amplify, {
+            ...apiOptions,
+            url,
+            method,
+            headers,
+            abortSignal
+        }, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$isIamAuthApplicable$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isIamAuthApplicableForRest"], signingServiceInfo);
+    });
+const get = (amplify, input)=>publicHandler(amplify, input, 'GET');
+const post = (amplify, input)=>publicHandler(amplify, input, 'POST');
+const put = (amplify, input)=>publicHandler(amplify, input, 'PUT');
+const del = (amplify, input)=>publicHandler(amplify, input, 'DELETE');
+const head = (amplify, input)=>publicHandler(amplify, input, 'HEAD');
+const patch = (amplify, input)=>publicHandler(amplify, input, 'PATCH');
+;
+ //# sourceMappingURL=publicApis.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/index.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "del",
+    ()=>del,
+    "get",
+    ()=>get,
+    "head",
+    ()=>head,
+    "patch",
+    ()=>patch,
+    "post",
+    ()=>post,
+    "put",
+    ()=>put
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Amplify.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/publicApis.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * GET HTTP request
+ * @param {GetInput} input - Input for GET operation
+ * @returns {GetOperation} Operation for GET request
+ * @throws - {@link RestApiError}
+ * @example
+ * Send a GET request
+ * ```js
+ * import { get, isCancelError } from '@aws-amplify/api';
+ *
+ * const { body } = await get({
+ *   apiName,
+ *   path,
+ *   options: {
+ *     headers, // Optional, A map of custom header key/values
+ *     body, // Optional, JSON object or FormData
+ *     queryParams, // Optional, A map of query strings
+ *   }
+ * }).response;
+ * const data = await body.json();
+ * ```
+ * @example
+ * Cancel a GET request
+ *
+ * ```js
+ * import { get, isCancelError } from '@aws-amplify/api';
+ *
+ * const { response, cancel } = get({apiName, path, options});
+ * cancel(message);
+ * try {
+ *   await response;
+ * } catch (e) {
+ *   if (isCancelError(e)) {
+ *    // handle request cancellation
+ *   }
+ *   //...
+ * }
+ * ```
+ */ const get = (input)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["get"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"], input);
+/**
+ * POST HTTP request
+ * @param {PostInput} input - Input for POST operation
+ * @returns {PostOperation} Operation for POST request
+ * @throws - {@link RestApiError}
+ * @example
+ * Send a POST request
+ * ```js
+ * import { post, isCancelError } from '@aws-amplify/api';
+ *
+ * const { body } = await post({
+ *   apiName,
+ *   path,
+ *   options: {
+ *     headers, // Optional, A map of custom header key/values
+ *     body, // Optional, JSON object or FormData
+ *     queryParams, // Optional, A map of query strings
+ *   }
+ * }).response;
+ * const data = await body.json();
+ * ```
+ * @example
+ * Cancel a POST request
+ *
+ * ```js
+ * import { post, isCancelError } from '@aws-amplify/api';
+ *
+ * const { response, cancel } = post({apiName, path, options});
+ * cancel(message);
+ * try {
+ *   await response;
+ * } catch (e) {
+ *   if (isCancelError(e)) {
+ *    // handle request cancellation
+ *   }
+ *   //...
+ * }
+ * ```
+ */ const post = (input)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["post"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"], input);
+/**
+ * PUT HTTP request
+ * @param {PutInput} input - Input for PUT operation
+ * @returns {PutOperation} Operation for PUT request
+ * @throws - {@link RestApiError}
+ * @example
+ * Send a PUT request
+ * ```js
+ * import { put, isCancelError } from '@aws-amplify/api';
+ *
+ * const { body } = await put({
+ *   apiName,
+ *   path,
+ *   options: {
+ *     headers, // Optional, A map of custom header key/values
+ *     body, // Optional, JSON object or FormData
+ *     queryParams, // Optional, A map of query strings
+ *   }
+ * }).response;
+ * const data = await body.json();
+ * ```
+ * @example
+ * Cancel a PUT request
+ * ```js
+ * import { put, isCancelError } from '@aws-amplify/api';
+ *
+ * const { response, cancel } = put({apiName, path, options});
+ * cancel(message);
+ * try {
+ *  await response;
+ * } catch (e) {
+ *   if (isCancelError(e)) {
+ *     // handle request cancellation
+ *   }
+ * //...
+ * }
+ * ```
+ */ const put = (input)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["put"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"], input);
+/**
+ * DELETE HTTP request
+ * @param {DeleteInput} input - Input for DELETE operation
+ * @returns {DeleteOperation} Operation for DELETE request
+ * @throws - {@link RestApiError}
+ * @example
+ * Send a DELETE request
+ * ```js
+ * import { del } from '@aws-amplify/api';
+ *
+ * const { statusCode } = await del({
+ *   apiName,
+ *   path,
+ *   options: {
+ *     headers, // Optional, A map of custom header key/values
+ *     queryParams, // Optional, A map of query strings
+ *   }
+ * }).response;
+ * ```
+ */ const del = (input)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["del"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"], input);
+/**
+ * HEAD HTTP request
+ * @param {HeadInput} input - Input for HEAD operation
+ * @returns {HeadOperation} Operation for HEAD request
+ * @throws - {@link RestApiError}
+ * @example
+ * Send a HEAD request
+ * ```js
+ * import { head, isCancelError } from '@aws-amplify/api';
+ *
+ * const { headers, statusCode } = await head({
+ *   apiName,
+ *   path,
+ *   options: {
+ *     headers, // Optional, A map of custom header key/values
+ *     queryParams, // Optional, A map of query strings
+ *   }
+ * }),response;
+ * ```
+ *
+ */ const head = (input)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["head"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"], input);
+/**
+ * PATCH HTTP request
+ * @param {PatchInput} input - Input for PATCH operation
+ * @returns {PatchOperation} Operation for PATCH request
+ * @throws - {@link RestApiError}
+ * @example
+ * Send a PATCH request
+ * ```js
+ * import { patch } from '@aws-amplify/api';
+ *
+ * const { body } = await patch({
+ *   apiName,
+ *   path,
+ *   options: {
+ *     headers, // Optional, A map of custom header key/values
+ *     body, // Optional, JSON object or FormData
+ *     queryParams, // Optional, A map of query strings
+ *   }
+ * }).response;
+ * const data = await body.json();
+ * ```
+ *
+ * @example
+ * Cancel a PATCH request
+ * ```js
+ * import { patch, isCancelError } from '@aws-amplify/api';
+ *
+ * const { response, cancel } = patch({apiName, path, options});
+ * cancel(message);
+ * try {
+ *  await response;
+ * } catch (e) {
+ *  if (isCancelError(e)) {
+ *   // handle request cancellation
+ *  }
+ * //...
+ * }
+ * ```
+ */ const patch = (input)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$publicApis$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["patch"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"], input);
+;
+ //# sourceMappingURL=index.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/index.mjs [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$CanceledError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/CanceledError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/index.mjs [app-route] (ecmascript)"); //# sourceMappingURL=index.mjs.map
+;
+;
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/internalPost.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cancel",
+    ()=>cancel,
+    "post",
+    ()=>post,
+    "updateRequestToBeCancellable",
+    ()=>updateRequestToBeCancellable
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$createCancellableOperation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/createCancellableOperation.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$errors$2f$validation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/errors/validation.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$logger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/logger.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$isIamAuthApplicable$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/utils/isIamAuthApplicable.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$transferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/transferHandler.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * This weak map provides functionality to cancel a request given the promise containing the `post` request.
+ *
+ * 1. For every GraphQL POST request, an abort controller is created and supplied to the request.
+ * 2. The promise fulfilled by GraphGL POST request is then mapped to that abort controller.
+ * 3. The promise is returned to the external caller.
+ * 4. The caller can either wait for the promise to fulfill or call `cancel(promise)` to cancel the request.
+ * 5. If `cancel(promise)` is called, then the corresponding abort controller is retrieved from the map below.
+ * 6. GraphQL POST request will be rejected with the error message provided during cancel.
+ * 7. Caller can check if the error is because of cancelling by calling `isCancelError(error)`.
+ */ const cancelTokenMap = new WeakMap();
+/**
+ * @internal
+ *
+ * REST POST handler to send GraphQL request to given endpoint. By default, it will use IAM to authorize
+ * the request. In some auth modes, the IAM auth has to be disabled. Here's how to set up the request auth correctly:
+ * * If auth mode is 'iam', you MUST NOT set 'authorization' header and 'x-api-key' header, since it would disable IAM
+ *   auth. You MUST also set 'input.options.signingServiceInfo' option.
+ *   * The including 'input.options.signingServiceInfo.service' and 'input.options.signingServiceInfo.region' are
+ *     optional. If omitted, the signing service and region will be inferred from url.
+ * * If auth mode is 'none', you MUST NOT set 'options.signingServiceInfo' option.
+ * * If auth mode is 'apiKey', you MUST set 'x-api-key' custom header.
+ * * If auth mode is 'oidc' or 'lambda' or 'userPool', you MUST set 'authorization' header.
+ *
+ * To make the internal post cancellable, you must also call `updateRequestToBeCancellable()` with the promise from
+ * internal post call and the abort controller supplied to the internal post call.
+ *
+ * @param amplify the AmplifyClassV6 instance - it may be the singleton used on Web, or an instance created within
+ * a context created by `runWithAmplifyServerContext`
+ * @param postInput an object of {@link InternalPostInput}
+ * @param postInput.url The URL that the POST request sends to
+ * @param postInput.options Options of the POST request
+ * @param postInput.abortController The abort controller used to cancel the POST request
+ * @returns a {@link RestApiResponse}
+ *
+ * @throws an {@link AmplifyError} with `Network Error` as the `message` when the external resource is unreachable due to one
+ * of the following reasons:
+ *   1. no network connection
+ *   2. CORS error
+ * @throws a {@link CanceledError} when the ongoing POST request get cancelled
+ */ const post = (amplify, { url, options, abortController })=>{
+    const controller = abortController ?? new AbortController();
+    const responsePromise = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$createCancellableOperation$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createCancellableOperation"])(async ()=>{
+        const response = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$transferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["transferHandler"])(amplify, {
+            url,
+            method: 'POST',
+            ...options,
+            abortSignal: controller.signal,
+            retryStrategy: {
+                strategy: 'jittered-exponential-backoff'
+            }
+        }, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$utils$2f$isIamAuthApplicable$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isIamAuthApplicableForGraphQL"], options?.signingServiceInfo);
+        return response;
+    }, controller);
+    const responseWithCleanUp = responsePromise.finally(()=>{
+        cancelTokenMap.delete(responseWithCleanUp);
+    });
+    return responseWithCleanUp;
+};
+/**
+ * Cancels a request given the promise returned by `post`.
+ * If the request is already completed, this function does nothing.
+ * It MUST be used after `updateRequestToBeCancellable` is called.
+ */ const cancel = (promise, message)=>{
+    const controller = cancelTokenMap.get(promise);
+    if (controller) {
+        controller.abort(message);
+        if (message && controller.signal.reason !== message) {
+            // In runtimes where `AbortSignal.reason` is not supported, we track the reason ourselves.
+            // @ts-expect-error reason is read-only property.
+            controller.signal.reason = message;
+        }
+        return true;
+    }
+    return false;
+};
+/**
+ * MUST be used to make a promise including internal `post` API call cancellable.
+ */ const updateRequestToBeCancellable = (promise, controller)=>{
+    cancelTokenMap.set(promise, controller);
+};
+;
+ //# sourceMappingURL=internalPost.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/internals/index.mjs [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$rest$2f$dist$2f$esm$2f$apis$2f$common$2f$internalPost$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-rest/dist/esm/apis/common/internalPost.mjs [app-route] (ecmascript)"); //# sourceMappingURL=index.mjs.map
+;
+}),
+"[project]/christmas-store-registration/node_modules/tslib/tslib.es6.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */ /* global Reflect, Promise, SuppressedError, Symbol, Iterator */ __turbopack_context__.s([
+    "__addDisposableResource",
+    ()=>__addDisposableResource,
+    "__assign",
+    ()=>__assign,
+    "__asyncDelegator",
+    ()=>__asyncDelegator,
+    "__asyncGenerator",
+    ()=>__asyncGenerator,
+    "__asyncValues",
+    ()=>__asyncValues,
+    "__await",
+    ()=>__await,
+    "__awaiter",
+    ()=>__awaiter,
+    "__classPrivateFieldGet",
+    ()=>__classPrivateFieldGet,
+    "__classPrivateFieldIn",
+    ()=>__classPrivateFieldIn,
+    "__classPrivateFieldSet",
+    ()=>__classPrivateFieldSet,
+    "__createBinding",
+    ()=>__createBinding,
+    "__decorate",
+    ()=>__decorate,
+    "__disposeResources",
+    ()=>__disposeResources,
+    "__esDecorate",
+    ()=>__esDecorate,
+    "__exportStar",
+    ()=>__exportStar,
+    "__extends",
+    ()=>__extends,
+    "__generator",
+    ()=>__generator,
+    "__importDefault",
+    ()=>__importDefault,
+    "__importStar",
+    ()=>__importStar,
+    "__makeTemplateObject",
+    ()=>__makeTemplateObject,
+    "__metadata",
+    ()=>__metadata,
+    "__param",
+    ()=>__param,
+    "__propKey",
+    ()=>__propKey,
+    "__read",
+    ()=>__read,
+    "__rest",
+    ()=>__rest,
+    "__rewriteRelativeImportExtension",
+    ()=>__rewriteRelativeImportExtension,
+    "__runInitializers",
+    ()=>__runInitializers,
+    "__setFunctionName",
+    ()=>__setFunctionName,
+    "__spread",
+    ()=>__spread,
+    "__spreadArray",
+    ()=>__spreadArray,
+    "__spreadArrays",
+    ()=>__spreadArrays,
+    "__values",
+    ()=>__values,
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf || ({
+        __proto__: []
+    }) instanceof Array && function(d, b) {
+        d.__proto__ = b;
+    } || function(d, b) {
+        for(var p in b)if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p];
+    };
+    return extendStatics(d, b);
+};
+function __extends(d, b) {
+    if (typeof b !== "function" && b !== null) throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+    function __() {
+        this.constructor = d;
+    }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for(var s, i = 1, n = arguments.length; i < n; i++){
+            s = arguments[i];
+            for(var p in s)if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+function __rest(s, e) {
+    var t = {};
+    for(var p in s)if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for(var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++){
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
+}
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for(var i = decorators.length - 1; i >= 0; i--)if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+function __param(paramIndex, decorator) {
+    return function(target, key) {
+        decorator(target, key, paramIndex);
+    };
+}
+function __esDecorate(ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
+    function accept(f) {
+        if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected");
+        return f;
+    }
+    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
+    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
+    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
+    var _, done = false;
+    for(var i = decorators.length - 1; i >= 0; i--){
+        var context = {};
+        for(var p in contextIn)context[p] = p === "access" ? {} : contextIn[p];
+        for(var p in contextIn.access)context.access[p] = contextIn.access[p];
+        context.addInitializer = function(f) {
+            if (done) throw new TypeError("Cannot add initializers after decoration has completed");
+            extraInitializers.push(accept(f || null));
+        };
+        var result = (0, decorators[i])(kind === "accessor" ? {
+            get: descriptor.get,
+            set: descriptor.set
+        } : descriptor[key], context);
+        if (kind === "accessor") {
+            if (result === void 0) continue;
+            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
+            if (_ = accept(result.get)) descriptor.get = _;
+            if (_ = accept(result.set)) descriptor.set = _;
+            if (_ = accept(result.init)) initializers.unshift(_);
+        } else if (_ = accept(result)) {
+            if (kind === "field") initializers.unshift(_);
+            else descriptor[key] = _;
+        }
+    }
+    if (target) Object.defineProperty(target, contextIn.name, descriptor);
+    done = true;
+}
+;
+function __runInitializers(thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for(var i = 0; i < initializers.length; i++){
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+}
+;
+function __propKey(x) {
+    return typeof x === "symbol" ? x : "".concat(x);
+}
+;
+function __setFunctionName(f, name, prefix) {
+    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
+    return Object.defineProperty(f, "name", {
+        configurable: true,
+        value: prefix ? "".concat(prefix, " ", name) : name
+    });
+}
+;
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) {
+        return value instanceof P ? value : new P(function(resolve) {
+            resolve(value);
+        });
+    }
+    return new (P || (P = Promise))(function(resolve, reject) {
+        function fulfilled(value) {
+            try {
+                step(generator.next(value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function rejected(value) {
+            try {
+                step(generator["throw"](value));
+            } catch (e) {
+                reject(e);
+            }
+        }
+        function step(result) {
+            result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+        }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+function __generator(thisArg, body) {
+    var _ = {
+        label: 0,
+        sent: function() {
+            if (t[0] & 1) throw t[1];
+            return t[1];
+        },
+        trys: [],
+        ops: []
+    }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
+        return this;
+    }), g;
+    //TURBOPACK unreachable
+    ;
+    function verb(n) {
+        return function(v) {
+            return step([
+                n,
+                v
+            ]);
+        };
+    }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while(g && (g = 0, op[0] && (_ = 0)), _)try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [
+                op[0] & 2,
+                t.value
+            ];
+            switch(op[0]){
+                case 0:
+                case 1:
+                    t = op;
+                    break;
+                case 4:
+                    _.label++;
+                    return {
+                        value: op[1],
+                        done: false
+                    };
+                case 5:
+                    _.label++;
+                    y = op[1];
+                    op = [
+                        0
+                    ];
+                    continue;
+                case 7:
+                    op = _.ops.pop();
+                    _.trys.pop();
+                    continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                        _ = 0;
+                        continue;
+                    }
+                    if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+                        _.label = op[1];
+                        break;
+                    }
+                    if (op[0] === 6 && _.label < t[1]) {
+                        _.label = t[1];
+                        t = op;
+                        break;
+                    }
+                    if (t && _.label < t[2]) {
+                        _.label = t[2];
+                        _.ops.push(op);
+                        break;
+                    }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop();
+                    continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) {
+            op = [
+                6,
+                e
+            ];
+            y = 0;
+        } finally{
+            f = t = 0;
+        }
+        if (op[0] & 5) throw op[1];
+        return {
+            value: op[0] ? op[1] : void 0,
+            done: true
+        };
+    }
+}
+var __createBinding = Object.create ? function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+        desc = {
+            enumerable: true,
+            get: function() {
+                return m[k];
+            }
+        };
+    }
+    Object.defineProperty(o, k2, desc);
+} : function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+};
+function __exportStar(m, o) {
+    for(var p in m)if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
+}
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function() {
+            if (o && i >= o.length) o = void 0;
+            return {
+                value: o && o[i++],
+                done: !o
+            };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while((n === void 0 || n-- > 0) && !(r = i.next()).done)ar.push(r.value);
+    } catch (error) {
+        e = {
+            error: error
+        };
+    } finally{
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        } finally{
+            if (e) throw e.error;
+        }
+    }
+    return ar;
+}
+function __spread() {
+    for(var ar = [], i = 0; i < arguments.length; i++)ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+function __spreadArrays() {
+    for(var s = 0, i = 0, il = arguments.length; i < il; i++)s += arguments[i].length;
+    for(var r = Array(s), k = 0, i = 0; i < il; i++)for(var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)r[k] = a[j];
+    return r;
+}
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for(var i = 0, l = from.length, ar; i < l; i++){
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = Object.create((typeof AsyncIterator === "function" ? AsyncIterator : Object).prototype), verb("next"), verb("throw"), verb("return", awaitReturn), i[Symbol.asyncIterator] = function() {
+        return this;
+    }, i;
+    //TURBOPACK unreachable
+    ;
+    function awaitReturn(f) {
+        return function(v) {
+            return Promise.resolve(v).then(f, reject);
+        };
+    }
+    function verb(n, f) {
+        if (g[n]) {
+            i[n] = function(v) {
+                return new Promise(function(a, b) {
+                    q.push([
+                        n,
+                        v,
+                        a,
+                        b
+                    ]) > 1 || resume(n, v);
+                });
+            };
+            if (f) i[n] = f(i[n]);
+        }
+    }
+    function resume(n, v) {
+        try {
+            step(g[n](v));
+        } catch (e) {
+            settle(q[0][3], e);
+        }
+    }
+    function step(r) {
+        r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r);
+    }
+    function fulfill(value) {
+        resume("next", value);
+    }
+    function reject(value) {
+        resume("throw", value);
+    }
+    function settle(f, v) {
+        if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]);
+    }
+}
+function __asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function(e) {
+        throw e;
+    }), verb("return"), i[Symbol.iterator] = function() {
+        return this;
+    }, i;
+    //TURBOPACK unreachable
+    ;
+    function verb(n, f) {
+        i[n] = o[n] ? function(v) {
+            return (p = !p) ? {
+                value: __await(o[n](v)),
+                done: false
+            } : f ? f(v) : v;
+        } : f;
+    }
+}
+function __asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function() {
+        return this;
+    }, i);
+    //TURBOPACK unreachable
+    ;
+    function verb(n) {
+        i[n] = o[n] && function(v) {
+            return new Promise(function(resolve, reject) {
+                v = o[n](v), settle(resolve, reject, v.done, v.value);
+            });
+        };
+    }
+    function settle(resolve, reject, d, v) {
+        Promise.resolve(v).then(function(v) {
+            resolve({
+                value: v,
+                done: d
+            });
+        }, reject);
+    }
+}
+function __makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) {
+        Object.defineProperty(cooked, "raw", {
+            value: raw
+        });
+    } else {
+        cooked.raw = raw;
+    }
+    return cooked;
+}
+;
+var __setModuleDefault = Object.create ? function(o, v) {
+    Object.defineProperty(o, "default", {
+        enumerable: true,
+        value: v
+    });
+} : function(o, v) {
+    o["default"] = v;
+};
+var ownKeys = function(o) {
+    ownKeys = Object.getOwnPropertyNames || function(o) {
+        var ar = [];
+        for(var k in o)if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+        return ar;
+    };
+    return ownKeys(o);
+};
+function __importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) {
+        for(var k = ownKeys(mod), i = 0; i < k.length; i++)if (k[i] !== "default") __createBinding(result, mod, k[i]);
+    }
+    __setModuleDefault(result, mod);
+    return result;
+}
+function __importDefault(mod) {
+    return mod && mod.__esModule ? mod : {
+        default: mod
+    };
+}
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+}
+function __classPrivateFieldIn(state, receiver) {
+    if (receiver === null || typeof receiver !== "object" && typeof receiver !== "function") throw new TypeError("Cannot use 'in' operator on non-object");
+    return typeof state === "function" ? receiver === state : state.has(receiver);
+}
+function __addDisposableResource(env, value, async) {
+    if (value !== null && value !== void 0) {
+        if (typeof value !== "object" && typeof value !== "function") throw new TypeError("Object expected.");
+        var dispose, inner;
+        if (async) {
+            if (!Symbol.asyncDispose) throw new TypeError("Symbol.asyncDispose is not defined.");
+            dispose = value[Symbol.asyncDispose];
+        }
+        if (dispose === void 0) {
+            if (!Symbol.dispose) throw new TypeError("Symbol.dispose is not defined.");
+            dispose = value[Symbol.dispose];
+            if (async) inner = dispose;
+        }
+        if (typeof dispose !== "function") throw new TypeError("Object not disposable.");
+        if (inner) dispose = function() {
+            try {
+                inner.call(this);
+            } catch (e) {
+                return Promise.reject(e);
+            }
+        };
+        env.stack.push({
+            value: value,
+            dispose: dispose,
+            async: async
+        });
+    } else if (async) {
+        env.stack.push({
+            async: true
+        });
+    }
+    return value;
+}
+var _SuppressedError = typeof SuppressedError === "function" ? SuppressedError : function(error, suppressed, message) {
+    var e = new Error(message);
+    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+};
+function __disposeResources(env) {
+    function fail(e) {
+        env.error = env.hasError ? new _SuppressedError(e, env.error, "An error was suppressed during disposal.") : e;
+        env.hasError = true;
+    }
+    var r, s = 0;
+    function next() {
+        while(r = env.stack.pop()){
+            try {
+                if (!r.async && s === 1) return s = 0, env.stack.push(r), Promise.resolve().then(next);
+                if (r.dispose) {
+                    var result = r.dispose.call(r.value);
+                    if (r.async) return s |= 2, Promise.resolve(result).then(next, function(e) {
+                        fail(e);
+                        return next();
+                    });
+                } else s |= 1;
+            } catch (e) {
+                fail(e);
+            }
+        }
+        if (s === 1) return env.hasError ? Promise.reject(env.error) : Promise.resolve();
+        if (env.hasError) throw env.error;
+    }
+    return next();
+}
+function __rewriteRelativeImportExtension(path, preserveJsx) {
+    if (typeof path === "string" && /^\.\.?\//.test(path)) {
+        return path.replace(/\.(tsx)$|((?:\.d)?)((?:\.[^./]+?)?)\.([cm]?)ts$/i, function(m, tsx, d, ext, cm) {
+            return tsx ? preserveJsx ? ".jsx" : ".js" : d && (!ext || !cm) ? m : d + ext + "." + cm.toLowerCase() + "js";
+        });
+    }
+    return path;
+}
+const __TURBOPACK__default__export__ = {
+    __extends,
+    __assign,
+    __rest,
+    __decorate,
+    __param,
+    __esDecorate,
+    __runInitializers,
+    __propKey,
+    __setFunctionName,
+    __metadata,
+    __awaiter,
+    __generator,
+    __createBinding,
+    __exportStar,
+    __values,
+    __read,
+    __spread,
+    __spreadArrays,
+    __spreadArray,
+    __await,
+    __asyncGenerator,
+    __asyncDelegator,
+    __asyncValues,
+    __makeTemplateObject,
+    __importStar,
+    __importDefault,
+    __classPrivateFieldGet,
+    __classPrivateFieldSet,
+    __classPrivateFieldIn,
+    __addDisposableResource,
+    __disposeResources,
+    __rewriteRelativeImportExtension
+};
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/constants.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/**
+ * @internal
+ */ __turbopack_context__.s([
+    "BLOCK_SIZE",
+    ()=>BLOCK_SIZE,
+    "DIGEST_LENGTH",
+    ()=>DIGEST_LENGTH,
+    "INIT",
+    ()=>INIT,
+    "KEY",
+    ()=>KEY,
+    "MAX_HASHABLE_LENGTH",
+    ()=>MAX_HASHABLE_LENGTH
+]);
+var BLOCK_SIZE = 64;
+var DIGEST_LENGTH = 32;
+var KEY = new Uint32Array([
+    0x428a2f98,
+    0x71374491,
+    0xb5c0fbcf,
+    0xe9b5dba5,
+    0x3956c25b,
+    0x59f111f1,
+    0x923f82a4,
+    0xab1c5ed5,
+    0xd807aa98,
+    0x12835b01,
+    0x243185be,
+    0x550c7dc3,
+    0x72be5d74,
+    0x80deb1fe,
+    0x9bdc06a7,
+    0xc19bf174,
+    0xe49b69c1,
+    0xefbe4786,
+    0x0fc19dc6,
+    0x240ca1cc,
+    0x2de92c6f,
+    0x4a7484aa,
+    0x5cb0a9dc,
+    0x76f988da,
+    0x983e5152,
+    0xa831c66d,
+    0xb00327c8,
+    0xbf597fc7,
+    0xc6e00bf3,
+    0xd5a79147,
+    0x06ca6351,
+    0x14292967,
+    0x27b70a85,
+    0x2e1b2138,
+    0x4d2c6dfc,
+    0x53380d13,
+    0x650a7354,
+    0x766a0abb,
+    0x81c2c92e,
+    0x92722c85,
+    0xa2bfe8a1,
+    0xa81a664b,
+    0xc24b8b70,
+    0xc76c51a3,
+    0xd192e819,
+    0xd6990624,
+    0xf40e3585,
+    0x106aa070,
+    0x19a4c116,
+    0x1e376c08,
+    0x2748774c,
+    0x34b0bcb5,
+    0x391c0cb3,
+    0x4ed8aa4a,
+    0x5b9cca4f,
+    0x682e6ff3,
+    0x748f82ee,
+    0x78a5636f,
+    0x84c87814,
+    0x8cc70208,
+    0x90befffa,
+    0xa4506ceb,
+    0xbef9a3f7,
+    0xc67178f2
+]);
+var INIT = [
+    0x6a09e667,
+    0xbb67ae85,
+    0x3c6ef372,
+    0xa54ff53a,
+    0x510e527f,
+    0x9b05688c,
+    0x1f83d9ab,
+    0x5be0cd19
+];
+var MAX_HASHABLE_LENGTH = Math.pow(2, 53) - 1; //# sourceMappingURL=constants.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/RawSha256.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "RawSha256",
+    ()=>RawSha256
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/constants.js [app-route] (ecmascript)");
+;
+/**
+ * @internal
+ */ var RawSha256 = function() {
+    function RawSha256() {
+        this.state = Int32Array.from(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["INIT"]);
+        this.temp = new Int32Array(64);
+        this.buffer = new Uint8Array(64);
+        this.bufferLength = 0;
+        this.bytesHashed = 0;
+        /**
+         * @internal
+         */ this.finished = false;
+    }
+    RawSha256.prototype.update = function(data) {
+        if (this.finished) {
+            throw new Error("Attempted to update an already finished hash.");
+        }
+        var position = 0;
+        var byteLength = data.byteLength;
+        this.bytesHashed += byteLength;
+        if (this.bytesHashed * 8 > __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["MAX_HASHABLE_LENGTH"]) {
+            throw new Error("Cannot hash more than 2^53 - 1 bits");
+        }
+        while(byteLength > 0){
+            this.buffer[this.bufferLength++] = data[position++];
+            byteLength--;
+            if (this.bufferLength === __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]) {
+                this.hashBuffer();
+                this.bufferLength = 0;
+            }
+        }
+    };
+    RawSha256.prototype.digest = function() {
+        if (!this.finished) {
+            var bitsHashed = this.bytesHashed * 8;
+            var bufferView = new DataView(this.buffer.buffer, this.buffer.byteOffset, this.buffer.byteLength);
+            var undecoratedLength = this.bufferLength;
+            bufferView.setUint8(this.bufferLength++, 0x80);
+            // Ensure the final block has enough room for the hashed length
+            if (undecoratedLength % __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"] >= __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"] - 8) {
+                for(var i = this.bufferLength; i < __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]; i++){
+                    bufferView.setUint8(i, 0);
+                }
+                this.hashBuffer();
+                this.bufferLength = 0;
+            }
+            for(var i = this.bufferLength; i < __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"] - 8; i++){
+                bufferView.setUint8(i, 0);
+            }
+            bufferView.setUint32(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"] - 8, Math.floor(bitsHashed / 0x100000000), true);
+            bufferView.setUint32(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"] - 4, bitsHashed);
+            this.hashBuffer();
+            this.finished = true;
+        }
+        // The value in state is little-endian rather than big-endian, so flip
+        // each word into a new Uint8Array
+        var out = new Uint8Array(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DIGEST_LENGTH"]);
+        for(var i = 0; i < 8; i++){
+            out[i * 4] = this.state[i] >>> 24 & 0xff;
+            out[i * 4 + 1] = this.state[i] >>> 16 & 0xff;
+            out[i * 4 + 2] = this.state[i] >>> 8 & 0xff;
+            out[i * 4 + 3] = this.state[i] >>> 0 & 0xff;
+        }
+        return out;
+    };
+    RawSha256.prototype.hashBuffer = function() {
+        var _a = this, buffer = _a.buffer, state = _a.state;
+        var state0 = state[0], state1 = state[1], state2 = state[2], state3 = state[3], state4 = state[4], state5 = state[5], state6 = state[6], state7 = state[7];
+        for(var i = 0; i < __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]; i++){
+            if (i < 16) {
+                this.temp[i] = (buffer[i * 4] & 0xff) << 24 | (buffer[i * 4 + 1] & 0xff) << 16 | (buffer[i * 4 + 2] & 0xff) << 8 | buffer[i * 4 + 3] & 0xff;
+            } else {
+                var u = this.temp[i - 2];
+                var t1_1 = (u >>> 17 | u << 15) ^ (u >>> 19 | u << 13) ^ u >>> 10;
+                u = this.temp[i - 15];
+                var t2_1 = (u >>> 7 | u << 25) ^ (u >>> 18 | u << 14) ^ u >>> 3;
+                this.temp[i] = (t1_1 + this.temp[i - 7] | 0) + (t2_1 + this.temp[i - 16] | 0);
+            }
+            var t1 = (((state4 >>> 6 | state4 << 26) ^ (state4 >>> 11 | state4 << 21) ^ (state4 >>> 25 | state4 << 7)) + (state4 & state5 ^ ~state4 & state6) | 0) + (state7 + (__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["KEY"][i] + this.temp[i] | 0) | 0) | 0;
+            var t2 = ((state0 >>> 2 | state0 << 30) ^ (state0 >>> 13 | state0 << 19) ^ (state0 >>> 22 | state0 << 10)) + (state0 & state1 ^ state0 & state2 ^ state1 & state2) | 0;
+            state7 = state6;
+            state6 = state5;
+            state5 = state4;
+            state4 = state3 + t1 | 0;
+            state3 = state2;
+            state2 = state1;
+            state1 = state0;
+            state0 = t1 + t2 | 0;
+        }
+        state[0] += state0;
+        state[1] += state1;
+        state[2] += state2;
+        state[3] += state3;
+        state[4] += state4;
+        state[5] += state5;
+        state[6] += state6;
+        state[7] += state7;
+    };
+    return RawSha256;
+}();
+;
+ //# sourceMappingURL=RawSha256.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/jsSha256.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Sha256",
+    ()=>Sha256
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$tslib$2f$tslib$2e$es6$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/tslib/tslib.es6.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/constants.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$RawSha256$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/RawSha256.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/index.js [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$isEmptyData$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/isEmptyData.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$convertToBuffer$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/convertToBuffer.js [app-route] (ecmascript)");
+;
+;
+;
+;
+var Sha256 = function() {
+    function Sha256(secret) {
+        this.secret = secret;
+        this.hash = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$RawSha256$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RawSha256"]();
+        this.reset();
+    }
+    Sha256.prototype.update = function(toHash) {
+        if ((0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$isEmptyData$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isEmptyData"])(toHash) || this.error) {
+            return;
+        }
+        try {
+            this.hash.update((0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$convertToBuffer$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["convertToBuffer"])(toHash));
+        } catch (e) {
+            this.error = e;
+        }
+    };
+    /* This synchronous method keeps compatibility
+     * with the v2 aws-sdk.
+     */ Sha256.prototype.digestSync = function() {
+        if (this.error) {
+            throw this.error;
+        }
+        if (this.outer) {
+            if (!this.outer.finished) {
+                this.outer.update(this.hash.digest());
+            }
+            return this.outer.digest();
+        }
+        return this.hash.digest();
+    };
+    /* The underlying digest method here is synchronous.
+     * To keep the same interface with the other hash functions
+     * the default is to expose this as an async method.
+     * However, it can sometimes be useful to have a sync method.
+     */ Sha256.prototype.digest = function() {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$tslib$2f$tslib$2e$es6$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["__awaiter"])(this, void 0, void 0, function() {
+            return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$tslib$2f$tslib$2e$es6$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["__generator"])(this, function(_a) {
+                return [
+                    2 /*return*/ ,
+                    this.digestSync()
+                ];
+            });
+        });
+    };
+    Sha256.prototype.reset = function() {
+        this.hash = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$RawSha256$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RawSha256"]();
+        if (this.secret) {
+            this.outer = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$RawSha256$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RawSha256"]();
+            var inner = bufferFromSecret(this.secret);
+            var outer = new Uint8Array(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]);
+            outer.set(inner);
+            for(var i = 0; i < __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]; i++){
+                inner[i] ^= 0x36;
+                outer[i] ^= 0x5c;
+            }
+            this.hash.update(inner);
+            this.outer.update(outer);
+            // overwrite the copied key in memory
+            for(var i = 0; i < inner.byteLength; i++){
+                inner[i] = 0;
+            }
+        }
+    };
+    return Sha256;
+}();
+;
+function bufferFromSecret(secret) {
+    var input = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$convertToBuffer$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["convertToBuffer"])(secret);
+    if (input.byteLength > __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]) {
+        var bufferHash = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$RawSha256$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["RawSha256"]();
+        bufferHash.update(input);
+        input = bufferHash.digest();
+    }
+    var buffer = new Uint8Array(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$constants$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["BLOCK_SIZE"]);
+    buffer.set(input);
+    return buffer;
+} //# sourceMappingURL=jsSha256.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/index.js [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$sha256$2d$js$2f$build$2f$module$2f$jsSha256$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/sha256-js/build/module/jsSha256.js [app-route] (ecmascript)"); //# sourceMappingURL=index.js.map
+;
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/convertToBuffer.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "convertToBuffer",
+    ()=>convertToBuffer
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$index$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/index.js [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@smithy/util-utf8/dist-es/fromUtf8.js [app-route] (ecmascript)");
+;
+// Quick polyfill
+var fromUtf8 = typeof Buffer !== "undefined" && Buffer.from ? function(input) {
+    return Buffer.from(input, "utf8");
+} : __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$smithy$2f$util$2d$utf8$2f$dist$2d$es$2f$fromUtf8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["fromUtf8"];
+function convertToBuffer(data) {
+    // Already a Uint8, do nothing
+    if (data instanceof Uint8Array) return data;
+    if (typeof data === "string") {
+        return fromUtf8(data);
+    }
+    if (ArrayBuffer.isView(data)) {
+        return new Uint8Array(data.buffer, data.byteOffset, data.byteLength / Uint8Array.BYTES_PER_ELEMENT);
+    }
+    return new Uint8Array(data);
+} //# sourceMappingURL=convertToBuffer.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/isEmptyData.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "isEmptyData",
+    ()=>isEmptyData
+]);
+function isEmptyData(data) {
+    if (typeof data === "string") {
+        return data.length === 0;
+    }
+    return data.byteLength === 0;
+} //# sourceMappingURL=isEmptyData.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/numToUint8.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "numToUint8",
+    ()=>numToUint8
+]);
+function numToUint8(num) {
+    return new Uint8Array([
+        (num & 0xff000000) >> 24,
+        (num & 0x00ff0000) >> 16,
+        (num & 0x0000ff00) >> 8,
+        num & 0x000000ff
+    ]);
+} //# sourceMappingURL=numToUint8.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/uint32ArrayFrom.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+// IE 11 does not support Array.from, so we do it manually
+__turbopack_context__.s([
+    "uint32ArrayFrom",
+    ()=>uint32ArrayFrom
+]);
+function uint32ArrayFrom(a_lookUpTable) {
+    if (!Uint32Array.from) {
+        var return_array = new Uint32Array(a_lookUpTable.length);
+        var a_index = 0;
+        while(a_index < a_lookUpTable.length){
+            return_array[a_index] = a_lookUpTable[a_index];
+            a_index += 1;
+        }
+        return return_array;
+    }
+    return Uint32Array.from(a_lookUpTable);
+} //# sourceMappingURL=uint32ArrayFrom.js.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/index.js [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$convertToBuffer$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/convertToBuffer.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$isEmptyData$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/isEmptyData.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$numToUint8$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/numToUint8.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$crypto$2f$util$2f$build$2f$module$2f$uint32ArrayFrom$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-crypto/util/build/module/uint32ArrayFrom.js [app-route] (ecmascript)"); //# sourceMappingURL=index.js.map
+;
+;
+;
+;
+}),
+"[project]/christmas-store-registration/node_modules/@smithy/util-hex-encoding/dist-es/index.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "fromHex",
+    ()=>fromHex,
+    "toHex",
+    ()=>toHex
+]);
+const SHORT_TO_HEX = {};
+const HEX_TO_SHORT = {};
+for(let i = 0; i < 256; i++){
+    let encodedByte = i.toString(16).toLowerCase();
+    if (encodedByte.length === 1) {
+        encodedByte = `0${encodedByte}`;
+    }
+    SHORT_TO_HEX[i] = encodedByte;
+    HEX_TO_SHORT[encodedByte] = i;
+}
+function fromHex(encoded) {
+    if (encoded.length % 2 !== 0) {
+        throw new Error("Hex encoded strings must have an even number length");
+    }
+    const out = new Uint8Array(encoded.length / 2);
+    for(let i = 0; i < encoded.length; i += 2){
+        const encodedByte = encoded.slice(i, i + 2).toLowerCase();
+        if (encodedByte in HEX_TO_SHORT) {
+            out[i / 2] = HEX_TO_SHORT[encodedByte];
+        } else {
+            throw new Error(`Cannot decode unrecognized sequence ${encodedByte} as hexadecimal`);
+        }
+    }
+    return out;
+}
+function toHex(bytes) {
+    let out = "";
+    for(let i = 0; i < bytes.byteLength; i++){
+        out += SHORT_TO_HEX[bytes[i]];
+    }
+    return out;
+}
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/native.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+var __TURBOPACK__imported__module__$5b$externals$5d2f$crypto__$5b$external$5d$__$28$crypto$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/crypto [external] (crypto, cjs)");
+;
+const __TURBOPACK__default__export__ = {
+    randomUUID: __TURBOPACK__imported__module__$5b$externals$5d2f$crypto__$5b$external$5d$__$28$crypto$2c$__cjs$29$__["randomUUID"]
+};
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/rng.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>rng
+]);
+var __TURBOPACK__imported__module__$5b$externals$5d2f$crypto__$5b$external$5d$__$28$crypto$2c$__cjs$29$__ = __turbopack_context__.i("[externals]/crypto [external] (crypto, cjs)");
+;
+const rnds8Pool = new Uint8Array(256);
+let poolPtr = rnds8Pool.length;
+function rng() {
+    if (poolPtr > rnds8Pool.length - 16) {
+        (0, __TURBOPACK__imported__module__$5b$externals$5d2f$crypto__$5b$external$5d$__$28$crypto$2c$__cjs$29$__["randomFillSync"])(rnds8Pool);
+        poolPtr = 0;
+    }
+    return rnds8Pool.slice(poolPtr, poolPtr += 16);
+}
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/regex.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+const __TURBOPACK__default__export__ = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/i;
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/validate.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$regex$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/uuid/dist/esm/regex.js [app-route] (ecmascript)");
+;
+function validate(uuid) {
+    return typeof uuid === 'string' && __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$regex$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].test(uuid);
+}
+const __TURBOPACK__default__export__ = validate;
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/stringify.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>__TURBOPACK__default__export__,
+    "unsafeStringify",
+    ()=>unsafeStringify
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$validate$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/uuid/dist/esm/validate.js [app-route] (ecmascript)");
+;
+const byteToHex = [];
+for(let i = 0; i < 256; ++i){
+    byteToHex.push((i + 0x100).toString(16).slice(1));
+}
+function unsafeStringify(arr, offset = 0) {
+    return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + '-' + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + '-' + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + '-' + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + '-' + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+}
+function stringify(arr, offset = 0) {
+    const uuid = unsafeStringify(arr, offset);
+    if (!(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$validate$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])(uuid)) {
+        throw TypeError('Stringified UUID is invalid');
+    }
+    return uuid;
+}
+const __TURBOPACK__default__export__ = stringify;
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/v4.js [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "default",
+    ()=>__TURBOPACK__default__export__
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$native$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/uuid/dist/esm/native.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$rng$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/uuid/dist/esm/rng.js [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$stringify$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/uuid/dist/esm/stringify.js [app-route] (ecmascript)");
+;
+;
+;
+function v4(options, buf, offset) {
+    if (__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$native$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].randomUUID && !buf && !options) {
+        return __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$native$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].randomUUID();
+    }
+    options = options || {};
+    const rnds = options.random ?? options.rng?.() ?? (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$rng$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"])();
+    if (rnds.length < 16) {
+        throw new Error('Random bytes length must be >= 16');
+    }
+    rnds[6] = rnds[6] & 0x0f | 0x40;
+    rnds[8] = rnds[8] & 0x3f | 0x80;
+    if (buf) {
+        offset = offset || 0;
+        if (offset < 0 || offset + 16 > buf.length) {
+            throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);
+        }
+        for(let i = 0; i < 16; ++i){
+            buf[offset + i] = rnds[i];
+        }
+        return buf;
+    }
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$stringify$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["unsafeStringify"])(rnds);
+}
+const __TURBOPACK__default__export__ = v4;
+}),
+"[project]/christmas-store-registration/node_modules/uuid/dist/esm/v4.js [app-route] (ecmascript) <export default as v4>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "v4",
+    ()=>__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$v4$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"]
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$uuid$2f$dist$2f$esm$2f$v4$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/uuid/dist/esm/v4.js [app-route] (ecmascript)");
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/api/dist/esm/API.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "generateClient",
+    ()=>generateClient
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$graphql$2f$dist$2f$esm$2f$internals$2f$generateClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/api-graphql/dist/esm/internals/generateClient.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Amplify.mjs [app-route] (ecmascript)");
+;
+;
+/**
+ * Generates an API client that can work with models or raw GraphQL
+ *
+ * @returns {@link V6Client}
+ * @throws {@link Error} - Throws error when client cannot be generated due to configuration issues.
+ */ function generateClient(options) {
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$api$2d$graphql$2f$dist$2f$esm$2f$internals$2f$generateClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["generateClient"])({
+        ...options || {},
+        amplify: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"]
+    });
+}
+;
+ //# sourceMappingURL=API.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/js-cookie/dist/js.cookie.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+/*! js-cookie v3.0.5 | MIT */ /* eslint-disable no-var */ __turbopack_context__.s([
+    "default",
+    ()=>api
+]);
+function assign(target) {
+    for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i];
+        for(var key in source){
+            target[key] = source[key];
+        }
+    }
+    return target;
+}
+/* eslint-enable no-var */ /* eslint-disable no-var */ var defaultConverter = {
+    read: function(value) {
+        if (value[0] === '"') {
+            value = value.slice(1, -1);
+        }
+        return value.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
+    },
+    write: function(value) {
+        return encodeURIComponent(value).replace(/%(2[346BF]|3[AC-F]|40|5[BDE]|60|7[BCD])/g, decodeURIComponent);
+    }
+};
+/* eslint-enable no-var */ /* eslint-disable no-var */ function init(converter, defaultAttributes) {
+    function set(name, value, attributes) {
+        if (typeof document === 'undefined') {
+            return;
+        }
+        attributes = assign({}, defaultAttributes, attributes);
+        if (typeof attributes.expires === 'number') {
+            attributes.expires = new Date(Date.now() + attributes.expires * 864e5);
+        }
+        if (attributes.expires) {
+            attributes.expires = attributes.expires.toUTCString();
+        }
+        name = encodeURIComponent(name).replace(/%(2[346B]|5E|60|7C)/g, decodeURIComponent).replace(/[()]/g, escape);
+        var stringifiedAttributes = '';
+        for(var attributeName in attributes){
+            if (!attributes[attributeName]) {
+                continue;
+            }
+            stringifiedAttributes += '; ' + attributeName;
+            if (attributes[attributeName] === true) {
+                continue;
+            }
+            // Considers RFC 6265 section 5.2:
+            // ...
+            // 3.  If the remaining unparsed-attributes contains a %x3B (";")
+            //     character:
+            // Consume the characters of the unparsed-attributes up to,
+            // not including, the first %x3B (";") character.
+            // ...
+            stringifiedAttributes += '=' + attributes[attributeName].split(';')[0];
+        }
+        return document.cookie = name + '=' + converter.write(value, name) + stringifiedAttributes;
+    }
+    function get(name) {
+        if (typeof document === 'undefined' || arguments.length && !name) {
+            return;
+        }
+        // To prevent the for loop in the first place assign an empty array
+        // in case there are no cookies at all.
+        var cookies = document.cookie ? document.cookie.split('; ') : [];
+        var jar = {};
+        for(var i = 0; i < cookies.length; i++){
+            var parts = cookies[i].split('=');
+            var value = parts.slice(1).join('=');
+            try {
+                var found = decodeURIComponent(parts[0]);
+                jar[found] = converter.read(value, found);
+                if (name === found) {
+                    break;
+                }
+            } catch (e) {}
+        }
+        return name ? jar[name] : jar;
+    }
+    return Object.create({
+        set,
+        get,
+        remove: function(name, attributes) {
+            set(name, '', assign({}, attributes, {
+                expires: -1
+            }));
+        },
+        withAttributes: function(attributes) {
+            return init(this.converter, assign({}, this.attributes, attributes));
+        },
+        withConverter: function(converter) {
+            return init(assign({}, this.converter, converter), this.attributes);
+        }
+    }, {
+        attributes: {
+            value: Object.freeze(defaultAttributes)
+        },
+        converter: {
+            value: Object.freeze(converter)
+        }
+    });
+}
+var api = init(defaultConverter, {
+    path: '/'
+});
+;
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "AuthError",
+    ()=>AuthError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$errors$2f$AmplifyError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/errors/AmplifyError.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+class AuthError extends __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$errors$2f$AmplifyError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyError"] {
+    constructor(params){
+        super(params);
+        // Hack for making the custom error class work when transpiled to es5
+        // TODO: Delete the following 2 lines after we change the build target to >= es2015
+        this.constructor = AuthError;
+        Object.setPrototypeOf(this, AuthError.prototype);
+    }
+}
+;
+ //# sourceMappingURL=AuthError.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/utils/assertServiceError.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "assertServiceError",
+    ()=>assertServiceError
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$types$2f$errors$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/types/errors.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+function assertServiceError(error) {
+    if (!error || error.name === 'Error' || error instanceof TypeError) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$types$2f$errors$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyErrorCode"].Unknown,
+            message: 'An unknown error has occurred.',
+            underlyingError: error
+        });
+    }
+}
+;
+ //# sourceMappingURL=assertServiceError.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/parsers/regionParsers.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "getRegionFromIdentityPoolId",
+    ()=>getRegionFromIdentityPoolId,
+    "getRegionFromUserPoolId",
+    ()=>getRegionFromUserPoolId
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+function getRegionFromUserPoolId(userPoolId) {
+    const region = userPoolId?.split('_')[0];
+    if (!userPoolId || userPoolId.indexOf('_') < 0 || !region || typeof region !== 'string') throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+        name: 'InvalidUserPoolId',
+        message: 'Invalid user pool id provided.'
+    });
+    return region;
+}
+function getRegionFromIdentityPoolId(identityPoolId) {
+    if (!identityPoolId || !identityPoolId.includes(':')) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: 'InvalidIdentityPoolIdException',
+            message: 'Invalid identity pool id provided.',
+            recoverySuggestion: 'Make sure a valid identityPoolId is given in the config.'
+        });
+    }
+    return identityPoolId.split(':')[0];
+}
+;
+ //# sourceMappingURL=regionParsers.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/constants.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "AUTO_SIGN_IN_EXCEPTION",
+    ()=>AUTO_SIGN_IN_EXCEPTION,
+    "DEVICE_METADATA_NOT_FOUND_EXCEPTION",
+    ()=>DEVICE_METADATA_NOT_FOUND_EXCEPTION,
+    "INVALID_APP_SCHEME_EXCEPTION",
+    ()=>INVALID_APP_SCHEME_EXCEPTION,
+    "INVALID_ORIGIN_EXCEPTION",
+    ()=>INVALID_ORIGIN_EXCEPTION,
+    "INVALID_PREFERRED_REDIRECT_EXCEPTION",
+    ()=>INVALID_PREFERRED_REDIRECT_EXCEPTION,
+    "INVALID_REDIRECT_EXCEPTION",
+    ()=>INVALID_REDIRECT_EXCEPTION,
+    "OAUTH_SIGNOUT_EXCEPTION",
+    ()=>OAUTH_SIGNOUT_EXCEPTION,
+    "TOKEN_REFRESH_EXCEPTION",
+    ()=>TOKEN_REFRESH_EXCEPTION,
+    "UNEXPECTED_SIGN_IN_INTERRUPTION_EXCEPTION",
+    ()=>UNEXPECTED_SIGN_IN_INTERRUPTION_EXCEPTION,
+    "USER_ALREADY_AUTHENTICATED_EXCEPTION",
+    ()=>USER_ALREADY_AUTHENTICATED_EXCEPTION,
+    "USER_UNAUTHENTICATED_EXCEPTION",
+    ()=>USER_UNAUTHENTICATED_EXCEPTION,
+    "invalidAppSchemeException",
+    ()=>invalidAppSchemeException,
+    "invalidOriginException",
+    ()=>invalidOriginException,
+    "invalidPreferredRedirectUrlException",
+    ()=>invalidPreferredRedirectUrlException,
+    "invalidRedirectException",
+    ()=>invalidRedirectException
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const USER_UNAUTHENTICATED_EXCEPTION = 'UserUnAuthenticatedException';
+const USER_ALREADY_AUTHENTICATED_EXCEPTION = 'UserAlreadyAuthenticatedException';
+const DEVICE_METADATA_NOT_FOUND_EXCEPTION = 'DeviceMetadataNotFoundException';
+const AUTO_SIGN_IN_EXCEPTION = 'AutoSignInException';
+const INVALID_REDIRECT_EXCEPTION = 'InvalidRedirectException';
+const INVALID_APP_SCHEME_EXCEPTION = 'InvalidAppSchemeException';
+const INVALID_PREFERRED_REDIRECT_EXCEPTION = 'InvalidPreferredRedirectUrlException';
+const invalidRedirectException = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+    name: INVALID_REDIRECT_EXCEPTION,
+    message: 'signInRedirect or signOutRedirect had an invalid format or was not found.',
+    recoverySuggestion: 'Please make sure the signIn/Out redirect in your oauth config is valid.'
+});
+const invalidAppSchemeException = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+    name: INVALID_APP_SCHEME_EXCEPTION,
+    message: 'A valid non-http app scheme was not found in the config.',
+    recoverySuggestion: 'Please make sure a valid custom app scheme is present in the config.'
+});
+const invalidPreferredRedirectUrlException = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+    name: INVALID_PREFERRED_REDIRECT_EXCEPTION,
+    message: 'The given preferredRedirectUrl does not match any items in the redirectSignOutUrls array from the config.',
+    recoverySuggestion: 'Please make sure a matching preferredRedirectUrl is provided.'
+});
+const INVALID_ORIGIN_EXCEPTION = 'InvalidOriginException';
+const invalidOriginException = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+    name: INVALID_ORIGIN_EXCEPTION,
+    message: 'redirect is coming from a different origin. The oauth flow needs to be initiated from the same origin',
+    recoverySuggestion: 'Please call signInWithRedirect from the same origin.'
+});
+const OAUTH_SIGNOUT_EXCEPTION = 'OAuthSignOutException';
+const TOKEN_REFRESH_EXCEPTION = 'TokenRefreshException';
+const UNEXPECTED_SIGN_IN_INTERRUPTION_EXCEPTION = 'UnexpectedSignInInterruptionException';
+;
+ //# sourceMappingURL=constants.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/types.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "OAuthStorageKeys",
+    ()=>OAuthStorageKeys,
+    "assertAuthTokens",
+    ()=>assertAuthTokens,
+    "assertAuthTokensWithRefreshToken",
+    ()=>assertAuthTokensWithRefreshToken,
+    "assertDeviceMetadata",
+    ()=>assertDeviceMetadata,
+    "assertIdTokenInAuthTokens",
+    ()=>assertIdTokenInAuthTokens,
+    "isTypeUserPoolConfig",
+    ()=>isTypeUserPoolConfig,
+    "oAuthTokenRefreshException",
+    ()=>oAuthTokenRefreshException,
+    "tokenRefreshException",
+    ()=>tokenRefreshException
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/constants.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+function isTypeUserPoolConfig(authConfig) {
+    if (authConfig && authConfig.Cognito.userPoolId && authConfig.Cognito.userPoolClientId) {
+        return true;
+    }
+    return false;
+}
+function assertAuthTokens(tokens) {
+    if (!tokens || !tokens.accessToken) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["USER_UNAUTHENTICATED_EXCEPTION"],
+            message: 'User needs to be authenticated to call this API.',
+            recoverySuggestion: 'Sign in before calling this API again.'
+        });
+    }
+}
+function assertIdTokenInAuthTokens(tokens) {
+    if (!tokens || !tokens.idToken) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["USER_UNAUTHENTICATED_EXCEPTION"],
+            message: 'User needs to be authenticated to call this API.',
+            recoverySuggestion: 'Sign in before calling this API again.'
+        });
+    }
+}
+const oAuthTokenRefreshException = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+    name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["TOKEN_REFRESH_EXCEPTION"],
+    message: `Token refresh is not supported when authenticated with the 'implicit grant' (token) oauth flow. 
+	Please change your oauth configuration to use 'code grant' flow.`,
+    recoverySuggestion: `Please logout and change your Amplify configuration to use "code grant" flow. 
+	E.g { responseType: 'code' }`
+});
+const tokenRefreshException = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+    name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["USER_UNAUTHENTICATED_EXCEPTION"],
+    message: 'User needs to be authenticated to call this API.',
+    recoverySuggestion: 'Sign in before calling this API again.'
+});
+function assertAuthTokensWithRefreshToken(tokens) {
+    if (isAuthenticatedWithImplicitOauthFlow(tokens)) {
+        throw oAuthTokenRefreshException;
+    }
+    if (!isAuthenticatedWithRefreshToken(tokens)) {
+        throw tokenRefreshException;
+    }
+}
+function assertDeviceMetadata(deviceMetadata) {
+    if (!deviceMetadata || !deviceMetadata.deviceKey || !deviceMetadata.deviceGroupKey || !deviceMetadata.randomPassword) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DEVICE_METADATA_NOT_FOUND_EXCEPTION"],
+            message: 'Either deviceKey, deviceGroupKey or secretPassword were not found during the sign-in process.',
+            recoverySuggestion: 'Make sure to not clear storage after calling the signIn API.'
+        });
+    }
+}
+const OAuthStorageKeys = {
+    inflightOAuth: 'inflightOAuth',
+    oauthSignIn: 'oauthSignIn',
+    oauthPKCE: 'oauthPKCE',
+    oauthState: 'oauthState'
+};
+function isAuthenticated(tokens) {
+    return tokens?.accessToken || tokens?.idToken;
+}
+function isAuthenticatedWithRefreshToken(tokens) {
+    return isAuthenticated(tokens) && tokens?.refreshToken;
+}
+function isAuthenticatedWithImplicitOauthFlow(tokens) {
+    return isAuthenticated(tokens) && !tokens?.refreshToken;
+}
+;
+ //# sourceMappingURL=types.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/factories/createCognitoIdentityPoolEndpointResolver.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "createCognitoIdentityPoolEndpointResolver",
+    ()=>createCognitoIdentityPoolEndpointResolver
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$cognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/foundation/factories/serviceClients/cognitoIdentity/cognitoIdentityPoolEndpointResolver.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/amplifyUrl/index.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const createCognitoIdentityPoolEndpointResolver = ({ endpointOverride })=>(input)=>{
+        if (endpointOverride) {
+            return {
+                url: new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyUrl"](endpointOverride)
+            };
+        }
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$cognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoIdentityPoolEndpointResolver"])(input);
+    };
+;
+ //# sourceMappingURL=createCognitoIdentityPoolEndpointResolver.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/utils.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "formLoginsMap",
+    ()=>formLoginsMap
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+function formLoginsMap(idToken) {
+    const issuer = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["decodeJWT"])(idToken).payload.iss;
+    const res = {};
+    if (!issuer) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: 'InvalidIdTokenException',
+            message: 'Invalid Idtoken.'
+        });
+    }
+    const domainName = issuer.replace(/(^\w+:|^)\/\//, '');
+    res[domainName] = idToken;
+    return res;
+}
+;
+ //# sourceMappingURL=utils.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/IdentityIdProvider.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cognitoIdentityIdProvider",
+    ()=>cognitoIdentityIdProvider
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$createGetIdClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/foundation/factories/serviceClients/cognitoIdentity/createGetIdClient.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/utils/assertServiceError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/parsers/regionParsers.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/factories/createCognitoIdentityPoolEndpointResolver.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$utils$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/utils.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * Provides a Cognito identityId
+ *
+ * @param tokens - The AuthTokens received after SignIn
+ * @returns string
+ * @throws configuration exceptions: `InvalidIdentityPoolIdException`
+ *  - Auth errors that may arise from misconfiguration.
+ * @throws service exceptions: {@link GetIdException }
+ */ async function cognitoIdentityIdProvider({ tokens, authConfig, identityIdStore }) {
+    identityIdStore.setAuthConfig({
+        Cognito: authConfig
+    });
+    // will return null only if there is no identityId cached or if there is an error retrieving it
+    const identityId = await identityIdStore.loadIdentityId();
+    if (identityId) {
+        return identityId.id;
+    }
+    const logins = tokens?.idToken ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$utils$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["formLoginsMap"])(tokens.idToken.toString()) : {};
+    const generatedIdentityId = await generateIdentityId(logins, authConfig);
+    // Store generated identityId
+    identityIdStore.storeIdentityId({
+        id: generatedIdentityId,
+        type: tokens ? 'primary' : 'guest'
+    });
+    return generatedIdentityId;
+}
+async function generateIdentityId(logins, authConfig) {
+    const identityPoolId = authConfig?.identityPoolId;
+    const region = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getRegionFromIdentityPoolId"])(identityPoolId);
+    const getId = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$createGetIdClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createGetIdClient"])({
+        endpointResolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createCognitoIdentityPoolEndpointResolver"])({
+            endpointOverride: authConfig.identityPoolEndpoint
+        })
+    });
+    // IdentityId is absent so get it using IdentityPoolId with Cognito's GetId API
+    let idResult;
+    // for a first-time user, this will return a brand new identity
+    // for a returning user, this will retrieve the previous identity assocaited with the logins
+    try {
+        idResult = (await getId({
+            region
+        }, {
+            IdentityPoolId: identityPoolId,
+            Logins: logins
+        })).IdentityId;
+    } catch (e) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertServiceError"])(e);
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"](e);
+    }
+    if (!idResult) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: 'GetIdResponseException',
+            message: 'Received undefined response from getId operation',
+            recoverySuggestion: 'Make sure to pass a valid identityPoolId in the configuration.'
+        });
+    }
+    return idResult;
+}
+;
+ //# sourceMappingURL=IdentityIdProvider.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/credentialsProvider.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "CognitoAWSCredentialsAndIdentityIdProvider",
+    ()=>CognitoAWSCredentialsAndIdentityIdProvider
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Logger$2f$ConsoleLogger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/Logger/ConsoleLogger.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$createGetCredentialsForIdentityClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/foundation/factories/serviceClients/cognitoIdentity/createGetCredentialsForIdentityClient.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/utils/assertServiceError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/parsers/regionParsers.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/types.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/factories/createCognitoIdentityPoolEndpointResolver.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$IdentityIdProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/IdentityIdProvider.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$utils$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/utils.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const logger = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Logger$2f$ConsoleLogger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["ConsoleLogger"]('CognitoCredentialsProvider');
+const CREDENTIALS_TTL = 50 * 60 * 1000; // 50 min, can be modified on config if required in the future
+class CognitoAWSCredentialsAndIdentityIdProvider {
+    constructor(identityIdStore){
+        this._nextCredentialsRefresh = 0;
+        this._identityIdStore = identityIdStore;
+    }
+    async clearCredentialsAndIdentityId() {
+        logger.debug('Clearing out credentials and identityId');
+        this._credentialsAndIdentityId = undefined;
+        await this._identityIdStore.clearIdentityId();
+    }
+    async clearCredentials() {
+        logger.debug('Clearing out in-memory credentials');
+        this._credentialsAndIdentityId = undefined;
+    }
+    async getCredentialsAndIdentityId(getCredentialsOptions) {
+        const isAuthenticated = getCredentialsOptions.authenticated;
+        const { tokens } = getCredentialsOptions;
+        const { authConfig } = getCredentialsOptions;
+        try {
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertIdentityPoolIdConfig"])(authConfig?.Cognito);
+        } catch  {
+            // No identity pool configured, skipping
+            return;
+        }
+        if (!isAuthenticated && !authConfig.Cognito.allowGuestAccess) {
+            // TODO(V6): return partial result like Native platforms
+            return;
+        }
+        const { forceRefresh } = getCredentialsOptions;
+        const tokenHasChanged = this.hasTokenChanged(tokens);
+        const identityId = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$IdentityIdProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoIdentityIdProvider"])({
+            tokens,
+            authConfig: authConfig.Cognito,
+            identityIdStore: this._identityIdStore
+        });
+        // Clear cached credentials when forceRefresh is true OR the cache token has changed
+        if (forceRefresh || tokenHasChanged) {
+            this.clearCredentials();
+        }
+        if (!isAuthenticated) {
+            return this.getGuestCredentials(identityId, authConfig.Cognito);
+        } else {
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertIdTokenInAuthTokens"])(tokens);
+            return this.credsForOIDCTokens(authConfig.Cognito, tokens, identityId);
+        }
+    }
+    async getGuestCredentials(identityId, authConfig) {
+        // Return existing in-memory cached credentials only if it exists, is not past it's lifetime and is unauthenticated credentials
+        if (this._credentialsAndIdentityId && !this.isPastTTL() && this._credentialsAndIdentityId.isAuthenticatedCreds === false) {
+            logger.info('returning stored credentials as they neither past TTL nor expired.');
+            return this._credentialsAndIdentityId;
+        }
+        // Clear to discard if any authenticated credentials are set and start with a clean slate
+        this.clearCredentials();
+        const region = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getRegionFromIdentityPoolId"])(authConfig.identityPoolId);
+        const getCredentialsForIdentity = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$createGetCredentialsForIdentityClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createGetCredentialsForIdentityClient"])({
+            endpointResolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createCognitoIdentityPoolEndpointResolver"])({
+                endpointOverride: authConfig.identityPoolEndpoint
+            })
+        });
+        // use identityId to obtain guest credentials
+        // save credentials in-memory
+        // No logins params should be passed for guest creds:
+        // https://docs.aws.amazon.com/cognitoidentity/latest/APIReference/API_GetCredentialsForIdentity.html
+        let clientResult;
+        try {
+            clientResult = await getCredentialsForIdentity({
+                region
+            }, {
+                IdentityId: identityId
+            });
+        } catch (e) {
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertServiceError"])(e);
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"](e);
+        }
+        if (clientResult?.Credentials?.AccessKeyId && clientResult?.Credentials?.SecretKey) {
+            this._nextCredentialsRefresh = new Date().getTime() + CREDENTIALS_TTL;
+            const res = {
+                credentials: {
+                    accessKeyId: clientResult.Credentials.AccessKeyId,
+                    secretAccessKey: clientResult.Credentials.SecretKey,
+                    sessionToken: clientResult.Credentials.SessionToken,
+                    expiration: clientResult.Credentials.Expiration
+                },
+                identityId
+            };
+            if (clientResult.IdentityId) {
+                res.identityId = clientResult.IdentityId;
+                this._identityIdStore.storeIdentityId({
+                    id: clientResult.IdentityId,
+                    type: 'guest'
+                });
+            }
+            this._credentialsAndIdentityId = {
+                ...res,
+                isAuthenticatedCreds: false
+            };
+            return res;
+        } else {
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                name: 'CredentialsNotFoundException',
+                message: `Cognito did not respond with either Credentials, AccessKeyId or SecretKey.`
+            });
+        }
+    }
+    async credsForOIDCTokens(authConfig, authTokens, identityId) {
+        if (this._credentialsAndIdentityId && !this.isPastTTL() && this._credentialsAndIdentityId.isAuthenticatedCreds === true) {
+            logger.debug('returning stored credentials as they neither past TTL nor expired.');
+            return this._credentialsAndIdentityId;
+        }
+        // Clear to discard if any unauthenticated credentials are set and start with a clean slate
+        this.clearCredentials();
+        const logins = authTokens.idToken ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$utils$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["formLoginsMap"])(authTokens.idToken.toString()) : {};
+        const region = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getRegionFromIdentityPoolId"])(authConfig.identityPoolId);
+        const getCredentialsForIdentity = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentity$2f$createGetCredentialsForIdentityClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createGetCredentialsForIdentityClient"])({
+            endpointResolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoIdentityPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createCognitoIdentityPoolEndpointResolver"])({
+                endpointOverride: authConfig.identityPoolEndpoint
+            })
+        });
+        let clientResult;
+        try {
+            clientResult = await getCredentialsForIdentity({
+                region
+            }, {
+                IdentityId: identityId,
+                Logins: logins
+            });
+        } catch (e) {
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertServiceError"])(e);
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"](e);
+        }
+        if (clientResult?.Credentials?.AccessKeyId && clientResult?.Credentials?.SecretKey) {
+            this._nextCredentialsRefresh = new Date().getTime() + CREDENTIALS_TTL;
+            const res = {
+                credentials: {
+                    accessKeyId: clientResult.Credentials.AccessKeyId,
+                    secretAccessKey: clientResult.Credentials.SecretKey,
+                    sessionToken: clientResult.Credentials.SessionToken,
+                    expiration: clientResult.Credentials.Expiration
+                },
+                identityId
+            };
+            if (clientResult.IdentityId) {
+                res.identityId = clientResult.IdentityId;
+                // note: the following call removes guest identityId from the persistent store (localStorage)
+                this._identityIdStore.storeIdentityId({
+                    id: clientResult.IdentityId,
+                    type: 'primary'
+                });
+            }
+            // Store the credentials in-memory along with the expiration
+            this._credentialsAndIdentityId = {
+                ...res,
+                isAuthenticatedCreds: true,
+                associatedIdToken: authTokens.idToken?.toString()
+            };
+            return res;
+        } else {
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                name: 'CredentialsException',
+                message: `Cognito did not respond with either Credentials, AccessKeyId or SecretKey.`
+            });
+        }
+    }
+    isPastTTL() {
+        return this._nextCredentialsRefresh === undefined ? true : this._nextCredentialsRefresh <= Date.now();
+    }
+    hasTokenChanged(tokens) {
+        return !!tokens && !!this._credentialsAndIdentityId?.associatedIdToken && tokens.idToken?.toString() !== this._credentialsAndIdentityId.associatedIdToken;
+    }
+}
+;
+ //# sourceMappingURL=credentialsProvider.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/types.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "AuthTokenStorageKeys",
+    ()=>AuthTokenStorageKeys
+]);
+const AuthTokenStorageKeys = {
+    accessToken: 'accessToken',
+    idToken: 'idToken',
+    oidcProvider: 'oidcProvider',
+    clockDrift: 'clockDrift',
+    refreshToken: 'refreshToken',
+    deviceKey: 'deviceKey',
+    randomPasswordKey: 'randomPasswordKey',
+    deviceGroupKey: 'deviceGroupKey',
+    signInDetails: 'signInDetails',
+    oauthMetadata: 'oauthMetadata'
+};
+;
+ //# sourceMappingURL=types.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/errorHelpers.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "TokenProviderErrorCode",
+    ()=>TokenProviderErrorCode,
+    "assert",
+    ()=>assert
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$errors$2f$createAssertionFunction$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/errors/createAssertionFunction.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+var TokenProviderErrorCode;
+(function(TokenProviderErrorCode) {
+    TokenProviderErrorCode["InvalidAuthTokens"] = "InvalidAuthTokens";
+})(TokenProviderErrorCode || (TokenProviderErrorCode = {}));
+const tokenValidationErrorMap = {
+    [TokenProviderErrorCode.InvalidAuthTokens]: {
+        message: 'Invalid tokens.',
+        recoverySuggestion: 'Make sure the tokens are valid.'
+    }
+};
+const assert = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$errors$2f$createAssertionFunction$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createAssertionFunction"])(tokenValidationErrorMap);
+;
+ //# sourceMappingURL=errorHelpers.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/constants.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "AUTH_KEY_PREFIX",
+    ()=>AUTH_KEY_PREFIX
+]);
+const AUTH_KEY_PREFIX = 'CognitoIdentityServiceProvider';
+;
+ //# sourceMappingURL=constants.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/TokenStore.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "DefaultTokenStore",
+    ()=>DefaultTokenStore,
+    "createKeysForAuthStorage",
+    ()=>createKeysForAuthStorage,
+    "getAuthStorageKeys",
+    ()=>getAuthStorageKeys
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/types.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$errorHelpers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/errorHelpers.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/constants.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+class DefaultTokenStore {
+    getKeyValueStorage() {
+        if (!this.keyValueStorage) {
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                name: 'KeyValueStorageNotFoundException',
+                message: 'KeyValueStorage was not found in TokenStore'
+            });
+        }
+        return this.keyValueStorage;
+    }
+    setKeyValueStorage(keyValueStorage) {
+        this.keyValueStorage = keyValueStorage;
+    }
+    setAuthConfig(authConfig) {
+        this.authConfig = authConfig;
+    }
+    async loadTokens() {
+        // TODO(v6): migration logic should be here
+        // Reading V5 tokens old format
+        try {
+            const authKeys = await this.getAuthKeys();
+            const accessTokenString = await this.getKeyValueStorage().getItem(authKeys.accessToken);
+            if (!accessTokenString) {
+                throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                    name: 'NoSessionFoundException',
+                    message: 'Auth session was not found. Make sure to call signIn.'
+                });
+            }
+            const accessToken = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["decodeJWT"])(accessTokenString);
+            const itString = await this.getKeyValueStorage().getItem(authKeys.idToken);
+            const idToken = itString ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["decodeJWT"])(itString) : undefined;
+            const refreshToken = await this.getKeyValueStorage().getItem(authKeys.refreshToken) ?? undefined;
+            const clockDriftString = await this.getKeyValueStorage().getItem(authKeys.clockDrift) ?? '0';
+            const clockDrift = Number.parseInt(clockDriftString);
+            const signInDetails = await this.getKeyValueStorage().getItem(authKeys.signInDetails);
+            const tokens = {
+                accessToken,
+                idToken,
+                refreshToken,
+                deviceMetadata: await this.getDeviceMetadata() ?? undefined,
+                clockDrift,
+                username: await this.getLastAuthUser()
+            };
+            if (signInDetails) {
+                tokens.signInDetails = JSON.parse(signInDetails);
+            }
+            return tokens;
+        } catch (err) {
+            return null;
+        }
+    }
+    async storeTokens(tokens) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$errorHelpers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assert"])(tokens !== undefined, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$errorHelpers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["TokenProviderErrorCode"].InvalidAuthTokens);
+        const lastAuthUser = tokens.username;
+        await this.getKeyValueStorage().setItem(this.getLastAuthUserKey(), lastAuthUser);
+        const authKeys = await this.getAuthKeys();
+        await this.getKeyValueStorage().setItem(authKeys.accessToken, tokens.accessToken.toString());
+        if (tokens.idToken) {
+            await this.getKeyValueStorage().setItem(authKeys.idToken, tokens.idToken.toString());
+        } else {
+            await this.getKeyValueStorage().removeItem(authKeys.idToken);
+        }
+        if (tokens.refreshToken) {
+            await this.getKeyValueStorage().setItem(authKeys.refreshToken, tokens.refreshToken);
+        } else {
+            await this.getKeyValueStorage().removeItem(authKeys.refreshToken);
+        }
+        if (tokens.deviceMetadata) {
+            if (tokens.deviceMetadata.deviceKey) {
+                await this.getKeyValueStorage().setItem(authKeys.deviceKey, tokens.deviceMetadata.deviceKey);
+            }
+            if (tokens.deviceMetadata.deviceGroupKey) {
+                await this.getKeyValueStorage().setItem(authKeys.deviceGroupKey, tokens.deviceMetadata.deviceGroupKey);
+            }
+            await this.getKeyValueStorage().setItem(authKeys.randomPasswordKey, tokens.deviceMetadata.randomPassword);
+        }
+        if (tokens.signInDetails) {
+            await this.getKeyValueStorage().setItem(authKeys.signInDetails, JSON.stringify(tokens.signInDetails));
+        } else {
+            await this.getKeyValueStorage().removeItem(authKeys.signInDetails);
+        }
+        await this.getKeyValueStorage().setItem(authKeys.clockDrift, `${tokens.clockDrift}`);
+    }
+    async clearTokens() {
+        const authKeys = await this.getAuthKeys();
+        // Not calling clear because it can remove data that is not managed by AuthTokenStore
+        await Promise.all([
+            this.getKeyValueStorage().removeItem(authKeys.accessToken),
+            this.getKeyValueStorage().removeItem(authKeys.idToken),
+            this.getKeyValueStorage().removeItem(authKeys.clockDrift),
+            this.getKeyValueStorage().removeItem(authKeys.refreshToken),
+            this.getKeyValueStorage().removeItem(authKeys.signInDetails),
+            this.getKeyValueStorage().removeItem(this.getLastAuthUserKey()),
+            this.getKeyValueStorage().removeItem(authKeys.oauthMetadata)
+        ]);
+    }
+    async getDeviceMetadata(username) {
+        const authKeys = await this.getAuthKeys(username);
+        const deviceKey = await this.getKeyValueStorage().getItem(authKeys.deviceKey);
+        const deviceGroupKey = await this.getKeyValueStorage().getItem(authKeys.deviceGroupKey);
+        const randomPassword = await this.getKeyValueStorage().getItem(authKeys.randomPasswordKey);
+        return randomPassword && deviceGroupKey && deviceKey ? {
+            deviceKey,
+            deviceGroupKey,
+            randomPassword
+        } : null;
+    }
+    async clearDeviceMetadata(username) {
+        const authKeys = await this.getAuthKeys(username);
+        await Promise.all([
+            this.getKeyValueStorage().removeItem(authKeys.deviceKey),
+            this.getKeyValueStorage().removeItem(authKeys.deviceGroupKey),
+            this.getKeyValueStorage().removeItem(authKeys.randomPasswordKey)
+        ]);
+    }
+    async getAuthKeys(username) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.authConfig?.Cognito);
+        const lastAuthUser = username ?? await this.getLastAuthUser();
+        return createKeysForAuthStorage(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AUTH_KEY_PREFIX"], `${this.authConfig.Cognito.userPoolClientId}.${lastAuthUser}`);
+    }
+    getLastAuthUserKey() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.authConfig?.Cognito);
+        const identifier = this.authConfig.Cognito.userPoolClientId;
+        return `${__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AUTH_KEY_PREFIX"]}.${identifier}.LastAuthUser`;
+    }
+    async getLastAuthUser() {
+        const lastAuthUser = await this.getKeyValueStorage().getItem(this.getLastAuthUserKey()) ?? 'username';
+        return lastAuthUser;
+    }
+    async setOAuthMetadata(metadata) {
+        const { oauthMetadata: oauthMetadataKey } = await this.getAuthKeys();
+        await this.getKeyValueStorage().setItem(oauthMetadataKey, JSON.stringify(metadata));
+    }
+    async getOAuthMetadata() {
+        const { oauthMetadata: oauthMetadataKey } = await this.getAuthKeys();
+        const oauthMetadata = await this.getKeyValueStorage().getItem(oauthMetadataKey);
+        return oauthMetadata && JSON.parse(oauthMetadata);
+    }
+}
+const createKeysForAuthStorage = (provider, identifier)=>{
+    return getAuthStorageKeys(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthTokenStorageKeys"])(`${provider}`, identifier);
+};
+function getAuthStorageKeys(authKeys) {
+    const keys = Object.values({
+        ...authKeys
+    });
+    return (prefix, identifier)=>keys.reduce((acc, authKey)=>({
+                ...acc,
+                [authKey]: `${prefix}.${identifier}.${authKey}`
+            }), {});
+}
+;
+ //# sourceMappingURL=TokenStore.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/types.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "IdentityIdStorageKeys",
+    ()=>IdentityIdStorageKeys
+]);
+const IdentityIdStorageKeys = {
+    identityId: 'identityId'
+};
+;
+ //# sourceMappingURL=types.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/IdentityIdStore.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "DefaultIdentityIdStore",
+    ()=>DefaultIdentityIdStore
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Logger$2f$ConsoleLogger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/Logger/ConsoleLogger.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/TokenStore.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/types.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const logger = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Logger$2f$ConsoleLogger$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["ConsoleLogger"]('DefaultIdentityIdStore');
+class DefaultIdentityIdStore {
+    setAuthConfig(authConfigParam) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertIdentityPoolIdConfig"])(authConfigParam.Cognito);
+        this.authConfig = authConfigParam;
+        this._authKeys = createKeysForAuthStorage('Cognito', authConfigParam.Cognito.identityPoolId);
+    }
+    constructor(keyValueStorage){
+        this._authKeys = {};
+        this._hasGuestIdentityId = false;
+        this.keyValueStorage = keyValueStorage;
+    }
+    async loadIdentityId() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertIdentityPoolIdConfig"])(this.authConfig?.Cognito);
+        try {
+            if (this._primaryIdentityId) {
+                return {
+                    id: this._primaryIdentityId,
+                    type: 'primary'
+                };
+            } else {
+                const storedIdentityId = await this.keyValueStorage.getItem(this._authKeys.identityId);
+                if (storedIdentityId) {
+                    this._hasGuestIdentityId = true;
+                    return {
+                        id: storedIdentityId,
+                        type: 'guest'
+                    };
+                }
+                return null;
+            }
+        } catch (err) {
+            logger.log('Error getting stored IdentityId.', err);
+            return null;
+        }
+    }
+    async storeIdentityId(identity) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertIdentityPoolIdConfig"])(this.authConfig?.Cognito);
+        if (identity.type === 'guest') {
+            this.keyValueStorage.setItem(this._authKeys.identityId, identity.id);
+            // Clear in-memory storage of primary identityId
+            this._primaryIdentityId = undefined;
+            this._hasGuestIdentityId = true;
+        } else {
+            this._primaryIdentityId = identity.id;
+            // Clear locally stored guest id
+            if (this._hasGuestIdentityId) {
+                this.keyValueStorage.removeItem(this._authKeys.identityId);
+                this._hasGuestIdentityId = false;
+            }
+        }
+    }
+    async clearIdentityId() {
+        this._primaryIdentityId = undefined;
+        await this.keyValueStorage.removeItem(this._authKeys.identityId);
+    }
+}
+const createKeysForAuthStorage = (provider, identifier)=>{
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getAuthStorageKeys"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["IdentityIdStorageKeys"])(`com.amplify.${provider}`, identifier);
+};
+;
+ //# sourceMappingURL=IdentityIdStore.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/index.mjs [app-route] (ecmascript) <locals>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cognitoCredentialsProvider",
+    ()=>cognitoCredentialsProvider
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/storage/index.mjs [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$IdentityIdStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/IdentityIdStore.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$credentialsProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/credentialsProvider.mjs [app-route] (ecmascript)");
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * Cognito specific implmentation of the CredentialsProvider interface
+ * that manages setting and getting of AWS Credentials.
+ *
+ * @throws configuration expections: `InvalidIdentityPoolIdException`
+ *  - Auth errors that may arise from misconfiguration.
+ * @throws service expections: {@link GetCredentialsForIdentityException}, {@link GetIdException}
+ *
+ */ const cognitoCredentialsProvider = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$credentialsProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["CognitoAWSCredentialsAndIdentityIdProvider"](new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$IdentityIdStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DefaultIdentityIdStore"](__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["defaultStorage"]));
+;
+ //# sourceMappingURL=index.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/constants.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * The service name used to sign requests if the API requires authentication.
+ */ __turbopack_context__.s([
+    "COGNITO_IDP_SERVICE_NAME",
+    ()=>COGNITO_IDP_SERVICE_NAME
+]);
+const COGNITO_IDP_SERVICE_NAME = 'cognito-idp';
+;
+ //# sourceMappingURL=constants.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/cognitoUserPoolEndpointResolver.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cognitoUserPoolEndpointResolver",
+    ()=>cognitoUserPoolEndpointResolver
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$endpoints$2f$getDnsSuffix$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/endpoints/getDnsSuffix.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/amplifyUrl/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/constants.mjs [app-route] (ecmascript)");
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const cognitoUserPoolEndpointResolver = ({ region })=>({
+        url: new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyUrl"](`https://${__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["COGNITO_IDP_SERVICE_NAME"]}.${region}.${(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$endpoints$2f$getDnsSuffix$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getDnsSuffix"])(region)}`)
+    });
+;
+ //# sourceMappingURL=cognitoUserPoolEndpointResolver.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/factories/createCognitoUserPoolEndpointResolver.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "createCognitoUserPoolEndpointResolver",
+    ()=>createCognitoUserPoolEndpointResolver
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/amplifyUrl/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$cognitoUserPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/cognitoUserPoolEndpointResolver.mjs [app-route] (ecmascript)");
+;
+;
+const createCognitoUserPoolEndpointResolver = ({ endpointOverride })=>(input)=>{
+        if (endpointOverride) {
+            return {
+                url: new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$amplifyUrl$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyUrl"](endpointOverride)
+            };
+        }
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$cognitoUserPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoUserPoolEndpointResolver"])(input);
+    };
+;
+ //# sourceMappingURL=createCognitoUserPoolEndpointResolver.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/shared/serde/createUserPoolSerializer.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "createUserPoolSerializer",
+    ()=>createUserPoolSerializer
+]);
+const createUserPoolSerializer = (operation)=>(input, endpoint)=>{
+        const headers = getSharedHeaders(operation);
+        const body = JSON.stringify(input);
+        return buildHttpRpcRequest(endpoint, headers, body);
+    };
+const getSharedHeaders = (operation)=>({
+        'content-type': 'application/x-amz-json-1.1',
+        'x-amz-target': `AWSCognitoIdentityProviderService.${operation}`
+    });
+const buildHttpRpcRequest = ({ url }, headers, body)=>({
+        headers,
+        url,
+        body,
+        method: 'POST'
+    });
+;
+ //# sourceMappingURL=createUserPoolSerializer.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/shared/serde/createUserPoolDeserializer.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "createUserPoolDeserializer",
+    ()=>createUserPoolDeserializer
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/serde/json.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/utils/assertServiceError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const createUserPoolDeserializer = ()=>async (response)=>{
+        if (response.statusCode >= 300) {
+            const error = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseJsonError"])(response);
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertServiceError"])(error);
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                name: error.name,
+                message: error.message,
+                metadata: error.$metadata
+            });
+        }
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseJsonBody"])(response);
+    };
+;
+ //# sourceMappingURL=createUserPoolDeserializer.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/shared/handler/cognitoUserPoolTransferHandler.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cognitoUserPoolTransferHandler",
+    ()=>cognitoUserPoolTransferHandler
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/internal/composeTransferHandler.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$handlers$2f$aws$2f$unauthenticated$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/handlers/aws/unauthenticated.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * A Cognito Identity-specific middleware that disables caching for all requests.
+ */ const disableCacheMiddlewareFactory = ()=>(next, _)=>async function disableCacheMiddleware(request) {
+            request.headers['cache-control'] = 'no-store';
+            return next(request);
+        };
+/**
+ * A Cognito Identity-specific transfer handler that does NOT sign requests, and
+ * disables caching.
+ *
+ * @internal
+ */ const cognitoUserPoolTransferHandler = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["composeTransferHandler"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$handlers$2f$aws$2f$unauthenticated$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["unauthenticatedHandler"], [
+    disableCacheMiddlewareFactory
+]);
+;
+ //# sourceMappingURL=cognitoUserPoolTransferHandler.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/constants.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "DEFAULT_SERVICE_CLIENT_API_CONFIG",
+    ()=>DEFAULT_SERVICE_CLIENT_API_CONFIG
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$defaultRetryDecider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/retry/defaultRetryDecider.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/serde/json.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$jitteredBackoff$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/middleware/retry/jitteredBackoff.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Platform$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/Platform/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/constants.mjs [app-route] (ecmascript)");
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const DEFAULT_SERVICE_CLIENT_API_CONFIG = {
+    service: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["COGNITO_IDP_SERVICE_NAME"],
+    retryDecider: (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$defaultRetryDecider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getRetryDecider"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$serde$2f$json$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseJsonError"]),
+    computeDelay: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$middleware$2f$retry$2f$jitteredBackoff$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["jitteredBackoff"],
+    get userAgentValue () {
+        return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Platform$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getAmplifyUserAgent"])();
+    },
+    cache: 'no-store'
+};
+;
+ //# sourceMappingURL=constants.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/createGetTokensFromRefreshTokenClient.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "createGetTokensFromRefreshTokenClient",
+    ()=>createGetTokensFromRefreshTokenClient
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeServiceApi$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/clients/internal/composeServiceApi.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$shared$2f$serde$2f$createUserPoolSerializer$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/shared/serde/createUserPoolSerializer.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$shared$2f$serde$2f$createUserPoolDeserializer$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/shared/serde/createUserPoolDeserializer.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$shared$2f$handler$2f$cognitoUserPoolTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/shared/handler/cognitoUserPoolTransferHandler.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/constants.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const createGetTokensFromRefreshTokenClient = (config)=>(0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$clients$2f$internal$2f$composeServiceApi$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["composeServiceApi"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$shared$2f$handler$2f$cognitoUserPoolTransferHandler$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoUserPoolTransferHandler"], (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$shared$2f$serde$2f$createUserPoolSerializer$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createUserPoolSerializer"])('GetTokensFromRefreshToken'), (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$shared$2f$serde$2f$createUserPoolDeserializer$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createUserPoolDeserializer"])(), {
+        ...__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$constants$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DEFAULT_SERVICE_CLIENT_API_CONFIG"],
+        ...config
+    });
+;
+ //# sourceMappingURL=createGetTokensFromRefreshTokenClient.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/refreshAuthTokens.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "refreshAuthTokens",
+    ()=>refreshAuthTokens,
+    "refreshAuthTokensWithoutDedupe",
+    ()=>refreshAuthTokensWithoutDedupe
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$deDupeAsyncFunction$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/deDupeAsyncFunction.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/parsers/regionParsers.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/types.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoUserPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/factories/createCognitoUserPoolEndpointResolver.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$createGetTokensFromRefreshTokenClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/foundation/factories/serviceClients/cognitoIdentityProvider/createGetTokensFromRefreshTokenClient.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const refreshAuthTokensFunction = async ({ tokens, authConfig, username })=>{
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(authConfig?.Cognito);
+    const { userPoolId, userPoolClientId, userPoolEndpoint } = authConfig.Cognito;
+    const region = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$parsers$2f$regionParsers$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getRegionFromUserPoolId"])(userPoolId);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertAuthTokensWithRefreshToken"])(tokens);
+    const getTokensFromRefreshToken = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$foundation$2f$factories$2f$serviceClients$2f$cognitoIdentityProvider$2f$createGetTokensFromRefreshTokenClient$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createGetTokensFromRefreshTokenClient"])({
+        endpointResolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$factories$2f$createCognitoUserPoolEndpointResolver$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createCognitoUserPoolEndpointResolver"])({
+            endpointOverride: userPoolEndpoint
+        })
+    });
+    const { AuthenticationResult } = await getTokensFromRefreshToken({
+        region
+    }, {
+        ClientId: userPoolClientId,
+        RefreshToken: tokens.refreshToken,
+        DeviceKey: tokens.deviceMetadata?.deviceKey
+    });
+    const accessToken = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["decodeJWT"])(AuthenticationResult?.AccessToken ?? '');
+    const idToken = AuthenticationResult?.IdToken ? (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["decodeJWT"])(AuthenticationResult.IdToken) : undefined;
+    const { iat } = accessToken.payload;
+    // This should never happen. If it does, it's a bug from the service.
+    if (!iat) {
+        throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+            name: 'iatNotFoundException',
+            message: 'iat not found in access token'
+        });
+    }
+    const clockDrift = iat * 1000 - new Date().getTime();
+    return {
+        accessToken,
+        idToken,
+        clockDrift,
+        refreshToken: AuthenticationResult?.RefreshToken ?? tokens.refreshToken,
+        username
+    };
+};
+const refreshAuthTokens = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$deDupeAsyncFunction$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["deDupeAsyncFunction"])(refreshAuthTokensFunction);
+const refreshAuthTokensWithoutDedupe = refreshAuthTokensFunction;
+;
+ //# sourceMappingURL=refreshAuthTokens.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/signInWithRedirectStore.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "DefaultOAuthStore",
+    ()=>DefaultOAuthStore
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/TokenStore.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/types.mjs [app-route] (ecmascript)");
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const V5_HOSTED_UI_KEY = 'amplify-signin-with-hostedUI';
+const name = 'CognitoIdentityServiceProvider';
+class DefaultOAuthStore {
+    constructor(keyValueStorage){
+        this.keyValueStorage = keyValueStorage;
+    }
+    async clearOAuthInflightData() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        await Promise.all([
+            this.keyValueStorage.removeItem(authKeys.inflightOAuth),
+            this.keyValueStorage.removeItem(authKeys.oauthPKCE),
+            this.keyValueStorage.removeItem(authKeys.oauthState)
+        ]);
+    }
+    async clearOAuthData() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        await this.clearOAuthInflightData();
+        await this.keyValueStorage.removeItem(V5_HOSTED_UI_KEY); // remove in case a customer migrated an App from v5 to v6
+        return this.keyValueStorage.removeItem(authKeys.oauthSignIn);
+    }
+    loadOAuthState() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        return this.keyValueStorage.getItem(authKeys.oauthState);
+    }
+    storeOAuthState(state) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        return this.keyValueStorage.setItem(authKeys.oauthState, state);
+    }
+    loadPKCE() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        return this.keyValueStorage.getItem(authKeys.oauthPKCE);
+    }
+    storePKCE(pkce) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        return this.keyValueStorage.setItem(authKeys.oauthPKCE, pkce);
+    }
+    setAuthConfig(authConfigParam) {
+        this.cognitoConfig = authConfigParam;
+    }
+    async loadOAuthInFlight() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        return await this.keyValueStorage.getItem(authKeys.inflightOAuth) === 'true';
+    }
+    async storeOAuthInFlight(inflight) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        await this.keyValueStorage.setItem(authKeys.inflightOAuth, `${inflight}`);
+    }
+    async loadOAuthSignIn() {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        const isLegacyHostedUISignIn = await this.keyValueStorage.getItem(V5_HOSTED_UI_KEY);
+        const [isOAuthSignIn, preferPrivateSession] = (await this.keyValueStorage.getItem(authKeys.oauthSignIn))?.split(',') ?? [];
+        return {
+            isOAuthSignIn: isOAuthSignIn === 'true' || isLegacyHostedUISignIn === 'true',
+            preferPrivateSession: preferPrivateSession === 'true'
+        };
+    }
+    async storeOAuthSignIn(oauthSignIn, preferPrivateSession = false) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.cognitoConfig);
+        const authKeys = createKeysForAuthStorage(name, this.cognitoConfig.userPoolClientId);
+        await this.keyValueStorage.setItem(authKeys.oauthSignIn, `${oauthSignIn},${preferPrivateSession}`);
+    }
+}
+const createKeysForAuthStorage = (provider, identifier)=>{
+    return (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["getAuthStorageKeys"])(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$types$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["OAuthStorageKeys"])(provider, identifier);
+};
+;
+ //# sourceMappingURL=signInWithRedirectStore.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/oauth/oAuthStore.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "oAuthStore",
+    ()=>oAuthStore
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/storage/index.mjs [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$signInWithRedirectStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/signInWithRedirectStore.mjs [app-route] (ecmascript)");
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const oAuthStore = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$signInWithRedirectStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DefaultOAuthStore"](__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["defaultStorage"]);
+;
+ //# sourceMappingURL=oAuthStore.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/oauth/inflightPromise.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+__turbopack_context__.s([
+    "addInflightPromise",
+    ()=>addInflightPromise,
+    "resolveAndClearInflightPromises",
+    ()=>resolveAndClearInflightPromises
+]);
+const inflightPromises = [];
+const addInflightPromise = (resolver)=>{
+    inflightPromises.push(resolver);
+};
+const resolveAndClearInflightPromises = ()=>{
+    while(inflightPromises.length){
+        inflightPromises.pop()?.();
+    }
+};
+;
+ //# sourceMappingURL=inflightPromise.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/TokenOrchestrator.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "TokenOrchestrator",
+    ()=>TokenOrchestrator
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Hub$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/Hub/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$isBrowser$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/isBrowser.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Auth/utils/index.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$isTokenExpired$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/isTokenExpired.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$types$2f$errors$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/types/errors.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/utils/assertServiceError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/errors/AuthError.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$oauth$2f$oAuthStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/oauth/oAuthStore.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$oauth$2f$inflightPromise$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/oauth/inflightPromise.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+class TokenOrchestrator {
+    constructor(){
+        this.waitForInflightOAuth = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$isBrowser$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isBrowser"])() ? async ()=>{
+            if (!await __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$oauth$2f$oAuthStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["oAuthStore"].loadOAuthInFlight()) {
+                return;
+            }
+            if (this.inflightPromise) {
+                return this.inflightPromise;
+            }
+            // when there is valid oauth config and there is an inflight oauth flow, try
+            // to block async calls that require fetching tokens before the oauth flow completes
+            // e.g. getCurrentUser, fetchAuthSession etc.
+            this.inflightPromise = new Promise((resolve, _reject)=>{
+                (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$oauth$2f$inflightPromise$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["addInflightPromise"])(resolve);
+            });
+            return this.inflightPromise;
+        } : async ()=>{
+        // no-op for non-browser environments
+        };
+    }
+    setAuthConfig(authConfig) {
+        __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$oauth$2f$oAuthStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["oAuthStore"].setAuthConfig(authConfig.Cognito);
+        this.authConfig = authConfig;
+    }
+    setTokenRefresher(tokenRefresher) {
+        this.tokenRefresher = tokenRefresher;
+    }
+    setAuthTokenStore(tokenStore) {
+        this.tokenStore = tokenStore;
+    }
+    getTokenStore() {
+        if (!this.tokenStore) {
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                name: 'EmptyTokenStoreException',
+                message: 'TokenStore not set'
+            });
+        }
+        return this.tokenStore;
+    }
+    getTokenRefresher() {
+        if (!this.tokenRefresher) {
+            throw new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$AuthError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AuthError"]({
+                name: 'EmptyTokenRefresherException',
+                message: 'TokenRefresher not set'
+            });
+        }
+        return this.tokenRefresher;
+    }
+    async getTokens(options) {
+        let tokens;
+        try {
+            (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Auth$2f$utils$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertTokenProviderConfig"])(this.authConfig?.Cognito);
+        } catch (_err) {
+            // Token provider not configured
+            return null;
+        }
+        await this.waitForInflightOAuth();
+        this.inflightPromise = undefined;
+        tokens = await this.getTokenStore().loadTokens();
+        const username = await this.getTokenStore().getLastAuthUser();
+        if (tokens === null) {
+            return null;
+        }
+        const idTokenExpired = !!tokens?.idToken && (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$isTokenExpired$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isTokenExpired"])({
+            expiresAt: (tokens.idToken?.payload?.exp ?? 0) * 1000,
+            clockDrift: tokens.clockDrift ?? 0
+        });
+        const accessTokenExpired = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$isTokenExpired$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["isTokenExpired"])({
+            expiresAt: (tokens.accessToken?.payload?.exp ?? 0) * 1000,
+            clockDrift: tokens.clockDrift ?? 0
+        });
+        if (options?.forceRefresh || idTokenExpired || accessTokenExpired) {
+            tokens = await this.refreshTokens({
+                tokens,
+                username
+            });
+            if (tokens === null) {
+                return null;
+            }
+        }
+        return {
+            accessToken: tokens?.accessToken,
+            idToken: tokens?.idToken,
+            signInDetails: tokens?.signInDetails
+        };
+    }
+    async refreshTokens({ tokens, username }) {
+        try {
+            const { signInDetails } = tokens;
+            const newTokens = await this.getTokenRefresher()({
+                tokens,
+                authConfig: this.authConfig,
+                username
+            });
+            newTokens.signInDetails = signInDetails;
+            await this.setTokens({
+                tokens: newTokens
+            });
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Hub$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Hub"].dispatch('auth', {
+                event: 'tokenRefresh'
+            }, 'Auth', __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Hub$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AMPLIFY_SYMBOL"]);
+            return newTokens;
+        } catch (err) {
+            return this.handleErrors(err);
+        }
+    }
+    handleErrors(err) {
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$errors$2f$utils$2f$assertServiceError$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["assertServiceError"])(err);
+        if (err.name !== __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$types$2f$errors$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AmplifyErrorCode"].NetworkError) {
+            // TODO(v6): Check errors on client
+            this.clearTokens();
+        }
+        __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Hub$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Hub"].dispatch('auth', {
+            event: 'tokenRefresh_failure',
+            data: {
+                error: err
+            }
+        }, 'Auth', __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$Hub$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["AMPLIFY_SYMBOL"]);
+        if (err.name.startsWith('NotAuthorizedException')) {
+            return null;
+        }
+        throw err;
+    }
+    async setTokens({ tokens }) {
+        return this.getTokenStore().storeTokens(tokens);
+    }
+    async clearTokens() {
+        return this.getTokenStore().clearTokens();
+    }
+    getDeviceMetadata(username) {
+        return this.getTokenStore().getDeviceMetadata(username);
+    }
+    clearDeviceMetadata(username) {
+        return this.getTokenStore().clearDeviceMetadata(username);
+    }
+    setOAuthMetadata(metadata) {
+        return this.getTokenStore().setOAuthMetadata(metadata);
+    }
+    getOAuthMetadata() {
+        return this.getTokenStore().getOAuthMetadata();
+    }
+}
+;
+ //# sourceMappingURL=TokenOrchestrator.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/CognitoUserPoolsTokenProvider.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "CognitoUserPoolsTokenProvider",
+    ()=>CognitoUserPoolsTokenProvider
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/storage/index.mjs [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$refreshAuthTokens$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/utils/refreshAuthTokens.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/TokenStore.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenOrchestrator$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/TokenOrchestrator.mjs [app-route] (ecmascript)");
+;
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+class CognitoUserPoolsTokenProvider {
+    constructor(){
+        this.authTokenStore = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DefaultTokenStore"]();
+        this.authTokenStore.setKeyValueStorage(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["defaultStorage"]);
+        this.tokenOrchestrator = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$TokenOrchestrator$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["TokenOrchestrator"]();
+        this.tokenOrchestrator.setAuthTokenStore(this.authTokenStore);
+        this.tokenOrchestrator.setTokenRefresher(__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$utils$2f$refreshAuthTokens$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["refreshAuthTokens"]);
+    }
+    getTokens({ forceRefresh } = {
+        forceRefresh: false
+    }) {
+        return this.tokenOrchestrator.getTokens({
+            forceRefresh
+        });
+    }
+    setKeyValueStorage(keyValueStorage) {
+        this.authTokenStore.setKeyValueStorage(keyValueStorage);
+    }
+    setAuthConfig(authConfig) {
+        this.authTokenStore.setAuthConfig(authConfig);
+        this.tokenOrchestrator.setAuthConfig(authConfig);
+    }
+}
+;
+ //# sourceMappingURL=CognitoUserPoolsTokenProvider.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/tokenProvider.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "cognitoUserPoolsTokenProvider",
+    ()=>cognitoUserPoolsTokenProvider,
+    "tokenOrchestrator",
+    ()=>tokenOrchestrator
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$CognitoUserPoolsTokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/CognitoUserPoolsTokenProvider.mjs [app-route] (ecmascript)");
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+/**
+ * The default provider for the JWT access token and ID token issued from the configured Cognito user pool. It manages
+ * the refresh and storage of the tokens. It stores the tokens in `window.localStorage` if available, and falls back to
+ * in-memory storage if not.
+ */ const cognitoUserPoolsTokenProvider = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$CognitoUserPoolsTokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["CognitoUserPoolsTokenProvider"]();
+const { tokenOrchestrator } = cognitoUserPoolsTokenProvider;
+;
+ //# sourceMappingURL=tokenProvider.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/aws-amplify/dist/esm/initSingleton.mjs [app-route] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "DefaultAmplify",
+    ()=>DefaultAmplify
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/singleton/Amplify.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$CookieStorage$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/storage/CookieStorage.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/storage/index.mjs [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$parseAmplifyConfig$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/core/dist/esm/utils/parseAmplifyConfig.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$credentialsProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/credentialsProvider.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$IdentityIdStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/IdentityIdStore.mjs [app-route] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/credentialsProvider/index.mjs [app-route] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$tokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/@aws-amplify/auth/dist/esm/providers/cognito/tokenProvider/tokenProvider.mjs [app-route] (ecmascript)");
+;
+;
+;
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+const DefaultAmplify = {
+    /**
+     * Configures Amplify with the {@link resourceConfig} and {@link libraryOptions}.
+     *
+     * @param resourceConfig The {@link ResourcesConfig} object that is typically imported from the
+     * `amplifyconfiguration.json` file. It can also be an object literal created inline when calling `Amplify.configure`.
+     * @param libraryOptions The {@link LibraryOptions} additional options for the library.
+     *
+     * @example
+     * import config from './amplifyconfiguration.json';
+     *
+     * Amplify.configure(config);
+     */ configure (resourceConfig, libraryOptions) {
+        const resolvedResourceConfig = (0, __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$utils$2f$parseAmplifyConfig$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["parseAmplifyConfig"])(resourceConfig);
+        const cookieBasedKeyValueStorage = new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$CookieStorage$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["CookieStorage"]({
+            sameSite: 'lax'
+        });
+        const resolvedKeyValueStorage = libraryOptions?.ssr ? cookieBasedKeyValueStorage : __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$storage$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["defaultStorage"];
+        const resolvedCredentialsProvider = libraryOptions?.ssr ? new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$credentialsProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["CognitoAWSCredentialsAndIdentityIdProvider"](new __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$IdentityIdStore$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DefaultIdentityIdStore"](cookieBasedKeyValueStorage)) : __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$credentialsProvider$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__$3c$locals$3e$__["cognitoCredentialsProvider"];
+        // If no Auth config is provided, no special handling will be required, configure as is.
+        // Otherwise, we can assume an Auth config is provided from here on.
+        if (!resolvedResourceConfig.Auth) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].configure(resolvedResourceConfig, libraryOptions);
+            return;
+        }
+        // If Auth options are provided, always just configure as is.
+        // Otherwise, we can assume no Auth libraryOptions were provided from here on.
+        if (libraryOptions?.Auth) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].configure(resolvedResourceConfig, libraryOptions);
+            return;
+        }
+        // If no Auth libraryOptions were previously configured, then always add default providers.
+        if (!__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].libraryOptions.Auth) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$tokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoUserPoolsTokenProvider"].setAuthConfig(resolvedResourceConfig.Auth);
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$tokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoUserPoolsTokenProvider"].setKeyValueStorage(// TODO: allow configure with a public interface
+            resolvedKeyValueStorage);
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].configure(resolvedResourceConfig, {
+                ...libraryOptions,
+                Auth: {
+                    tokenProvider: __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$tokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoUserPoolsTokenProvider"],
+                    credentialsProvider: resolvedCredentialsProvider
+                }
+            });
+            return;
+        }
+        // At this point, Auth libraryOptions would have been previously configured and no overriding
+        // Auth options were given, so we should preserve the currently configured Auth libraryOptions.
+        if (libraryOptions) {
+            const authLibraryOptions = __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].libraryOptions.Auth;
+            // If ssr is provided through libraryOptions, we should respect the intentional reconfiguration.
+            if (libraryOptions.ssr !== undefined) {
+                __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$auth$2f$dist$2f$esm$2f$providers$2f$cognito$2f$tokenProvider$2f$tokenProvider$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["cognitoUserPoolsTokenProvider"].setKeyValueStorage(// TODO: allow configure with a public interface
+                resolvedKeyValueStorage);
+                authLibraryOptions.credentialsProvider = resolvedCredentialsProvider;
+            }
+            __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].configure(resolvedResourceConfig, {
+                Auth: authLibraryOptions,
+                ...libraryOptions
+            });
+            return;
+        }
+        // Finally, if there were no libraryOptions given at all, we should simply not touch the currently
+        // configured libraryOptions.
+        __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].configure(resolvedResourceConfig);
+    },
+    /**
+     * Returns the {@link ResourcesConfig} object passed in as the `resourceConfig` parameter when calling
+     * `Amplify.configure`.
+     *
+     * @returns An {@link ResourcesConfig} object.
+     */ getConfig () {
+        return __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f40$aws$2d$amplify$2f$core$2f$dist$2f$esm$2f$singleton$2f$Amplify$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Amplify"].getConfig();
+    }
+};
+;
+ //# sourceMappingURL=initSingleton.mjs.map
+}),
+"[project]/christmas-store-registration/node_modules/aws-amplify/dist/esm/initSingleton.mjs [app-route] (ecmascript) <export DefaultAmplify as Amplify>", ((__turbopack_context__) => {
+"use strict";
+
+__turbopack_context__.s([
+    "Amplify",
+    ()=>__TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$aws$2d$amplify$2f$dist$2f$esm$2f$initSingleton$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["DefaultAmplify"]
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$christmas$2d$store$2d$registration$2f$node_modules$2f$aws$2d$amplify$2f$dist$2f$esm$2f$initSingleton$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/christmas-store-registration/node_modules/aws-amplify/dist/esm/initSingleton.mjs [app-route] (ecmascript)");
+}),
+];
+
+//# sourceMappingURL=6361e_bc9ccfff._.js.map

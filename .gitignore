@@ -2,3 +2,57 @@
 .aws/
 # Local environment files
 .env
+\n# Begin moved app .gitignore patterns
+# moved: # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# moved: 
+# moved: # dependencies
+# moved: /node_modules
+# moved: /.pnp
+# moved: .pnp.*
+# moved: .yarn/*
+# moved: !.yarn/patches
+# moved: !.yarn/plugins
+# moved: !.yarn/releases
+# moved: !.yarn/versions
+# moved: 
+# moved: # testing
+# moved: /coverage
+# moved: 
+# moved: # next.js
+# moved: /.next/
+# moved: /out/
+# moved: 
+# moved: # production
+# moved: /build
+# moved: 
+# moved: # misc
+# moved: .DS_Store
+# moved: *.pem
+# moved: 
+# moved: # debug
+# moved: npm-debug.log*
+# moved: yarn-debug.log*
+# moved: yarn-error.log*
+# moved: .pnpm-debug.log*
+# moved: 
+# moved: # env files (can opt-in for committing if needed)
+# moved: .env*
+# moved: 
+# moved: # vercel
+# moved: .vercel
+# moved: 
+# moved: # typescript
+# moved: *.tsbuildinfo
+# moved: next-env.d.ts
+# moved: 
+# moved: # amplify
+# moved: amplify_outputs.json
+# moved: .amplify/
+# moved: amplify/data/resource.ts.backup
+# moved: 
+# moved: # Local runtime artifacts
+# moved: .dev.log
+# moved: .dev.pid
+# moved: .sandbox.log
+# moved: .sandbox.pid
+# End moved app .gitignore patterns

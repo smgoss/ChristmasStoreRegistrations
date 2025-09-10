@@ -1,0 +1,1725 @@
+
+> christmas-store-registration@0.1.0 dev
+> next dev --turbopack -p 3004
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/stephengoss/GitHub/ChristmasStoreRegistrations/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/package-lock.json
+
+   ▲ Next.js 15.5.2 (Turbopack)
+   - Local:        http://localhost:3004
+   - Network:      http://172.16.227.207:3004
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 782ms
+ ○ Compiling / ...
+ ✓ Compiled / in 2.1s
+Amplify has not been configured. Please call Amplify.configure() before using this service.
+Amplify has not been configured. Please call Amplify.configure() before using this service.
+ GET / 200 in 2419ms
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ⨯ ./christmas-store-registration/src/lib/amplify.ts:2:1
+Module not found: Can't resolve '../../amplify_outputs.json'
+[0m [90m 1 |[39m [36mimport[39m { [33mAmplify[39m } [36mfrom[39m [32m'aws-amplify'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m outputs [36mfrom[39m [32m'../../amplify_outputs.json'[39m[33m;[39m
+ [90m   |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m
+ [90m 4 |[39m [90m// Single place to configure Amplify on both client/server where needed[39m
+ [90m 5 |[39m [36mif[39m ([33m![39m[33mAmplify[39m[33m.[39mgetConfig()[33m?[39m[33m.[39m[33mAuth[39m) {[0m
+
+
+
+Import traces:
+  Server Component:
+    ./christmas-store-registration/src/lib/amplify.ts
+    ./christmas-store-registration/src/app/layout.tsx
+
+  Client Component Browser:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component Browser]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./christmas-store-registration/src/lib/amplify.ts [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Client Component SSR]
+    ./christmas-store-registration/src/components/RegistrationForm.tsx [Server Component]
+    ./christmas-store-registration/src/app/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+ ✓ Compiled in 76ms
+ ✓ Compiled /_not-found/page in 355ms
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1345ms
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.iglqj8emxv'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.iglqj8emxv'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.mzmqqjx5xhi'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.mzmqqjx5xhi'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.vfi1ed2bpc'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.vfi1ed2bpc'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.knwd3jvb6'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.knwd3jvb6'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.rbc69o1hncg'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.rbc69o1hncg'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.h6mgig3nx1'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.h6mgig3nx1'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.vhtikxu17j'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.vhtikxu17j'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.j7tmlspzc6'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.j7tmlspzc6'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.ayzd5wc2lwb'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.ayzd5wc2lwb'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.83huoubrx3'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.83huoubrx3'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.jgb9dfkejh'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.jgb9dfkejh'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.ow7r4h3jbm'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.ow7r4h3jbm'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.72dj2zowzye'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.72dj2zowzye'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.d4d4z8w1lf'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.d4d4z8w1lf'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.n2ikmzrr44'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.n2ikmzrr44'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.przbje60p4b'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.przbje60p4b'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.7x7m3gy0rn4'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.7x7m3gy0rn4'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.8r4ainejxnj'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.8r4ainejxnj'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.i2forpai9df'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.i2forpai9df'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.3b5u7vtm4a'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.3b5u7vtm4a'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.4fv19f15vzp'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.4fv19f15vzp'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.7o4ib9lpjh'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.7o4ib9lpjh'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.btxoha2zncg'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.btxoha2zncg'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.n1tnbuvo1u'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.n1tnbuvo1u'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.cs8v2ce3gu8'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.cs8v2ce3gu8'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.pgockq082t'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.pgockq082t'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.c4pbmeyuctu'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.c4pbmeyuctu'
+}
+ ⨯ [Error [PageNotFoundError]: Cannot find module for page: route not found /_not-found/page] {
+  code: 'ENOENT'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.jponjl4ih2g'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.jponjl4ih2g'
+}
+ ⨯ [Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.pv1zo7tr2s'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.pv1zo7tr2s'
+}
+[Error: ENOENT: no such file or directory, open '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.s5zi2pu8jq'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/Users/stephengoss/GitHub/ChristmasStoreRegistrations/christmas-store-registration/.next/static/development/_buildManifest.js.tmp.s5zi2pu8jq'
+}
