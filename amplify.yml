@@ -15,44 +15,10 @@ applications:
               elif [ "$AWS_BRANCH" = "gray" ]; then
                 export NEXT_PUBLIC_LOCATION=location3
               fi
-            # Generate production backend configuration for each campus branch
+            # Use sandbox backend configuration for all branches temporarily
             - |
-              echo "[Backend] Generating production config for branch: $AWS_BRANCH"
-              if [ "$AWS_BRANCH" = "gray" ]; then
-                cat > amplify_outputs.json << 'EOL'
-              {
-                "auth": {
-                  "user_pool_id": "us-east-1_XqeAJa9YW",
-                  "aws_region": "us-east-1",
-                  "user_pool_client_id": "4i3908r7f00n57gae6nvhttuj0",
-                  "identity_pool_id": "us-east-1:51af273a-b309-488f-ba7d-3483f085cd35",
-                  "mfa_methods": [],
-                  "standard_required_attributes": ["email"],
-                  "username_attributes": ["email"],
-                  "user_verification_types": ["email"],
-                  "mfa_configuration": "NONE",
-                  "password_policy": {
-                    "min_length": 8,
-                    "require_lowercase": true,
-                    "require_numbers": true,
-                    "require_symbols": true,
-                    "require_uppercase": true
-                  },
-                  "unauthenticated_identities_enabled": true
-                },
-                "data": {
-                  "url": "https://s6n7b4p7djbgrdfek3adtxwvaa.appsync-api.us-east-1.amazonaws.com/graphql",
-                  "aws_region": "us-east-1",
-                  "api_key": "da2-oqndi7wn4jgjhjbr7kcazszfsa",
-                  "default_authorization_type": "API_KEY",
-                  "authorization_types": ["AMAZON_COGNITO_USER_POOLS", "AWS_IAM"]
-                },
-                "version": "1.4"
-              }
-              EOL
-              else
-                echo "[Backend] Using development/sandbox config for non-gray branches"
-                cat > amplify_outputs.json << 'EOL'
+              echo "[Backend] Using sandbox backend configuration for all branches"
+              cat > amplify_outputs.json << 'EOL'
               {
                 "auth": {
                   "user_pool_id": "us-east-1_vwgchbYC8",
@@ -83,7 +49,6 @@ applications:
                 "version": "1.4"
               }
               EOL
-              fi
             - cp amplify_outputs.json public/amplify_outputs.json
         build:
           commands:
