@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import '@/lib/amplify';
+
 const client = generateClient<Schema>();
 
 interface Registration {
@@ -16,7 +18,9 @@ interface Registration {
   isCancelled: boolean;
 }
 
-export default function CancelPage({ params }: { params: { token: string } }) {
+export default function CancelPage() {
+  const params = useParams();
+  const token = params.token as string;
   const [registration, setRegistration] = useState<Registration | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -24,13 +28,15 @@ export default function CancelPage({ params }: { params: { token: string } }) {
   const [cancelled, setCancelled] = useState(false);
 
   useEffect(() => {
-    loadRegistration();
-  }, []);
+    if (token) {
+      loadRegistration();
+    }
+  }, [token]);
 
   const loadRegistration = async () => {
     try {
       const { data: registrations } = await client.models.Registration.list({
-        filter: { confirmationToken: { eq: params.token } }
+        filter: { confirmationToken: { eq: token } }
       });
 
       if (registrations && registrations.length > 0) {
@@ -103,7 +109,7 @@ export default function CancelPage({ params }: { params: { token: string } }) {
               <div className="text-3xl mb-2">😔</div>
               <p className="text-lg font-semibold">{message}</p>
               <p className="text-sm mt-4 text-orange-700">
-                If you change your mind, please contact us and we\u2019ll help you get back on the list if there\u2019s space available.
+                If you change your mind, please contact us and we'll help you get back on the list if there's space available.
               </p>
             </div>
           ) : message && !registration ? (
@@ -146,7 +152,7 @@ export default function CancelPage({ params }: { params: { token: string } }) {
                   Changed your mind? 
                 </p>
                 <a
-                  href={`/confirm/${params.token}`}
+                  href={`/confirm/${token}`}
                   className="text-green-600 hover:text-green-700 underline font-medium"
                 >
                   Click here to confirm your attendance instead
@@ -156,7 +162,7 @@ export default function CancelPage({ params }: { params: { token: string } }) {
           ) : null}
 
           <div className="text-center mt-8 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">🎅 Questions? Contact us and we\u2019ll be happy to help! 🤶</p>
+            <p className="text-sm text-gray-500">🎅 Questions? Contact us and we'll be happy to help! 🤶</p>
           </div>
         </div>
       </div>

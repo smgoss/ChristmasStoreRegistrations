@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import '@/lib/amplify';
@@ -16,7 +17,9 @@ interface Registration {
   isCancelled: boolean;
 }
 
-export default function ConfirmPage({ params }: { params: { token: string } }) {
+export default function ConfirmPage() {
+  const params = useParams();
+  const token = params.token as string;
   const [registration, setRegistration] = useState<Registration | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
@@ -24,13 +27,15 @@ export default function ConfirmPage({ params }: { params: { token: string } }) {
   const [confirmed, setConfirmed] = useState(false);
 
   useEffect(() => {
-    loadRegistration();
-  }, []);
+    if (token) {
+      loadRegistration();
+    }
+  }, [token]);
 
   const loadRegistration = async () => {
     try {
       const { data: registrations } = await client.models.Registration.list({
-        filter: { confirmationToken: { eq: params.token } }
+        filter: { confirmationToken: { eq: token } }
       });
 
       if (registrations && registrations.length > 0) {
@@ -137,7 +142,7 @@ export default function ConfirmPage({ params }: { params: { token: string } }) {
                   Can't make it? 
                 </p>
                 <a
-                  href={`/cancel/${params.token}`}
+                  href={`/cancel/${token}`}
                   className="text-red-600 hover:text-red-700 underline font-medium"
                 >
                   Click here to cancel your registration

@@ -60,11 +60,8 @@ applications:
           commands:
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
-            # Copy public assets and static files needed for standalone mode
-            - cp -r public .next/standalone/ || echo "[Build] No public directory to copy"
-            - cp -r .next/static .next/standalone/.next/ || echo "[Build] No static directory to copy"
       artifacts:
-        baseDirectory: .next/standalone
+        baseDirectory: out
         files:
           - "**/*"
       cache:

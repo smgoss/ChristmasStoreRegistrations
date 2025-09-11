@@ -12,7 +12,7 @@ const client = generateClient<Schema>();
 export default function InviteRegistrationPage() {
   const params = useParams();
   const router = useRouter();
-  const token = params.token as string;
+  const token = params?.token as string;
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState<string>('');
