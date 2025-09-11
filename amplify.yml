@@ -19,10 +19,13 @@ applications:
               else
                 export NEXT_PUBLIC_LOCATION=location1
               fi
-            # Generate amplify_outputs.json from environment variables
-            # This avoids committing secrets to git while providing real config
+            # Try to deploy backend resources (may fail due to permissions, fallback to sandbox config)
+            - npx ampx sandbox --once || echo "[Backend] Sandbox deployment failed, using existing resources"
+            # Use the generated amplify_outputs.json or fallback to inline config
             - |
-              cat > amplify_outputs.json << 'EOL'
+              if [ ! -f amplify_outputs.json ]; then
+                echo "[Backend] No amplify_outputs.json found, creating fallback config"
+                cat > amplify_outputs.json << 'EOL'
               {
                 "auth": {
                   "user_pool_id": "us-east-1_vwgchbYC8",
@@ -53,6 +56,9 @@ applications:
                 "version": "1.4"
               }
               EOL
+              else
+                echo "[Backend] Using generated amplify_outputs.json"
+              fi
             - cp amplify_outputs.json public/amplify_outputs.json
     frontend:
       phases:
