@@ -72,6 +72,9 @@ applications:
           commands:
             - echo "Building frontend for $NEXT_PUBLIC_LOCATION"
             - npm run build
+            - echo "Build completed. Checking output structure:"
+            - ls -la
+            - ls -la .next/ || echo "No .next directory"
         postBuild:
           commands:
             - chmod +x scripts/setup-waf-captcha.sh || true
