@@ -20,6 +20,10 @@ applications:
                 export NEXT_PUBLIC_LOCATION=location1
               fi
             - amplify push --yes
+            # Generate Amplify outputs for frontend/runtime
+            - npx ampx generate || echo "[ampx] generate skipped"
+            # Make outputs available to the Next.js app at /amplify_outputs.json
+            - if [ -f amplify_outputs.json ]; then cp amplify_outputs.json public/amplify_outputs.json; fi
     frontend:
       phases:
         preBuild:

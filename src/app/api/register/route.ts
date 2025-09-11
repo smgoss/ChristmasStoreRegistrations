@@ -180,11 +180,11 @@ export async function POST(req: Request) {
       if (Array.isArray(children) && numberOfKids > 0) {
         for (const child of children) {
           if (!child) continue;
-          await client.models.Child.create({
-            registrationId: reg.id,
-            age: child.age,
-            gender: child.gender,
-          });
+        await client.models.Child.create({
+          registrationId: reg.id,
+          age: String(child.age),
+          gender: child.gender,
+        });
         }
       }
 

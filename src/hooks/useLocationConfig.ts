@@ -21,9 +21,9 @@ interface LocationConfig {
 }
 
 // Import all configs
-const location1Config = require('../../config/location1.json') as LocationConfig;
-const location2Config = require('../../config/location2.json') as LocationConfig;
-const location3Config = require('../../config/location3.json') as LocationConfig;
+import location1Config from '../../config/location1.json';
+import location2Config from '../../config/location2.json';
+import location3Config from '../../config/location3.json';
 
 export function useLocationConfig(): LocationConfig {
   const [config, setConfig] = useState<LocationConfig>(location1Config);

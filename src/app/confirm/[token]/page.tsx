@@ -128,7 +128,7 @@ export default function ConfirmPage({ params }: { params: { token: string } }) {
                   disabled={processing}
                   className="bg-gradient-to-r from-green-600 to-green-700 text-white px-8 py-4 rounded-xl hover:from-green-700 hover:to-green-800 disabled:opacity-50 font-bold text-lg shadow-lg transition-all"
                 >
-                  {processing ? '⏳ Confirming...' : '✅ Yes, I\'ll be there!'}
+                  {processing ? '⏳ Confirming...' : '✅ Yes, I\u2019ll be there!'}
                 </button>
               </div>
 
@@ -144,7 +144,7 @@ export default function ConfirmPage({ params }: { params: { token: string } }) {
                 </a>
               </div>
             </div>
-          )}
+          ) : null}
 
           <div className="text-center mt-8 pt-6 border-t border-gray-200">
             <p className="text-sm text-gray-500">

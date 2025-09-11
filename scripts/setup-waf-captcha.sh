@@ -90,8 +90,12 @@ if [ -z "$ACL_ARN" ] || [ "$ACL_ARN" = "None" ]; then
       }
     ]' \
     --query 'Summary.ARN' --output text)
-  ACL_ARN="$CREATE_OUT"
-  echo "[WAF] Created Web ACL ARN: $ACL_ARN"
+  ACL_ARN="$CREATE_OUT" || true
+  if [ -n "$ACL_ARN" ] && [ "$ACL_ARN" != "None" ]; then
+    echo "[WAF] Created Web ACL ARN: $ACL_ARN"
+  else
+    echo "[WAF] Create Web ACL failed or skipped"
+  fi
 else
   echo "[WAF] Found existing Web ACL: $ACL_ARN"
 fi

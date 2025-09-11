@@ -103,7 +103,7 @@ export default function CancelPage({ params }: { params: { token: string } }) {
               <div className="text-3xl mb-2">😔</div>
               <p className="text-lg font-semibold">{message}</p>
               <p className="text-sm mt-4 text-orange-700">
-                If you change your mind, please contact us and we'll help you get back on the list if there's space available.
+                If you change your mind, please contact us and we\u2019ll help you get back on the list if there\u2019s space available.
               </p>
             </div>
           ) : message && !registration ? (
@@ -153,12 +153,10 @@ export default function CancelPage({ params }: { params: { token: string } }) {
                 </a>
               </div>
             </div>
-          )}
+          ) : null}
 
           <div className="text-center mt-8 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              🎅 Questions? Contact us and we'll be happy to help! 🤶
-            </p>
+            <p className="text-sm text-gray-500">🎅 Questions? Contact us and we\u2019ll be happy to help! 🤶</p>
           </div>
         </div>
       </div>

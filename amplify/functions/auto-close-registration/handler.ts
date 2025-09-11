@@ -1,37 +1,40 @@
-import type { Schema } from "../../data/resource";
-import { Amplify } from "aws-amplify";
-import { generateClient } from "aws-amplify/data";
-import { getAmplifyDataClientConfig } from '@aws-amplify/backend/function/runtime';
-import { env } from '$amplify/env/auto-close-registration';
+import { DynamoDBClient, ScanCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
 
-const { resourceConfig, libraryOptions } = await getAmplifyDataClientConfig(env);
-
-Amplify.configure(resourceConfig, libraryOptions);
-const client = generateClient<Schema>({
-  authMode: "identityPool",
-});
+const dynamodb = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 export const handler = async (event: any) => {
   try {
     console.log('🔍 Checking for registrations to auto-close...');
     
+    // Get the table name from environment variables
+    const tableName = `RegistrationConfig-${process.env.AMPLIFY_BRANCH || 'main'}-${process.env.AMPLIFY_APP_ID || 'sandbox'}`;
+    
     // Get registration configuration
-    const { data: configData } = await client.models.RegistrationConfig.list();
-    const config = configData?.[0];
+    const scanResult = await dynamodb.send(new ScanCommand({
+      TableName: tableName,
+      Limit: 1
+    }));
+    
+    const config = scanResult.Items?.[0];
     
     if (!config) {
       console.log('⚠️ No registration configuration found');
       return { statusCode: 404, body: 'No registration configuration found' };
     }
     
+    const autoCloseEnabled = config.autoCloseEnabled?.BOOL;
+    const isRegistrationOpen = config.isRegistrationOpen?.BOOL;
+    const scheduledCloseDate = config.scheduledCloseDate?.S;
+    const configId = config.id?.S;
+    
     // Only process if auto-close is enabled and registration is currently open
-    if (!config.autoCloseEnabled || !config.isRegistrationOpen || !config.scheduledCloseDate) {
+    if (!autoCloseEnabled || !isRegistrationOpen || !scheduledCloseDate) {
       console.log('ℹ️ Auto-close not enabled or registration already closed');
       return { statusCode: 200, body: 'No action needed' };
     }
     
     const now = new Date();
-    const scheduledDate = new Date(config.scheduledCloseDate);
+    const scheduledDate = new Date(scheduledCloseDate);
     
     console.log(`⏰ Current time: ${now.toISOString()}`);
     console.log(`📅 Scheduled close time: ${scheduledDate.toISOString()}`);
@@ -40,12 +43,16 @@ export const handler = async (event: any) => {
       console.log('🔒 Time to close registration!');
       
       // Close registration
-      await client.models.RegistrationConfig.update({
-        id: config.id,
-        isRegistrationOpen: false,
-        updatedAt: now.toISOString(),
-        updatedBy: 'auto-close-system'
-      });
+      await dynamodb.send(new UpdateItemCommand({
+        TableName: tableName,
+        Key: { id: { S: configId! } },
+        UpdateExpression: 'SET isRegistrationOpen = :false, updatedAt = :now, updatedBy = :system',
+        ExpressionAttributeValues: {
+          ':false': { BOOL: false },
+          ':now': { S: now.toISOString() },
+          ':system': { S: 'auto-close-system' }
+        }
+      }));
       
       console.log('✅ Registration closed successfully');
       

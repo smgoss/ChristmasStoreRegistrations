@@ -4,8 +4,24 @@ import { useState, useEffect } from 'react';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { useLocationConfig } from '../hooks/useLocationConfig';
-import '@/lib/amplify';
-const client = generateClient<Schema>();
+import { ensureAmplifyConfigured } from '@/lib/amplify';
+
+// Lazy client initialization with retry mechanism
+let client: ReturnType<typeof generateClient<Schema>> | null = null;
+const getClient = async () => {
+  // Ensure Amplify is configured first
+  await ensureAmplifyConfigured();
+  
+  if (!client) {
+    try {
+      client = generateClient<Schema>();
+    } catch (error) {
+      console.warn('Amplify client creation failed:', error);
+      throw error;
+    }
+  }
+  return client;
+};
 
 interface Child {
   age: number | string;
@@ -85,6 +101,7 @@ export default function RegistrationForm({
   const loadRegistrationConfig = async () => {
     try {
       setConfigLoading(true);
+      const client = await getClient();
       const { data: configData } = await client.models.RegistrationConfig.list();
       const config = configData?.[0] as RegistrationConfig;
       setRegistrationConfig(config);
@@ -122,6 +139,7 @@ export default function RegistrationForm({
   const loadTimeSlotCapacities = async () => {
     try {
       // Load time slot configurations
+      const client = await getClient();
       const { data: timeSlotData } = await client.models.TimeSlotConfig.list();
       
       // Load all registrations to calculate actual counts
@@ -166,6 +184,7 @@ export default function RegistrationForm({
     // If in invite-only mode, validate the invite token
     if (registrationConfig?.inviteOnlyMode && inviteToken) {
       try {
+        const client = await getClient();
         const { data: inviteData } = await client.models.InviteLink.list({
           filter: { token: { eq: inviteToken } }
         });
@@ -212,6 +231,7 @@ export default function RegistrationForm({
 
     // Check for duplicate email
     try {
+      const client = await getClient();
       const { data: existingRegistrations } = await client.models.Registration.list({
         filter: { email: { eq: formData.email } }
       });
@@ -225,6 +245,7 @@ export default function RegistrationForm({
 
     // Check for duplicate phone
     try {
+      const client = await getClient();
       const { data: existingRegistrations } = await client.models.Registration.list({
         filter: { phone: { eq: formData.phone } }
       });
@@ -327,9 +348,7 @@ export default function RegistrationForm({
             </p>
           </div>
           <div className="text-center mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              🎅 Questions? Contact us and we'll be happy to help! 🤶
-            </p>
+            <p className="text-sm text-gray-500">🎅 Questions? Contact us and we\u2019ll be happy to help! 🤶</p>
           </div>
         </div>
       </div>
@@ -352,9 +371,7 @@ export default function RegistrationForm({
             </p>
           </div>
           <div className="text-center mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">
-              🎅 Questions about invitations? Contact us and we'll be happy to help! 🤶
-            </p>
+            <p className="text-sm text-gray-500">🎅 Questions about invitations? Contact us and we\u2019ll be happy to help! 🤶</p>
           </div>
         </div>
       </div>
@@ -568,11 +585,8 @@ export default function RegistrationForm({
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 px-6 rounded-md font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          style={{ 
-            backgroundColor: BRANDING.primaryColor,
-            ':hover': { backgroundColor: BRANDING.secondaryColor }
-          }}
+          className="w-full py-3 px-6 rounded-md font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors hover:opacity-90"
+          style={{ backgroundColor: BRANDING.primaryColor }}
         >
           {loading ? 'Submitting...' : '🎁 Register for Christmas Store'}
         </button>
