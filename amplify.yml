@@ -19,12 +19,12 @@ applications:
               else
                 export NEXT_PUBLIC_LOCATION=location1
               fi
-            # Deploy Amplify Gen 2 backend
-            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
-            # Generate Amplify outputs for frontend/runtime
-            - npx ampx generate outputs --yes || echo "[ampx] generate skipped"
-            # Make outputs available to the Next.js app at /amplify_outputs.json
-            - if [ -f amplify_outputs.json ]; then cp amplify_outputs.json public/amplify_outputs.json; fi
+            # Skip backend deployment - use sandbox/local development only
+            # Production backend resources should be deployed separately via AWS CLI/CDK
+            - echo "Backend deployment skipped - use local sandbox for development"
+            # Generate mock outputs for frontend build
+            - echo '{"version":"1","auth":{"user_pool_id":"mock","user_pool_client_id":"mock","identity_pool_id":"mock","aws_region":"us-east-1"}}' > amplify_outputs.json
+            - cp amplify_outputs.json public/amplify_outputs.json
     frontend:
       phases:
         preBuild:
