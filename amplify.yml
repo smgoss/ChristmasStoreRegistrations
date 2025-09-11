@@ -20,7 +20,7 @@ applications:
                 export NEXT_PUBLIC_LOCATION=location1
               fi
             # Deploy Amplify Gen 2 backend
-            - npx ampx deploy --yes
+            - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
             # Generate Amplify outputs for frontend/runtime
             - npx ampx generate outputs --yes || echo "[ampx] generate skipped"
             # Make outputs available to the Next.js app at /amplify_outputs.json
