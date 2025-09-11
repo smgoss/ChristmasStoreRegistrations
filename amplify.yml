@@ -1,14 +1,12 @@
 version: 1
 applications:
-  - backend:
+  - appRoot: .
+    frontend:
       phases:
         preBuild:
           commands:
             - npm ci
-        build:
-          commands:
-            - echo "Building for environment $AWS_BRANCH"
-            # Set environment-specific variables based on branch
+            # Set location based on branch
             - |
               if [ "$AWS_BRANCH" = "lewiston" ]; then
                 export NEXT_PUBLIC_LOCATION=location1
@@ -16,8 +14,6 @@ applications:
                 export NEXT_PUBLIC_LOCATION=location2
               elif [ "$AWS_BRANCH" = "gray" ]; then
                 export NEXT_PUBLIC_LOCATION=location3
-              else
-                export NEXT_PUBLIC_LOCATION=location1
               fi
             # Generate production backend configuration for each campus branch
             - |
@@ -89,37 +85,20 @@ applications:
               EOL
               fi
             - cp amplify_outputs.json public/amplify_outputs.json
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm ci
-            # Set location based on branch
-            - |
-              if [ "$AWS_BRANCH" = "lewiston" ]; then
-                export NEXT_PUBLIC_LOCATION=location1
-              elif [ "$AWS_BRANCH" = "brunswick" ]; then
-                export NEXT_PUBLIC_LOCATION=location2
-              elif [ "$AWS_BRANCH" = "gray" ]; then
-                export NEXT_PUBLIC_LOCATION=location3
-              fi
         build:
           commands:
-            - echo "Building frontend for $NEXT_PUBLIC_LOCATION"
+            - echo "Building Next.js for $NEXT_PUBLIC_LOCATION"
             - npm run build
             - echo "Build completed. Checking output structure:"
-            - ls -la
-            - ls -la .next/ || echo "No .next directory"
+            - ls -la .next/
         postBuild:
           commands:
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
       artifacts:
-        baseDirectory: .
         files:
-          - '**/*'
+          - "**/*"
       cache:
         paths:
           - node_modules/**/*
           - .next/cache/**/*
-    appRoot: .
