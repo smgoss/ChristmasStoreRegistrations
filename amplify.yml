@@ -20,6 +20,10 @@ applications:
         build:
           commands:
             - echo "Building Next.js for $NEXT_PUBLIC_LOCATION"
+            - echo "Checking for amplify_outputs.json..."
+            - ls -la amplify_outputs.json || echo "No amplify_outputs.json found in root"
+            - echo "Copying amplify_outputs.json to public directory if it exists..."
+            - cp amplify_outputs.json public/amplify_outputs.json || echo "Could not copy amplify_outputs.json - this is expected if backend hasn't deployed yet"
             - npm run build
         postBuild:
           commands:
