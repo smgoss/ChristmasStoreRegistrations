@@ -58,9 +58,12 @@ applications:
             - ls -la .next/
         postBuild:
           commands:
-            # Copy static and public files for standalone deployment  
+            # Copy required files for Next.js standalone deployment
             - cp -r public .next/standalone/public
             - cp -r .next/static .next/standalone/.next/static
+            - cp .next/required-server-files.json .next/standalone/
+            - cp .next/routes-manifest.json .next/standalone/
+            - cp .next/prerender-manifest.json .next/standalone/
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
       artifacts:
