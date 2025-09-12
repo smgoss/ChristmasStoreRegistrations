@@ -58,10 +58,13 @@ applications:
             - ls -la .next/
         postBuild:
           commands:
+            # Copy static and public files for standalone deployment  
+            - cp -r public .next/standalone/public
+            - cp -r .next/static .next/standalone/.next/static
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
       artifacts:
-        baseDirectory: .next
+        baseDirectory: .next/standalone
         files:
           - "**/*"
       cache:
