@@ -26,9 +26,9 @@ try {
         })
         .catch(fetchError => {
           console.error('❌ Failed to configure Amplify:', {
-            rootError: rootError.message,
-            publicError: publicError.message,
-            fetchError: fetchError.message
+            rootError: rootError instanceof Error ? rootError.message : String(rootError),
+            publicError: publicError instanceof Error ? publicError.message : String(publicError),
+            fetchError: fetchError instanceof Error ? fetchError.message : String(fetchError)
           });
         });
     } else {
