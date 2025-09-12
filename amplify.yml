@@ -56,22 +56,12 @@ applications:
           commands:
             - echo "Building Next.js for $NEXT_PUBLIC_LOCATION"
             - npm run build
-            - echo "Build completed. Checking output structure:"
-            - ls -la .next/
         postBuild:
           commands:
-            # Copy required files for Next.js standalone deployment
-            - cp -r public .next/standalone/public
-            - cp -r .next/static .next/standalone/.next/static
-            - cp .next/required-server-files.json .next/standalone/
-            - cp .next/routes-manifest.json .next/standalone/
-            - cp .next/prerender-manifest.json .next/standalone/
-            - cp .next/trace .next/standalone/
-            - cp -r .next/server .next/standalone/.next/server
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
       artifacts:
-        baseDirectory: .next/standalone
+        baseDirectory: .next
         files:
           - "**/*"
       cache:
