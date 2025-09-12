@@ -1,0 +1,8 @@
+{
+  "name": "create-admin-user",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-cognito-idp": "^3.0.0"
+  }
+}

@@ -5,6 +5,7 @@ import { sendConfirmationEmail } from './functions/send-confirmation-email/resou
 import { sendAttendanceConfirmation } from './functions/send-attendance-confirmation/resource';
 import { reserveRegistration } from './functions/reserve-registration/resource';
 import { autoCloseRegistration } from './functions/auto-close-registration/resource';
+import { createAdminUser } from './functions/create-admin-user/resource';
 
 export const backend = defineBackend({
   auth,
@@ -13,4 +14,17 @@ export const backend = defineBackend({
   sendAttendanceConfirmation,
   reserveRegistration,
   autoCloseRegistration,
+  createAdminUser,
+});
+
+// Grant the createAdminUser function access to Cognito User Pool
+backend.createAdminUser.addEnvironment('AMPLIFY_AUTH_USERPOOL_ID', backend.auth.resources.userPool.userPoolId);
+backend.createAdminUser.resources.lambda.addToRolePolicy({
+  effect: 'Allow',
+  actions: [
+    'cognito-idp:AdminCreateUser',
+    'cognito-idp:AdminAddUserToGroup', 
+    'cognito-idp:CreateGroup'
+  ],
+  resources: [backend.auth.resources.userPool.userPoolArn]
 });
