@@ -1,81 +1,44 @@
 import { Amplify } from 'aws-amplify';
 
-let configured = false;
-let configPromise: Promise<void> | null = null;
-
-async function configureAmplify(): Promise<void> {
-  if (configured) return;
-  
+// Simplest approach - try to import outputs directly as per Amplify Gen 2 docs
+try {
+  // This should work when amplify_outputs.json exists in project root
+  const outputs = require('../../amplify_outputs.json');
+  Amplify.configure(outputs);
+  console.log('✅ Amplify configured from root amplify_outputs.json');
+} catch (rootError) {
   try {
-    // If already configured, skip
-    const cfg: any = Amplify.getConfig();
-    if (cfg && (cfg.Auth || cfg.API)) {
-      configured = true;
-      return;
-    }
-
-    // Try server-side load of amplify_outputs.json (when present in env)
-    if (typeof window === 'undefined') {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const path = require('node:path');
-        const fs = require('node:fs');
-        const p = path.join(process.cwd(), 'amplify_outputs.json');
-        if (fs.existsSync(p)) {
-          const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-          Amplify.configure(data);
-          configured = true;
-          return;
-        }
-      } catch {
-        // ignore
-      }
+    // Try public directory
+    const outputs = require('../../public/amplify_outputs.json');
+    Amplify.configure(outputs);
+    console.log('✅ Amplify configured from public/amplify_outputs.json');
+  } catch (publicError) {
+    // For client-side, try fetching from public
+    if (typeof window !== 'undefined') {
+      fetch('/amplify_outputs.json')
+        .then(response => {
+          if (!response.ok) throw new Error('Failed to fetch');
+          return response.json();
+        })
+        .then(outputs => {
+          Amplify.configure(outputs);
+          console.log('✅ Amplify configured from fetch /amplify_outputs.json');
+        })
+        .catch(fetchError => {
+          console.error('❌ Failed to configure Amplify:', {
+            rootError: rootError.message,
+            publicError: publicError.message,
+            fetchError: fetchError.message
+          });
+        });
     } else {
-      // Try client-side fetch
-      try {
-        const res = await fetch('/amplify_outputs.json');
-        if (res.ok) {
-          const data = await res.json();
-          Amplify.configure(data);
-          configured = true;
-          return;
-        }
-      } catch {
-        // ignore
-      }
+      console.error('❌ Could not find amplify_outputs.json on server side');
     }
-  } catch {
-    // ignore
   }
 }
 
-// Export a function to ensure Amplify is configured before use
+// Legacy export for compatibility
 export async function ensureAmplifyConfigured(): Promise<void> {
-  if (configured) return;
-  
-  if (!configPromise) {
-    configPromise = configureAmplify();
-  }
-  
-  await configPromise;
+  // In the new pattern, configuration happens immediately on import
+  return Promise.resolve();
 }
-
-// Immediately configure on server side if possible
-if (typeof window === 'undefined') {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const path = require('node:path');
-    const fs = require('node:fs');
-    const p = path.join(process.cwd(), 'amplify_outputs.json');
-    if (fs.existsSync(p)) {
-      const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-      Amplify.configure(data);
-      configured = true;
-    }
-  } catch {
-    // ignore
-  }
-}
-
-// Fire and forget; consumers can import this module for side-effect
-void configureAmplify();

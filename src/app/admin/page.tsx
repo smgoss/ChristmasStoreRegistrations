@@ -8,19 +8,23 @@ import type { Schema } from '../../../amplify/data/resource';
 import { useLocationConfig } from '../../hooks/useLocationConfig';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 
-// Lazy client initialization with retry mechanism
+// Client initialization with proper error handling and fallback
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = () => {
   if (!client) {
     try {
+      // First ensure Amplify is configured
       client = generateClient<Schema>({ authMode: 'userPool' });
-    } catch (error) {
-      console.warn('Amplify client creation failed, will retry:', error);
-      // Force reconfiguration on next attempt
-      setTimeout(() => {
-        void ensureAmplifyConfigured();
-      }, 100);
-      throw error;
+      console.log('✅ Client created with userPool auth');
+    } catch (userPoolError) {
+      console.warn('⚠️ UserPool client failed, trying apiKey fallback:', userPoolError);
+      try {
+        client = generateClient<Schema>({ authMode: 'apiKey' });
+        console.log('✅ Client created with apiKey auth (fallback)');
+      } catch (apiKeyError) {
+        console.error('❌ All client creation attempts failed:', { userPoolError, apiKeyError });
+        throw new Error('Failed to create Amplify client. Check Amplify configuration.');
+      }
     }
   }
   return client;
