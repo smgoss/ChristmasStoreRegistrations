@@ -1,4 +1,5 @@
 import { defineBackend } from '@aws-amplify/backend';
+import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { sendConfirmationEmail } from './functions/send-confirmation-email/resource';
@@ -19,12 +20,14 @@ export const backend = defineBackend({
 
 // Grant the createAdminUser function access to Cognito User Pool
 backend.createAdminUser.addEnvironment('AMPLIFY_AUTH_USERPOOL_ID', backend.auth.resources.userPool.userPoolId);
-backend.createAdminUser.resources.lambda.addToRolePolicy({
-  effect: 'Allow',
-  actions: [
-    'cognito-idp:AdminCreateUser',
-    'cognito-idp:AdminAddUserToGroup', 
-    'cognito-idp:CreateGroup'
-  ],
-  resources: [backend.auth.resources.userPool.userPoolArn]
-});
+backend.createAdminUser.resources.lambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'cognito-idp:AdminCreateUser',
+      'cognito-idp:AdminAddUserToGroup', 
+      'cognito-idp:CreateGroup'
+    ],
+    resources: [backend.auth.resources.userPool.userPoolArn]
+  })
+);
