@@ -8,19 +8,22 @@ import type { Schema } from '../../../amplify/data/resource';
 import { useLocationConfig } from '../../hooks/useLocationConfig';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 
-// Lazy client initialization with retry mechanism
+// Sync client initialization with error handling
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = () => {
   if (!client) {
     try {
       client = generateClient<Schema>({ authMode: 'userPool' });
     } catch (error) {
-      console.warn('Amplify client creation failed, will retry:', error);
-      // Force reconfiguration on next attempt
-      setTimeout(() => {
-        void ensureAmplifyConfigured();
-      }, 100);
-      throw error;
+      console.error('Client creation failed:', error);
+      // Fallback to API key mode
+      try {
+        client = generateClient<Schema>({ authMode: 'apiKey' });
+        console.warn('Using API key authentication as fallback');
+      } catch (fallbackError) {
+        console.error('All client creation attempts failed:', fallbackError);
+        throw new Error('Failed to initialize Amplify client. Please refresh the page.');
+      }
     }
   }
   return client;
@@ -199,13 +202,14 @@ function AdminDashboard() {
       
       // Load registration configuration (singleton)
       console.log('🔍 Fetching registration config...');
-      const { data: configData } = await getClient().models.RegistrationConfig.list();
+      const client = await getClient();
+      const { data: configData } = await client.models.RegistrationConfig.list();
       let config = configData?.[0] as RegistrationConfig;
       
       if (!config) {
         // Create default config if none exists
         console.log('🚀 Creating default registration config...');
-        const { data: newConfig } = await getClient().models.RegistrationConfig.create({
+        const { data: newConfig } = await client.models.RegistrationConfig.create({
           id: 'main',
           isRegistrationOpen: true,
           inviteOnlyMode: false,
@@ -220,7 +224,7 @@ function AdminDashboard() {
       
       // Load time slot configurations
       console.log('🔍 Fetching time slots...');
-      const { data: timeSlotData, errors: timeSlotErrors } = await getClient().models.TimeSlotConfig.list();
+      const { data: timeSlotData, errors: timeSlotErrors } = await client.models.TimeSlotConfig.list();
       
       if (timeSlotErrors) {
         console.error('❌ Time slot errors:', timeSlotErrors);
@@ -231,7 +235,7 @@ function AdminDashboard() {
 
       // Load registrations
       console.log('🔍 Fetching registrations...');
-      const { data: registrationData, errors: registrationErrors } = await getClient().models.Registration.list();
+      const { data: registrationData, errors: registrationErrors } = await client.models.Registration.list();
       
       if (registrationErrors) {
         console.error('❌ Registration errors:', registrationErrors);
@@ -268,12 +272,13 @@ function AdminDashboard() {
     setLoading(true);
     try {
       // Check if time slots already exist
-      const { data: existingSlots } = await getClient().models.TimeSlotConfig.list();
+      const client = await getClient();
+      const { data: existingSlots } = await client.models.TimeSlotConfig.list();
       
       if (existingSlots.length === 0) {
         // Create default time slots with capacity of 20 each
         const promises = TIME_SLOTS.map(slot =>
-          getClient().models.TimeSlotConfig.create({
+          client.models.TimeSlotConfig.create({
             timeSlot: slot,
             maxCapacity: DEFAULT_CAPACITY,
             currentRegistrations: 0,
@@ -303,7 +308,8 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.update({
+      const client = await getClient();
+      await client.models.TimeSlotConfig.update({
         id,
         maxCapacity: newCapacity
       });
@@ -340,7 +346,8 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.create({
+      const client = await getClient();
+      await client.models.TimeSlotConfig.create({
         timeSlot: newTimeSlot,
         maxCapacity: DEFAULT_CAPACITY,
         currentRegistrations: 0,
@@ -366,7 +373,8 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.update({
+      const client = await getClient();
+      await client.models.TimeSlotConfig.update({
         id,
         timeSlot: newTime
       });
@@ -389,7 +397,8 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.delete({ id });
+      const client = await getClient();
+      await client.models.TimeSlotConfig.delete({ id });
       
       setMessage(`✅ Time slot "${timeSlot}" deleted successfully!`);
       loadData();
@@ -406,7 +415,8 @@ function AdminDashboard() {
       setLoading(true);
       setMessage('🧹 Cleaning up duplicate time slots...');
 
-      const { data: allSlots } = await getClient().models.TimeSlotConfig.list();
+      const client = await getClient();
+      const { data: allSlots } = await client.models.TimeSlotConfig.list();
       
       // Group by time slot to find duplicates
       const timeSlotGroups: { [key: string]: TimeSlotConfig[] } = {};
@@ -423,7 +433,7 @@ function AdminDashboard() {
         if (slots.length > 1) {
           // Keep the first one, delete the rest
           for (let i = 1; i < slots.length; i++) {
-            await getClient().models.TimeSlotConfig.delete({ id: slots[i].id });
+            await client.models.TimeSlotConfig.delete({ id: slots[i].id });
             deletedCount++;
             console.log(`🗑️ Deleted duplicate time slot: ${timeSlot} (${slots[i].id})`);
           }
@@ -465,7 +475,8 @@ function AdminDashboard() {
         token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       }
       
-      await getClient().models.InviteLink.create({
+      const client = await getClient();
+      await client.models.InviteLink.create({
         token,
         email: inviteEmail,
         isUsed: false,
