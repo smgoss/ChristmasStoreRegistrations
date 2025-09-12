@@ -1,29 +1,6 @@
 version: 1
 applications:
-  - backend:
-      phases:
-        preBuild:
-          commands:
-            - npm ci
-        build:
-          commands:
-            - echo "Building for environment $AWS_BRANCH"
-            # Set environment-specific variables based on branch
-            - |
-              if [ "$AWS_BRANCH" = "lewiston" ]; then
-                export NEXT_PUBLIC_LOCATION=location1
-              elif [ "$AWS_BRANCH" = "brunswick" ]; then
-                export NEXT_PUBLIC_LOCATION=location2
-              elif [ "$AWS_BRANCH" = "gray" ]; then
-                export NEXT_PUBLIC_LOCATION=location3
-              else
-                export NEXT_PUBLIC_LOCATION=location1
-              fi
-            # Try to deploy backend resources (may fail due to permissions, fallback to sandbox config)
-            - npx ampx sandbox --once || echo "[Backend] Sandbox deployment failed, using existing resources"
-            # Let Amplify Gen 2 generate backend configuration automatically
-            - echo "[Backend] Using Amplify Gen 2 auto-generated configuration"
-            - cp amplify_outputs.json public/amplify_outputs.json
+  - appRoot: .
     frontend:
       phases:
         preBuild:
@@ -40,21 +17,17 @@ applications:
               fi
         build:
           commands:
-            - echo "Building frontend for $NEXT_PUBLIC_LOCATION"
+            - echo "Building for branch $AWS_BRANCH with location $NEXT_PUBLIC_LOCATION"
             - npm run build
-            - echo "Build completed. Checking output structure:"
-            - ls -la
-            - ls -la .next/ || echo "No .next directory"
         postBuild:
           commands:
             - chmod +x scripts/setup-waf-captcha.sh || true
-            - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
+            - ./scripts/setup-waf-captcha.sh || echo "[WAF] WAF setup skipped"
       artifacts:
-        baseDirectory: .next/standalone
+        baseDirectory: .next
         files:
           - '**/*'
       cache:
         paths:
           - node_modules/**/*
           - .next/cache/**/*
-    appRoot: .
