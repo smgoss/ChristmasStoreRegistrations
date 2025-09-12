@@ -2,6 +2,8 @@ version: 1
 applications:
   - appRoot: .
     frontend:
+      environmentVariables:
+        AMPLIFY_NODEJS_VERSION: '20'
       phases:
         preBuild:
           commands:
@@ -64,6 +66,8 @@ applications:
             - cp .next/required-server-files.json .next/standalone/
             - cp .next/routes-manifest.json .next/standalone/
             - cp .next/prerender-manifest.json .next/standalone/
+            - cp .next/trace .next/standalone/
+            - cp -r .next/server .next/standalone/.next/server
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
       artifacts:
