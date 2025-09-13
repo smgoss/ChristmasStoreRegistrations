@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-cognito-idp": "^3.883.0"
+    "@aws-sdk/client-cognito-idp": "^3.600.0"
   }
 }
