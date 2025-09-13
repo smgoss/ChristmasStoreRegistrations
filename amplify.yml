@@ -25,6 +25,10 @@ applications:
                npx ampx pipeline-deploy --debug true --branch $AWS_BRANCH --app-id $AWS_APP_ID
         build:
           commands:
+            - echo "Checking if amplify_outputs.json was generated..."
+            - ls -la amplify_outputs.json || echo "No amplify_outputs.json found in root"
+            - echo "Copying amplify_outputs.json to public directory if it exists..."
+            - cp amplify_outputs.json public/amplify_outputs.json || echo "Could not copy amplify_outputs.json - this is expected if backend hasn't deployed yet"
             - npm run build
         postBuild:
           commands:
