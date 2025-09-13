@@ -8,6 +8,11 @@ applications:
         preBuild:
           commands:
             - npm ci
+            # Install function dependencies
+            - cd amplify/functions/create-admin-user && npm ci && cd ../../..
+            - cd amplify/functions/send-confirmation-email && npm ci && cd ../../..
+            - cd amplify/functions/reserve-registration && npm ci && cd ../../..
+            - cd amplify/functions/auto-close-registration && npm ci && cd ../../..
             # Set location based on branch
             - |
               if [ "$AWS_BRANCH" = "lewiston" ]; then
