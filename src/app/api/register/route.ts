@@ -98,7 +98,7 @@ function formatPhoneForStorage(phone: string): string {
   return `+${digits}`;
 }
 
-// Async SMS sending function
+// Direct SMS sending function using Clearstream API
 async function sendSmsConfirmationAsync(registration: {
   firstName: string;
   lastName: string;
@@ -110,30 +110,85 @@ async function sendSmsConfirmationAsync(registration: {
   registrationDate: string;
 }) {
   try {
-    const { LambdaClient, InvokeCommand } = await import('@aws-sdk/client-lambda');
-    const lambda = new LambdaClient({ region: process.env.AWS_REGION || 'us-east-1' });
+    if (!registration.phone) {
+      console.log('ℹ️ No phone number provided, skipping SMS');
+      return;
+    }
+
+    // Clean phone number (ensure it has country code)
+    const cleanPhone = cleanPhoneNumber(registration.phone);
+    const smsContent = generateSmsContent(registration);
     
-    const command = new InvokeCommand({
-      FunctionName: process.env.SEND_SMS_CONFIRMATION_FUNCTION_NAME || 'send-sms-confirmation',
-      Payload: JSON.stringify({
-        arguments: { registration }
+    // Get API key from environment variable
+    const apiKey = process.env.CLEAR_STREAM_API_KEY;
+    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Christmas Store';
+    
+    if (!apiKey) {
+      throw new Error('CLEAR_STREAM_API_KEY environment variable not found');
+    }
+    
+    const response = await fetch('https://api.getclearstream.com/v1/texts', {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': apiKey,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        to: cleanPhone,
+        text_header: textHeader,
+        text_body: smsContent,
       }),
     });
-
-    const response = await lambda.send(command);
     
-    if (response.Payload) {
-      const result = JSON.parse(new TextDecoder().decode(response.Payload));
-      if (result.success) {
-        console.log('✅ SMS confirmation sent successfully');
-      } else {
-        throw new Error(`SMS Lambda failed: ${result.message}`);
-      }
+    if (response.ok) {
+      const result = await response.text();
+      console.log('✅ SMS confirmation sent successfully:', result);
+    } else {
+      const error = await response.text();
+      console.error('❌ Clearstream API error:', error);
+      throw new Error(`Clearstream API error: ${error}`);
     }
   } catch (error) {
     console.error('❌ Failed to send SMS confirmation:', error);
     throw error;
   }
+}
+
+function cleanPhoneNumber(phone: string): string {
+  // Remove all non-numeric characters
+  const digits = phone.replace(/\D/g, '');
+  
+  // Add +1 if it's a 10-digit US number
+  if (digits.length === 10) {
+    return `+1${digits}`;
+  }
+  
+  // Add + if it starts with country code but missing +
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+${digits}`;
+  }
+  
+  return phone; // Return as-is if already formatted
+}
+
+function generateSmsContent(registration: {
+  firstName: string;
+  timeSlot: string;
+  numberOfKids: number;
+}): string {
+  return `🎄 Christmas Store Registration Confirmed!
+
+Hello ${registration.firstName}!
+
+Your registration is confirmed for:
+📅 Time: ${registration.timeSlot}
+👶 Children: ${registration.numberOfKids}
+
+We look forward to seeing you! Please arrive 15 minutes early and bring a photo ID.
+
+Questions? Reply to this message or call the office.
+
+- Christmas Store Team`;
 }
 
 export async function POST(req: Request) {
