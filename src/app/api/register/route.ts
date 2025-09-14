@@ -202,21 +202,42 @@ export async function POST(req: Request) {
 
       // Create registration
       const now = new Date().toISOString();
-      const regResult = await (await getClient()).models.Registration.create({
+      console.log('Creating registration with data:', {
         firstName,
         lastName,
         email,
         phone,
         numberOfKids,
         timeSlot,
-        needsChildcare: false, // Temporary: until schema migration completes
+        needsChildcare: false,
         referredBy: referredBy || undefined,
         inviteToken,
         registrationDate: now,
       });
+      
+      let regResult;
+      try {
+        regResult = await (await getClient()).models.Registration.create({
+          firstName,
+          lastName,
+          email,
+          phone,
+          numberOfKids,
+          timeSlot,
+          needsChildcare: false, // Temporary: until schema migration completes
+          referredBy: referredBy || undefined,
+          inviteToken,
+          registrationDate: now,
+        });
+      } catch (createError) {
+        console.error('Error during registration creation:', createError);
+        return NextResponse.json({ error: 'Database error during registration creation', details: createError instanceof Error ? createError.message : 'Unknown error' }, { status: 500 });
+      }
 
+      console.log('Registration creation result:', regResult);
       const reg = regResult.data;
       if (!reg) {
+        console.error('Registration creation failed - no data returned');
         return NextResponse.json({ error: 'Failed to create registration' }, { status: 500 });
       }
 
