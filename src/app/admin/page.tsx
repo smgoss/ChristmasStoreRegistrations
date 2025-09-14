@@ -10,15 +10,17 @@ import { ensureAmplifyConfigured } from '@/lib/amplify';
 
 // Client initialization with proper error handling and fallback
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
-const getClient = () => {
+const getClient = async () => {
   if (!client) {
     try {
       // First ensure Amplify is configured
+      await ensureAmplifyConfigured();
       client = generateClient<Schema>({ authMode: 'userPool' });
       console.log('✅ Client created with userPool auth');
     } catch (userPoolError) {
       console.warn('⚠️ UserPool client failed, trying apiKey fallback:', userPoolError);
       try {
+        await ensureAmplifyConfigured();
         client = generateClient<Schema>({ authMode: 'apiKey' });
         console.log('✅ Client created with apiKey auth (fallback)');
       } catch (apiKeyError) {
@@ -148,7 +150,7 @@ function AdminDashboard() {
         setLoading(true);
         
         // Check if time slots exist first
-        const { data: existingSlots } = await getClient().models.TimeSlotConfig.list();
+        const { data: existingSlots } = await (await getClient()).models.TimeSlotConfig.list();
         console.log('📊 Found existing slots:', existingSlots.length, existingSlots);
         
         if (existingSlots.length === 0) {
@@ -159,7 +161,7 @@ function AdminDashboard() {
             // Auto-initialize time slots with location-specific capacity
             const createPromises = TIME_SLOTS.map(async (slot, index) => {
               console.log(`⏰ Creating time slot ${index + 1}: ${slot}`);
-              const result = await getClient().models.TimeSlotConfig.create({
+              const result = await (await getClient()).models.TimeSlotConfig.create({
                 timeSlot: slot,
                 maxCapacity: DEFAULT_CAPACITY,
                 currentRegistrations: 0,
@@ -203,13 +205,13 @@ function AdminDashboard() {
       
       // Load registration configuration (singleton)
       console.log('🔍 Fetching registration config...');
-      const { data: configData } = await getClient().models.RegistrationConfig.list();
+      const { data: configData } = await (await getClient()).models.RegistrationConfig.list();
       let config = configData?.[0] as RegistrationConfig;
       
       if (!config) {
         // Create default config if none exists
         console.log('🚀 Creating default registration config...');
-        const { data: newConfig } = await getClient().models.RegistrationConfig.create({
+        const { data: newConfig } = await (await getClient()).models.RegistrationConfig.create({
           id: 'main',
           isRegistrationOpen: true,
           inviteOnlyMode: false,
@@ -224,7 +226,7 @@ function AdminDashboard() {
       
       // Load time slot configurations
       console.log('🔍 Fetching time slots...');
-      const { data: timeSlotData, errors: timeSlotErrors } = await getClient().models.TimeSlotConfig.list();
+      const { data: timeSlotData, errors: timeSlotErrors } = await (await getClient()).models.TimeSlotConfig.list();
       
       if (timeSlotErrors) {
         console.error('❌ Time slot errors:', timeSlotErrors);
@@ -235,7 +237,7 @@ function AdminDashboard() {
 
       // Load registrations
       console.log('🔍 Fetching registrations...');
-      const { data: registrationData, errors: registrationErrors } = await getClient().models.Registration.list();
+      const { data: registrationData, errors: registrationErrors } = await (await getClient()).models.Registration.list();
       
       if (registrationErrors) {
         console.error('❌ Registration errors:', registrationErrors);
@@ -272,12 +274,12 @@ function AdminDashboard() {
     setLoading(true);
     try {
       // Check if time slots already exist
-      const { data: existingSlots } = await getClient().models.TimeSlotConfig.list();
+      const { data: existingSlots } = await (await getClient()).models.TimeSlotConfig.list();
       
       if (existingSlots.length === 0) {
         // Create default time slots with capacity of 20 each
         const promises = TIME_SLOTS.map(slot =>
-          getClient().models.TimeSlotConfig.create({
+          (await getClient()).models.TimeSlotConfig.create({
             timeSlot: slot,
             maxCapacity: DEFAULT_CAPACITY,
             currentRegistrations: 0,
@@ -307,7 +309,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.update({
+      await (await getClient()).models.TimeSlotConfig.update({
         id,
         maxCapacity: newCapacity
       });
@@ -344,7 +346,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.create({
+      await (await getClient()).models.TimeSlotConfig.create({
         timeSlot: newTimeSlot,
         maxCapacity: DEFAULT_CAPACITY,
         currentRegistrations: 0,
@@ -370,7 +372,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.update({
+      await (await getClient()).models.TimeSlotConfig.update({
         id,
         timeSlot: newTime
       });
@@ -393,7 +395,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await getClient().models.TimeSlotConfig.delete({ id });
+      await (await getClient()).models.TimeSlotConfig.delete({ id });
       
       setMessage(`✅ Time slot "${timeSlot}" deleted successfully!`);
       loadData();
@@ -410,7 +412,7 @@ function AdminDashboard() {
       setLoading(true);
       setMessage('🧹 Cleaning up duplicate time slots...');
 
-      const { data: allSlots } = await getClient().models.TimeSlotConfig.list();
+      const { data: allSlots } = await (await getClient()).models.TimeSlotConfig.list();
       
       // Group by time slot to find duplicates
       const timeSlotGroups: { [key: string]: TimeSlotConfig[] } = {};
@@ -427,7 +429,7 @@ function AdminDashboard() {
         if (slots.length > 1) {
           // Keep the first one, delete the rest
           for (let i = 1; i < slots.length; i++) {
-            await getClient().models.TimeSlotConfig.delete({ id: slots[i].id });
+            await (await getClient()).models.TimeSlotConfig.delete({ id: slots[i].id });
             deletedCount++;
             console.log(`🗑️ Deleted duplicate time slot: ${timeSlot} (${slots[i].id})`);
           }
@@ -469,7 +471,7 @@ function AdminDashboard() {
         token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       }
       
-      await getClient().models.InviteLink.create({
+      await (await getClient()).models.InviteLink.create({
         token,
         email: inviteEmail,
         isUsed: false,
@@ -493,7 +495,7 @@ function AdminDashboard() {
 
   const loadRegistrationConfig = async () => {
     try {
-      const { data: configData } = await getClient().models.RegistrationConfig.list();
+      const { data: configData } = await (await getClient()).models.RegistrationConfig.list();
       let config = configData?.[0] as RegistrationConfig;
       
       if (config) {
@@ -503,7 +505,7 @@ function AdminDashboard() {
           const scheduledDate = new Date(config.scheduledCloseDate);
           if (now >= scheduledDate && config.isRegistrationOpen) {
             // Auto-close registration
-            const updatedConfig = await getClient().models.RegistrationConfig.update({
+            const updatedConfig = await (await getClient()).models.RegistrationConfig.update({
               id: config.id,
               isRegistrationOpen: false,
               updatedAt: new Date().toISOString(),
@@ -528,7 +530,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      const updatedConfig = await getClient().models.RegistrationConfig.update({
+      const updatedConfig = await (await getClient()).models.RegistrationConfig.update({
         id: registrationConfig.id,
         [field]: value,
         updatedAt: new Date().toISOString()
@@ -563,7 +565,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      const updatedConfig = await getClient().models.RegistrationConfig.update({
+      const updatedConfig = await (await getClient()).models.RegistrationConfig.update({
         id: registrationConfig.id,
         scheduledCloseDate: scheduledDateTime,
         autoCloseEnabled: true,
@@ -593,7 +595,7 @@ function AdminDashboard() {
         registrations.map(async (reg) => {
           if (!reg.confirmationToken && !reg.isCancelled) {
             const token = Math.random().toString(36).substr(2, 15) + Date.now().toString(36);
-            await getClient().models.Registration.update({
+            await (await getClient()).models.Registration.update({
               id: reg.id,
               confirmationToken: token
             });
@@ -650,7 +652,7 @@ function AdminDashboard() {
     if (!editFormData || !editingRegistration) return;
 
     try {
-      await getClient().models.Registration.update({
+      await (await getClient()).models.Registration.update({
         id: editingRegistration,
         firstName: editFormData.firstName,
         lastName: editFormData.lastName,
@@ -675,7 +677,7 @@ function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this registration?')) return;
     
     try {
-      await getClient().models.Registration.delete({ id });
+      await (await getClient()).models.Registration.delete({ id });
       await loadData();
       setMessage('Registration deleted successfully!');
     } catch (error) {
