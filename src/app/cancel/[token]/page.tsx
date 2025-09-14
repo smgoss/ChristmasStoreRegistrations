@@ -4,9 +4,16 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
-import '@/lib/amplify';
+import { ensureAmplifyConfigured } from '@/lib/amplify';
 
-const client = generateClient<Schema>();
+let client: ReturnType<typeof generateClient<Schema>> | null = null;
+const getClient = async () => {
+  if (!client) {
+    await ensureAmplifyConfigured();
+    client = generateClient<Schema>();
+  }
+  return client;
+};
 
 interface Registration {
   id: string;
@@ -35,7 +42,7 @@ export default function CancelPage() {
 
   const loadRegistration = async () => {
     try {
-      const { data: registrations } = await client.models.Registration.list({
+      const { data: registrations } = await (await getClient()).models.Registration.list({
         filter: { confirmationToken: { eq: token } }
       });
 
@@ -65,7 +72,7 @@ export default function CancelPage() {
 
     setProcessing(true);
     try {
-      await client.models.Registration.update({
+      await (await getClient()).models.Registration.update({
         id: registration.id,
         isCancelled: true,
         cancelledAt: new Date().toISOString(),

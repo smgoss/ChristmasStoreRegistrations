@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
-import '@/lib/amplify';
+import { ensureAmplifyConfigured } from '@/lib/amplify';
 import { z } from 'zod';
 
-const client = generateClient<Schema>();
+let client: ReturnType<typeof generateClient<Schema>> | null = null;
+const getClient = async () => {
+  if (!client) {
+    await ensureAmplifyConfigured();
+    client = generateClient<Schema>();
+  }
+  return client;
+};
 
 // In-memory rate limiting (best-effort; use durable store in production)
 const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
@@ -84,8 +91,8 @@ export async function POST(req: Request) {
 
     // Check duplicates on server
     const [emailCheck, phoneCheck] = await Promise.all([
-      client.models.Registration.list({ filter: { email: { eq: email } } }),
-      client.models.Registration.list({ filter: { phone: { eq: phone } } }),
+      (await getClient()).models.Registration.list({ filter: { email: { eq: email } } }),
+      (await getClient()).models.Registration.list({ filter: { phone: { eq: phone } } }),
     ]);
 
     if (emailCheck.data?.length) {
@@ -96,7 +103,7 @@ export async function POST(req: Request) {
     }
 
     // Enforce registration status
-    const { data: configData } = await client.models.RegistrationConfig.list();
+    const { data: configData } = await (await getClient()).models.RegistrationConfig.list();
     const config = configData?.[0];
     if (config) {
       if (!config.isRegistrationOpen) {
@@ -133,13 +140,13 @@ export async function POST(req: Request) {
     // Wrap the entire capacity check + create in a per-slot lock
     return await withSlotLock(timeSlot, async () => {
       // Capacity check (pre-create)
-      const { data: slotList } = await client.models.TimeSlotConfig.list({ filter: { timeSlot: { eq: timeSlot } } });
+      const { data: slotList } = await (await getClient()).models.TimeSlotConfig.list({ filter: { timeSlot: { eq: timeSlot } } });
       const slot = slotList?.[0];
       if (!slot) {
         return NextResponse.json({ error: 'Selected time slot is not available' }, { status: 400 });
       }
 
-      const { data: regsInSlot } = await client.models.Registration.list({
+      const { data: regsInSlot } = await (await getClient()).models.Registration.list({
         filter: { timeSlot: { eq: timeSlot }, isCancelled: { ne: true } },
       });
       const currentCount = regsInSlot?.length ?? 0;
@@ -149,7 +156,7 @@ export async function POST(req: Request) {
 
       // If invite token is present, validate not used
       if (inviteToken) {
-        const { data: invites } = await client.models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
+        const { data: invites } = await (await getClient()).models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
         const invite = invites?.[0];
         if (!invite || invite.isUsed) {
           return NextResponse.json({ error: 'Invalid or already used invite token' }, { status: 400 });
@@ -158,7 +165,7 @@ export async function POST(req: Request) {
 
       // Create registration
       const now = new Date().toISOString();
-      const regResult = await client.models.Registration.create({
+      const regResult = await (await getClient()).models.Registration.create({
         firstName,
         lastName,
         email,
@@ -180,7 +187,7 @@ export async function POST(req: Request) {
       if (Array.isArray(children) && numberOfKids > 0) {
         for (const child of children) {
           if (!child) continue;
-        await client.models.Child.create({
+        await (await getClient()).models.Child.create({
           registrationId: reg.id,
           age: String(child.age),
           gender: child.gender,
@@ -189,22 +196,22 @@ export async function POST(req: Request) {
       }
 
       // Post-create capacity recheck to reduce race conditions
-      const { data: regsInSlotAfter } = await client.models.Registration.list({
+      const { data: regsInSlotAfter } = await (await getClient()).models.Registration.list({
         filter: { timeSlot: { eq: timeSlot }, isCancelled: { ne: true } },
       });
       const newCount = regsInSlotAfter?.length ?? 0;
       if (newCount > (slot.maxCapacity || 0)) {
         // Roll back this registration
-        await client.models.Registration.delete({ id: reg.id });
+        await (await getClient()).models.Registration.delete({ id: reg.id });
         return NextResponse.json({ error: 'This time slot just filled up. Please choose another.' }, { status: 409 });
       }
 
       // Mark invite as used (best effort) if applicable
       if (inviteToken) {
-        const { data: invites2 } = await client.models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
+        const { data: invites2 } = await (await getClient()).models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
         const invite2 = invites2?.[0];
         if (invite2 && !invite2.isUsed) {
-          await client.models.InviteLink.update({ id: invite2.id, isUsed: true, usedAt: now });
+          await (await getClient()).models.InviteLink.update({ id: invite2.id, isUsed: true, usedAt: now });
         }
       }
 
