@@ -191,6 +191,47 @@ Questions? Reply to this message or call the office.
 - Christmas Store Team`;
 }
 
+// Email confirmation sending function
+async function sendEmailConfirmationAsync(registration: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  timeSlot: string;
+  numberOfKids: number;
+  referredBy?: string;
+  children: Array<{ age: number | string; gender: string }>;
+}) {
+  try {
+    console.log('📧 Sending email confirmation');
+    
+    // Call the Amplify backend function directly
+    const client = await getClient();
+    const result = await client.mutations.sendConfirmationEmail({
+      registration: {
+        firstName: registration.firstName,
+        lastName: registration.lastName,
+        email: registration.email,
+        phone: registration.phone,
+        timeSlot: registration.timeSlot,
+        numberOfKids: registration.numberOfKids,
+        referredBy: registration.referredBy || '',
+        children: registration.children
+      }
+    });
+
+    if (result.data?.success) {
+      console.log('✅ Email confirmation sent successfully');
+    } else {
+      console.error('❌ Email function failed:', result.errors);
+      throw new Error(`Email function failed: ${result.errors?.[0]?.message || 'Unknown error'}`);
+    }
+  } catch (error) {
+    console.error('❌ Failed to send email confirmation:', error);
+    throw error;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     console.log('Registration API called');
@@ -374,6 +415,20 @@ export async function POST(req: Request) {
         registrationDate: now
       }).catch(error => {
         console.error('SMS confirmation failed (non-blocking):', error);
+      });
+
+      // Send email confirmation (async, don't wait for completion)
+      sendEmailConfirmationAsync({
+        firstName,
+        lastName,
+        email,
+        phone: rawPhone,
+        timeSlot,
+        numberOfKids,
+        referredBy,
+        children
+      }).catch(error => {
+        console.error('Email confirmation failed (non-blocking):', error);
       });
 
       return NextResponse.json({ id: reg.id }, { status: 201 });

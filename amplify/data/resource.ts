@@ -1,5 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { sendSmsConfirmation } from '../functions/send-sms-confirmation/resource';
+import { sendConfirmationEmail } from '../functions/send-confirmation-email/resource';
 
 const schema = a.schema({
   Registration: a
@@ -116,6 +117,27 @@ const schema = a.schema({
     }))
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendSmsConfirmation)),
+
+  sendConfirmationEmail: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        referredBy: a.string(),
+        children: a.json(),
+      })
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendConfirmationEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;
