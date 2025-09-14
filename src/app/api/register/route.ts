@@ -75,6 +75,29 @@ const RegistrationSchema = z.object({
   children: z.array(ChildSchema).optional(),
 });
 
+function formatPhoneForStorage(phone: string): string {
+  // Remove all non-numeric characters
+  const digits = phone.replace(/\D/g, '');
+  
+  // Add +1 if it's a 10-digit US number
+  if (digits.length === 10) {
+    return `+1${digits}`;
+  }
+  
+  // Add + if it starts with country code but missing +
+  if (digits.length === 11 && digits.startsWith('1')) {
+    return `+${digits}`;
+  }
+  
+  // If already has +, return as-is
+  if (phone.startsWith('+')) {
+    return phone;
+  }
+  
+  // Return with + prefix
+  return `+${digits}`;
+}
+
 // Async SMS sending function
 async function sendSmsConfirmationAsync(registration: {
   firstName: string;
@@ -127,19 +150,23 @@ export async function POST(req: Request) {
       console.log('Schema validation failed:', parsed.error);
       return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
     }
-    const { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
+    const { firstName, lastName, email, phone: rawPhone, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
+    
+    // Format phone number to E.164 format for database storage
+    const phone = formatPhoneForStorage(rawPhone);
     console.log('Parsed registration data:', { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken });
 
-    // Check duplicates on server
-    const [emailCheck, phoneCheck] = await Promise.all([
+    // Check duplicates on server (check both formatted and raw phone)
+    const [emailCheck, phoneCheck, rawPhoneCheck] = await Promise.all([
       (await getClient()).models.Registration.list({ filter: { email: { eq: email } } }),
       (await getClient()).models.Registration.list({ filter: { phone: { eq: phone } } }),
+      (await getClient()).models.Registration.list({ filter: { phone: { eq: rawPhone } } }),
     ]);
 
     if (emailCheck.data?.length) {
       return NextResponse.json({ error: 'Someone is already registered with this email address' }, { status: 409 });
     }
-    if (phoneCheck.data?.length) {
+    if (phoneCheck.data?.length || rawPhoneCheck.data?.length) {
       return NextResponse.json({ error: 'Someone is already registered with this phone number' }, { status: 409 });
     }
 
@@ -285,7 +312,7 @@ export async function POST(req: Request) {
         firstName,
         lastName,
         email,
-        phone,
+        phone: rawPhone, // Use raw phone for SMS (it handles formatting internally)
         timeSlot,
         numberOfKids,
         referredBy,
