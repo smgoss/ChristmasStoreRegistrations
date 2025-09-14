@@ -115,16 +115,20 @@ async function sendSmsConfirmationAsync(registration: {
 
 export async function POST(req: Request) {
   try {
+    console.log('Registration API called');
     if (!checkRateLimit(req)) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
     }
 
     const json = await req.json();
+    console.log('Received registration data:', json);
     const parsed = RegistrationSchema.safeParse(json);
     if (!parsed.success) {
+      console.log('Schema validation failed:', parsed.error);
       return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
     }
     const { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
+    console.log('Parsed registration data:', { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken });
 
     // Check duplicates on server
     const [emailCheck, phoneCheck] = await Promise.all([
@@ -176,10 +180,13 @@ export async function POST(req: Request) {
 
     // Wrap the entire capacity check + create in a per-slot lock
     return await withSlotLock(timeSlot, async () => {
+      console.log('Checking time slot availability for:', timeSlot);
       // Capacity check (pre-create)
       const { data: slotList } = await (await getClient()).models.TimeSlotConfig.list({ filter: { timeSlot: { eq: timeSlot } } });
+      console.log('TimeSlotConfig query result:', slotList);
       const slot = slotList?.[0];
       if (!slot) {
+        console.log('Time slot not found:', timeSlot);
         return NextResponse.json({ error: 'Selected time slot is not available' }, { status: 400 });
       }
 
