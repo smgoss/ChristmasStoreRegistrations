@@ -75,6 +75,44 @@ const RegistrationSchema = z.object({
   children: z.array(ChildSchema).optional(),
 });
 
+// Async SMS sending function
+async function sendSmsConfirmationAsync(registration: {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  timeSlot: string;
+  numberOfKids: number;
+  referredBy?: string;
+  registrationDate: string;
+}) {
+  try {
+    const { LambdaClient, InvokeCommand } = await import('@aws-sdk/client-lambda');
+    const lambda = new LambdaClient({ region: process.env.AWS_REGION || 'us-east-1' });
+    
+    const command = new InvokeCommand({
+      FunctionName: process.env.SEND_SMS_CONFIRMATION_FUNCTION_NAME || 'send-sms-confirmation',
+      Payload: JSON.stringify({
+        arguments: { registration }
+      }),
+    });
+
+    const response = await lambda.send(command);
+    
+    if (response.Payload) {
+      const result = JSON.parse(new TextDecoder().decode(response.Payload));
+      if (result.success) {
+        console.log('✅ SMS confirmation sent successfully');
+      } else {
+        throw new Error(`SMS Lambda failed: ${result.message}`);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Failed to send SMS confirmation:', error);
+    throw error;
+  }
+}
+
 export async function POST(req: Request) {
   try {
     if (!checkRateLimit(req)) {
@@ -213,6 +251,20 @@ export async function POST(req: Request) {
           await (await getClient()).models.InviteLink.update({ id: invite2.id, isUsed: true, usedAt: now });
         }
       }
+
+      // Send SMS confirmation (async, don't wait for completion)
+      sendSmsConfirmationAsync({
+        firstName,
+        lastName,
+        email,
+        phone,
+        timeSlot,
+        numberOfKids,
+        referredBy,
+        registrationDate: now
+      }).catch(error => {
+        console.error('SMS confirmation failed (non-blocking):', error);
+      });
 
       return NextResponse.json({ id: reg.id }, { status: 201 });
     });

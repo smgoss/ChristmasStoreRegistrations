@@ -8,6 +8,7 @@ import { reserveRegistration } from './functions/reserve-registration/resource';
 import { autoCloseRegistration } from './functions/auto-close-registration/resource';
 import { createAdminUser } from './functions/create-admin-user/resource';
 import { sendInviteEmail } from './functions/send-invite-email/resource';
+import { sendSmsConfirmation } from './functions/send-sms-confirmation/resource';
 
 export const backend = defineBackend({
   auth,
@@ -18,6 +19,7 @@ export const backend = defineBackend({
   autoCloseRegistration,
   createAdminUser,
   sendInviteEmail,
+  sendSmsConfirmation,
 });
 
 // Grant the createAdminUser function access to Cognito User Pool
