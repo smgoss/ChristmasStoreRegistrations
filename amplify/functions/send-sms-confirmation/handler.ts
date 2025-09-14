@@ -106,7 +106,7 @@ async function sendClearstreamSms(phone: string, message: string) {
     const response = await fetch('https://api.getclearstream.com/v1/texts', {
       method: 'POST',
       headers: {
-        'X-Api-Key': apiKey,
+        'X-Api-Key': apiKey.resolve.toString(),
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
