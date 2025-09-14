@@ -1407,10 +1407,6 @@ function AdminDashboard() {
                           <p className="text-purple-700"><span className="font-bold">📱 Phone:</span> {reg.phone}</p>
                           <p className="text-purple-700"><span className="font-bold">⏰ Time:</span> <span className="bg-blue-200 px-2 py-1 rounded font-bold">{reg.timeSlot}</span></p>
                           <p className="text-purple-700"><span className="font-bold">👶 Kids:</span> {reg.numberOfKids}</p>
-                          <p className="text-purple-700">
-                            <span className="font-bold">🍼 Childcare:</span> 
-                            </span>
-                          </p>
                           {reg.referredBy && (
                             <p className="text-purple-700"><span className="font-bold">👤 Referred:</span> {reg.referredBy}</p>
                           )}
