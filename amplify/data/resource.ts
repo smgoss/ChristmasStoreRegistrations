@@ -17,6 +17,7 @@ const schema = a.schema({
       timeSlot: a.string().required(), // "09:00", "09:30", etc.
       
       // Additional requirements
+      needsChildcare: a.boolean().default(false), // Kept for backward compatibility, not used in UI
       referredBy: a.string(),
       
       // Invite link tracking
