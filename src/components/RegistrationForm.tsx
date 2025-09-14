@@ -44,7 +44,6 @@ interface RegistrationData {
   phone: string;
   numberOfKids: number;
   timeSlot: string;
-  needsChildcare: boolean;
   referredBy: string;
   children: Child[];
 }
@@ -64,13 +63,14 @@ export default function RegistrationForm({
 }: RegistrationFormProps = {}) {
   const locationConfig = useLocationConfig();
   const { 
-    timeSlots: TIME_SLOTS, 
     locationName: LOCATION_NAME,
     locationAddress: LOCATION_ADDRESS,
     branding: BRANDING,
     churchInfo: CHURCH_INFO,
     contactEmail: CONTACT_EMAIL 
   } = locationConfig;
+  
+  const [timeSlots, setTimeSlots] = useState<string[]>([]);
 
   const [formData, setFormData] = useState<RegistrationData>({
     firstName: '',
@@ -79,7 +79,6 @@ export default function RegistrationForm({
     phone: '',
     numberOfKids: 0,
     timeSlot: '',
-    needsChildcare: false,
     referredBy: '',
     children: []
   });
@@ -136,6 +135,11 @@ export default function RegistrationForm({
     setFormData(prev => ({ ...prev, children: newChildren }));
   }, [formData.numberOfKids]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    // Load time slots from database on component mount
+    loadTimeSlotCapacities();
+  }, []);
+
   const loadTimeSlotCapacities = async () => {
     try {
       // Load time slot configurations
@@ -146,18 +150,25 @@ export default function RegistrationForm({
       const { data: registrationData } = await client.models.Registration.list();
       
       const capacities: Record<string, { max: number; current: number }> = {};
+      const activeTimeSlots: string[] = [];
       
       timeSlotData.forEach(config => {
-        // Calculate actual registration count for this time slot
-        const actualCount = registrationData ? 
-          registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
-        
-        capacities[config.timeSlot] = {
-          max: config.maxCapacity || 0,
-          current: actualCount
-        };
+        // Only include active time slots
+        if (config.isActive) {
+          activeTimeSlots.push(config.timeSlot);
+          
+          // Calculate actual registration count for this time slot
+          const actualCount = registrationData ? 
+            registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
+          
+          capacities[config.timeSlot] = {
+            max: config.maxCapacity || 0,
+            current: actualCount
+          };
+        }
       });
       
+      setTimeSlots(activeTimeSlots);
       setTimeSlotCapacities(capacities);
     } catch (error) {
       console.error('Error loading time slot capacities:', error);
@@ -316,7 +327,6 @@ export default function RegistrationForm({
             <p className="text-gray-900"><strong>Email:</strong> {formData.email}</p>
             <p className="text-gray-900"><strong>Time Slot:</strong> {formData.timeSlot}</p>
             <p className="text-gray-900"><strong>Number of Children:</strong> {formData.numberOfKids}</p>
-            {formData.needsChildcare && <p className="text-gray-900"><strong>Childcare:</strong> Yes</p>}
           </div>
         </div>
       </div>
@@ -540,7 +550,7 @@ export default function RegistrationForm({
             required
           >
             <option value="">Select a time slot</option>
-            {TIME_SLOTS.map(slot => {
+            {timeSlots.map(slot => {
               const capacity = timeSlotCapacities[slot];
               const isFull = capacity && capacity.current >= capacity.max;
               const availableText = capacity ? ` (${capacity.current}/${capacity.max} registered)` : '';
@@ -555,19 +565,6 @@ export default function RegistrationForm({
           {errors.timeSlot && <p className="text-red-500 text-sm mt-1">{errors.timeSlot}</p>}
         </div>
 
-        <div>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={formData.needsChildcare}
-              onChange={(e) => setFormData(prev => ({ ...prev, needsChildcare: e.target.checked }))}
-              className="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
-            />
-            <span className="text-sm font-medium text-gray-700">
-              I need childcare during my shopping time
-            </span>
-          </label>
-        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">

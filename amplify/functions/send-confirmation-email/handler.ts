@@ -10,7 +10,6 @@ interface RegistrationData {
   phone: string;
   timeSlot: string;
   numberOfKids: number;
-  needsChildcare: boolean;
   referredBy?: string;
   children: Array<{ age: number; gender: string }>;
 }
@@ -107,7 +106,6 @@ function generateEmailContent(registration: RegistrationData): string {
             <li><strong>Phone:</strong> ${registration.phone}</li>
             <li><strong>Time Slot:</strong> ${registration.timeSlot}</li>
             <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
-            ${registration.needsChildcare ? '<li><strong>Childcare:</strong> Yes</li>' : ''}
             ${registration.referredBy ? `<li><strong>Referred by:</strong> ${registration.referredBy}</li>` : ''}
           </ul>
           
@@ -124,7 +122,6 @@ function generateEmailContent(registration: RegistrationData): string {
           <li>Please arrive 15 minutes before your scheduled time slot</li>
           <li>Bring a valid photo ID</li>
           <li>Children must be accompanied by a parent or guardian</li>
-          ${registration.needsChildcare ? '<li>Childcare will be available during your shopping time</li>' : ''}
         </ul>
         
         <p>If you need to make any changes to your registration or have questions, please contact us as soon as possible.</p>

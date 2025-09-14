@@ -96,7 +96,6 @@ interface Registration {
   phone: string;
   timeSlot: string;
   numberOfKids: number;
-  needsChildcare: boolean;
   referredBy?: string;
   registrationDate: string;
   attendanceConfirmed?: boolean;
@@ -745,7 +744,6 @@ function AdminDashboard() {
         phone: editFormData.phone,
         timeSlot: editFormData.timeSlot,
         numberOfKids: editFormData.numberOfKids,
-        needsChildcare: editFormData.needsChildcare,
         referredBy: editFormData.referredBy
       });
       
@@ -780,7 +778,6 @@ function AdminDashboard() {
         reg.phone,
         reg.timeSlot,
         reg.numberOfKids.toString(),
-        reg.needsChildcare ? 'Yes' : 'No',
         reg.referredBy || '',
         new Date(reg.registrationDate).toLocaleDateString()
       ])
@@ -1231,7 +1228,7 @@ function AdminDashboard() {
                             </span>
                           )}
                         </div>
-                        <div className="mt-2 font-mono text-sm bg-gray-100 p-2 rounded border break-all">
+                        <div className="mt-2 font-mono text-sm bg-gray-100 text-gray-800 p-2 rounded border break-all">
                           {window.location.origin}/register/{invite.token}
                         </div>
                       </div>
@@ -1318,7 +1315,7 @@ function AdminDashboard() {
             <div className="text-4xl mb-2">🍼</div>
             <h3 className="font-bold text-yellow-800 text-lg">NEED CHILDCARE</h3>
             <p className="text-3xl font-bold text-yellow-900">
-              {registrations.filter(reg => reg.needsChildcare).length}
+              0
             </p>
           </div>
         </div>
@@ -1386,8 +1383,6 @@ function AdminDashboard() {
                       <label className="flex items-center space-x-2">
                         <input
                           type="checkbox"
-                          checked={editFormData?.needsChildcare || false}
-                          onChange={(e) => setEditFormData(prev => prev ? {...prev, needsChildcare: e.target.checked} : null)}
                           className="w-4 h-4"
                         />
                         <span className="font-bold text-gray-800">Needs Childcare</span>
@@ -1414,8 +1409,6 @@ function AdminDashboard() {
                           <p className="text-purple-700"><span className="font-bold">👶 Kids:</span> {reg.numberOfKids}</p>
                           <p className="text-purple-700">
                             <span className="font-bold">🍼 Childcare:</span> 
-                            <span className={`px-2 py-1 rounded font-bold ml-1 ${reg.needsChildcare ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-800'}`}>
-                              {reg.needsChildcare ? 'YES' : 'NO'}
                             </span>
                           </p>
                           {reg.referredBy && (

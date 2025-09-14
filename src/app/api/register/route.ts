@@ -70,7 +70,6 @@ const RegistrationSchema = z.object({
   phone: z.string().trim().min(7),
   numberOfKids: z.number().int().min(0),
   timeSlot: z.string().trim().min(1),
-  needsChildcare: z.boolean(),
   referredBy: z.string().optional(),
   inviteToken: z.string().optional(),
   children: z.array(ChildSchema).optional(),
@@ -87,7 +86,7 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
     }
-    const { firstName, lastName, email, phone, numberOfKids, timeSlot, needsChildcare, referredBy, inviteToken, children = [] } = parsed.data;
+    const { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
 
     // Check duplicates on server
     const [emailCheck, phoneCheck] = await Promise.all([
@@ -121,7 +120,7 @@ export async function POST(req: Request) {
         const lc = new LambdaClient({});
         const ivk = new InvokeCommand({
           FunctionName: process.env.RESERVE_FUNCTION_NAME,
-          Payload: new TextEncoder().encode(JSON.stringify({ input: { firstName, lastName, email, phone, numberOfKids, timeSlot, needsChildcare, referredBy, inviteToken, children } })),
+          Payload: new TextEncoder().encode(JSON.stringify({ input: { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken, children } })),
         });
         const res = await lc.send(ivk);
         const payloadStr = res.Payload ? new TextDecoder().decode(res.Payload) : '{}';
@@ -172,7 +171,6 @@ export async function POST(req: Request) {
         phone,
         numberOfKids,
         timeSlot,
-        needsChildcare,
         referredBy: referredBy || undefined,
         inviteToken,
         registrationDate: now,
