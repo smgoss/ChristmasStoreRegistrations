@@ -278,7 +278,7 @@ function AdminDashboard() {
       
       if (existingSlots.length === 0) {
         // Create default time slots with capacity of 20 each
-        const promises = TIME_SLOTS.map(slot =>
+        const promises = TIME_SLOTS.map(async slot =>
           (await getClient()).models.TimeSlotConfig.create({
             timeSlot: slot,
             maxCapacity: DEFAULT_CAPACITY,
