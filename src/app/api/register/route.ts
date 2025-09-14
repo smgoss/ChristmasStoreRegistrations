@@ -171,6 +171,7 @@ export async function POST(req: Request) {
         phone,
         numberOfKids,
         timeSlot,
+        needsChildcare: false, // Temporary: until schema migration completes
         referredBy: referredBy || undefined,
         inviteToken,
         registrationDate: now,
