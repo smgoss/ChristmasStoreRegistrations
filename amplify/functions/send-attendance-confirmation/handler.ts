@@ -24,6 +24,7 @@ export const handler = async (event: AppSyncResolverEvent<{ registrations: Regis
 
         const command = new SendEmailCommand({
           Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
+          ReplyToAddresses: ['office@pathwayvineyard.com'],
           Destination: {
             ToAddresses: [registration.email],
           },
