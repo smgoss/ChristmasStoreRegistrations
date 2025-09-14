@@ -117,6 +117,15 @@ interface RegistrationConfig {
   updatedAt?: string;
 }
 
+interface InviteLink {
+  id: string;
+  token: string;
+  email?: string;
+  isUsed?: boolean;
+  createdAt: string;
+  usedAt?: string;
+}
+
 // TIME_SLOTS is now imported from locationConfig
 
 function AdminDashboard() {
@@ -130,6 +139,7 @@ function AdminDashboard() {
 
   const [timeSlots, setTimeSlots] = useState<TimeSlotConfig[]>([]);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
+  const [inviteLinks, setInviteLinks] = useState<InviteLink[]>([]);
   const [inviteEmail, setInviteEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -263,6 +273,18 @@ function AdminDashboard() {
           });
           setTimeSlots(sortedTimeSlots);
         }
+      }
+
+      // Load invite links
+      console.log('🔍 Fetching invite links...');
+      const { data: inviteData, errors: inviteErrors } = await (await getClient()).models.InviteLink.list();
+      
+      if (inviteErrors) {
+        console.error('❌ Invite link errors:', inviteErrors);
+      } else {
+        console.log('✅ Invite links loaded:', inviteData?.length || 0);
+        const inviteLinks = inviteData as InviteLink[];
+        setInviteLinks(inviteLinks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
       }
     } catch (error) {
       console.error('💥 Error loading data:', error);
@@ -480,16 +502,79 @@ function AdminDashboard() {
 
       const inviteUrl = `${window.location.origin}/register/${token}`;
       
+      // Send invite email if email was provided
+      if (inviteEmail.trim()) {
+        try {
+          console.log('📧 Sending invite email to:', inviteEmail);
+          const response = await fetch('/api/send-invite-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: inviteEmail,
+              inviteLink: inviteUrl,
+              token: token
+            }),
+          });
+
+          if (response.ok) {
+            console.log('✅ Invite email sent successfully');
+            setMessage(`Invite link generated and email sent to ${inviteEmail}. Link also copied to clipboard.`);
+          } else {
+            console.warn('⚠️ Invite email failed to send');
+            setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+          }
+        } catch (emailError) {
+          console.error('❌ Error sending invite email:', emailError);
+          setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+        }
+      } else {
+        setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);
+      }
+      
       try {
         await navigator.clipboard.writeText(inviteUrl);
       } catch {}
-      setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);
+      
       setInviteEmail('');
+      
+      // Reload invite links to show the new one
+      loadData();
     } catch (error) {
       console.error('Error generating invite link:', error);
       setMessage('Error generating invite link.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const invalidateInviteLink = async (inviteId: string) => {
+    if (!confirm('Are you sure you want to invalidate this invite link? This action cannot be undone.')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await (await getClient()).models.InviteLink.delete({ id: inviteId });
+      setMessage('Invite link invalidated successfully.');
+      loadData(); // Reload to update the list
+    } catch (error) {
+      console.error('Error invalidating invite link:', error);
+      setMessage('Error invalidating invite link.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const copyInviteLink = async (token: string) => {
+    const inviteUrl = `${window.location.origin}/register/${token}`;
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      setMessage(`Invite link copied to clipboard: ${inviteUrl}`);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      setMessage('Error copying link to clipboard.');
     }
   };
 
@@ -1073,12 +1158,15 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* Invite Link Generator */}
+        {/* Invite Link Management */}
         <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
           <h2 className="text-2xl font-bold text-green-800 mb-4 flex items-center">
-            🔗 Generate Invite Link
+            🔗 Invite Link Management
           </h2>
-          <div className="space-y-4">
+          
+          {/* Generate New Invite Link */}
+          <div className="space-y-4 mb-6">
+            <h3 className="text-lg font-semibold text-green-700">Generate New Invite Link</h3>
             <div>
               <label className="block text-green-700 font-bold mb-2">
                 📧 Email Address (optional)
@@ -1098,6 +1186,80 @@ function AdminDashboard() {
             >
               {loading ? '⏳ Generating...' : '🚀 Generate Invite Link'}
             </button>
+          </div>
+
+          {/* Existing Invite Links */}
+          <div className="border-t-2 border-green-200 pt-6">
+            <h3 className="text-lg font-semibold text-green-700 mb-4">
+              Existing Invite Links ({inviteLinks.length})
+            </h3>
+            
+            {inviteLinks.length === 0 ? (
+              <p className="text-green-600 italic">No invite links have been generated yet.</p>
+            ) : (
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {inviteLinks.map((invite) => (
+                  <div
+                    key={invite.id}
+                    className={`p-4 rounded-lg border-2 ${
+                      invite.isUsed 
+                        ? 'bg-gray-100 border-gray-300 text-gray-600' 
+                        : 'bg-white border-green-200'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className={`px-2 py-1 rounded text-xs font-bold ${
+                            invite.isUsed 
+                              ? 'bg-red-100 text-red-800' 
+                              : 'bg-green-100 text-green-800'
+                          }`}>
+                            {invite.isUsed ? '✅ USED' : '🟢 ACTIVE'}
+                          </span>
+                          {invite.email && (
+                            <span className="text-sm text-gray-600">
+                              📧 {invite.email}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Created: {new Date(invite.createdAt).toLocaleString()}
+                          {invite.usedAt && (
+                            <span className="ml-4">
+                              Used: {new Date(invite.usedAt).toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-2 font-mono text-sm bg-gray-100 p-2 rounded border break-all">
+                          {window.location.origin}/register/{invite.token}
+                        </div>
+                      </div>
+                      <div className="flex space-x-2 ml-4">
+                        <button
+                          onClick={() => copyInviteLink(invite.token)}
+                          disabled={loading}
+                          className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 disabled:opacity-50"
+                          title="Copy Link"
+                        >
+                          📋 Copy
+                        </button>
+                        {!invite.isUsed && (
+                          <button
+                            onClick={() => invalidateInviteLink(invite.id)}
+                            disabled={loading}
+                            className="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 disabled:opacity-50"
+                            title="Invalidate Link"
+                          >
+                            ❌ Invalidate
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
