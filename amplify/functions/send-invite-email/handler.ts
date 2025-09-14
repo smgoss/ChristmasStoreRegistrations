@@ -25,7 +25,7 @@ export const handler = async (event: any) => {
     const emailContent = generateInviteEmailContent(email, inviteLink, token);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'noreply@pathwayvineyard.com',
+      Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
       Destination: {
         ToAddresses: [email],
       },
