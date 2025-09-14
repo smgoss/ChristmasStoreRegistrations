@@ -93,7 +93,13 @@ async function sendClearstreamSms(phone: string, message: string) {
     const apiKey = process.env.CLEAR_STREAM_API_KEY;
     const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Christmas Store';
     
+    console.log('Environment variables check:');
+    console.log('CLEARSTREAM_TEXT_HEADER:', textHeader);
+    console.log('CLEAR_STREAM_API_KEY exists:', !!apiKey);
+    console.log('CLEAR_STREAM_API_KEY length:', apiKey?.length || 0);
+    
     if (!apiKey) {
+      console.error('Available environment variables:', Object.keys(process.env));
       throw new Error('CLEAR_STREAM_API_KEY environment variable not found');
     }
     
