@@ -1,17 +1,3 @@
-import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
-
-const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
-
-async function getSecret(secretName: string): Promise<string> {
-  try {
-    const command = new GetSecretValueCommand({ SecretId: secretName });
-    const response = await secretsClient.send(command);
-    return response.SecretString || '';
-  } catch (error) {
-    console.error(`Error retrieving secret ${secretName}:`, error);
-    throw error;
-  }
-}
 
 interface RegistrationData {
   firstName: string;
@@ -103,12 +89,12 @@ Questions? Reply to this message or call the office.
 
 async function sendClearstreamSms(phone: string, message: string) {
   try {
-    // Get API key from AWS Secrets Manager
-    const apiKey = await getSecret('CLEAR_STREAM_API_KEY');
+    // Get API key from environment variable (populated by Amplify secret)
+    const apiKey = process.env.CLEAR_STREAM_API_KEY;
     const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Christmas Store';
     
     if (!apiKey) {
-      throw new Error('CLEAR_STREAM_API_KEY secret not found');
+      throw new Error('CLEAR_STREAM_API_KEY environment variable not found');
     }
     
     const response = await fetch('https://api.getclearstream.com/v1/texts', {
