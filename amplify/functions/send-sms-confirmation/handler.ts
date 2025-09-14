@@ -1,3 +1,4 @@
+import { secret } from '@aws-amplify/backend';
 
 interface RegistrationData {
   firstName: string;
@@ -90,13 +91,12 @@ Questions? Reply to this message or call the office.
 async function sendClearstreamSms(phone: string, message: string) {
   try {
     // Get API key from environment variable (populated by Amplify secret)
-    const apiKey = process.env.CLEAR_STREAM_API_KEY;
-    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Christmas Store';
+    const apiKey = secret("CLEAR_STREAM_API_KEY");
+    const textHeader = 'Pathway Christmas Store';
     
     console.log('Environment variables check:');
     console.log('CLEARSTREAM_TEXT_HEADER:', textHeader);
     console.log('CLEAR_STREAM_API_KEY exists:', !!apiKey);
-    console.log('CLEAR_STREAM_API_KEY length:', apiKey?.length || 0);
     
     if (!apiKey) {
       console.error('Available environment variables:', Object.keys(process.env));
