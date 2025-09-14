@@ -1,5 +1,8 @@
 {
   "name": "send-sms-confirmation",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.600.0"
+  }
 }
