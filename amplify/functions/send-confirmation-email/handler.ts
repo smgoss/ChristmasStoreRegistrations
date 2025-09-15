@@ -12,7 +12,7 @@ interface RegistrationData {
   timeSlot: string;
   numberOfKids: number;
   referredBy?: string;
-  children: Array<{ age: number; gender: string }>;
+  children?: Array<{ age: number | string; gender: string }> | string;
 }
 
 export const handler: Handler = async (event: AppSyncResolverEvent<{ registration: RegistrationData }>) => {
@@ -65,7 +65,26 @@ function generateEmailContent(registration: RegistrationData): string {
   const secondaryColor = process.env.SECONDARY_COLOR || '#059669';
   const locationEmoji = process.env.LOCATION_EMOJI || '⛪';
   
-  const childrenInfo = registration.children.map(
+  // Handle children data safely - it might be JSON string or array
+  let childrenArray: Array<{ age: number | string; gender: string }> = [];
+  
+  if (registration.children) {
+    try {
+      // If children is a string (JSON), parse it
+      if (typeof registration.children === 'string') {
+        childrenArray = JSON.parse(registration.children);
+      } else if (Array.isArray(registration.children)) {
+        childrenArray = registration.children;
+      } else {
+        console.log('Unexpected children format:', typeof registration.children, registration.children);
+      }
+    } catch (error) {
+      console.error('Error parsing children data:', error);
+      childrenArray = [];
+    }
+  }
+
+  const childrenInfo = childrenArray.map(
     (child, index) => `<li>Child ${index + 1}: Age ${child.age}, ${child.gender}</li>`
   ).join('');
 
