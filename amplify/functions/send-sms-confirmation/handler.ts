@@ -78,14 +78,14 @@ function generateSmsContent(registration: RegistrationData): string {
 Hello ${registration.firstName}!
 
 Your registration is confirmed for:
-📅 Time: ${registration.timeSlot}
-👶 Children: ${registration.numberOfKids}
+Time: ${registration.timeSlot}
+Children: ${registration.numberOfKids}
 
-We look forward to seeing you! Please arrive 15 minutes early and bring a photo ID.
+We look forward to seeing you!
 
 Questions? Reply to this message or call the office.
 
-- Christmas Store Team`;
+- Pathway Christmas Store Team`;
 }
 
 async function sendClearstreamSms(phone: string, message: string) {
