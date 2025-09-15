@@ -91,8 +91,8 @@ Questions? Reply to this message or call the office.
 async function sendClearstreamSms(phone: string, message: string) {
   try {
     // Get API key from environment variable (populated by Amplify secret)
-    const apiKey = secret('CLEAR_STREAM_API_KEY');
-    const textHeader = 'Pathway Christmas Store';
+    const apiKey = process.env.CLEAR_STREAM_API_KEY;
+    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
     
     console.log('Environment variables check:');
     console.log('CLEARSTREAM_TEXT_HEADER:', textHeader);
