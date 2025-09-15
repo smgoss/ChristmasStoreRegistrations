@@ -403,7 +403,10 @@ export async function POST(req: Request) {
         }
       }
 
+      console.log('🚀 Starting confirmation notifications...');
+      
       // Send SMS confirmation (async, don't wait for completion)
+      console.log('📱 About to call SMS confirmation');
       sendSmsConfirmationAsync({
         firstName,
         lastName,
@@ -418,6 +421,7 @@ export async function POST(req: Request) {
       });
 
       // Send email confirmation (async, don't wait for completion)
+      console.log('📧 About to call email confirmation');
       sendEmailConfirmationAsync({
         firstName,
         lastName,
@@ -431,6 +435,7 @@ export async function POST(req: Request) {
         console.error('Email confirmation failed (non-blocking):', error);
       });
 
+      console.log('✅ Registration complete, returning response');
       return NextResponse.json({ id: reg.id }, { status: 201 });
     });
   } catch (err) {
