@@ -3,7 +3,6 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 import { z } from 'zod';
-import { secret } from '@aws-amplify/backend';
 
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = async () => {
@@ -99,152 +98,8 @@ function formatPhoneForStorage(phone: string): string {
   return `+${digits}`;
 }
 
-// Direct SMS sending function using Clearstream API
-async function sendSmsConfirmationAsync(registration: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  timeSlot: string;
-  numberOfKids: number;
-  referredBy?: string;
-  registrationDate: string;
-}) {
-  try {
-    if (!registration.phone) {
-      console.log('ℹ️ No phone number provided, skipping SMS');
-      return;
-    }
 
-    console.log('📱 Sending SMS confirmation directly');
-    
-    // Clean phone number (ensure it has country code)
-    const cleanPhone = cleanPhoneNumber(registration.phone);
-    const smsContent = generateSmsContent(registration);
-    
-    // Use the API key directly (you'll need to set this as an environment variable in Amplify console)
-    const apiKey = secret('CLEAR_STREAM_API_KEY').resolve.toString();
-    const textHeader = 'Christmas Store';
-    
-    console.log('Sending SMS to:', cleanPhone);
-    
-    const response = await fetch('https://api.getclearstream.com/v1/texts', {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': apiKey,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        to: cleanPhone,
-        text_header: textHeader,
-        text_body: smsContent,
-      }),
-    });
-    
-    if (response.ok) {
-      const result = await response.text();
-      console.log('✅ SMS confirmation sent successfully:', result);
-    } else {
-      const error = await response.text();
-      console.error('❌ Clearstream API error:', error);
-      throw new Error(`Clearstream API error: ${error}`);
-    }
-  } catch (error) {
-    console.error('❌ Failed to send SMS confirmation:', error);
-    throw error;
-  }
-}
 
-function cleanPhoneNumber(phone: string): string {
-  // Remove all non-numeric characters
-  const digits = phone.replace(/\D/g, '');
-  
-  // Add +1 if it's a 10-digit US number
-  if (digits.length === 10) {
-    return `+1${digits}`;
-  }
-  
-  // Add + if it starts with country code but missing +
-  if (digits.length === 11 && digits.startsWith('1')) {
-    return `+${digits}`;
-  }
-  
-  return phone; // Return as-is if already formatted
-}
-
-function generateSmsContent(registration: {
-  firstName: string;
-  timeSlot: string;
-  numberOfKids: number;
-}): string {
-  return `🎄 Christmas Store Registration Confirmed!
-
-Hello ${registration.firstName}!
-
-Your registration is confirmed for:
-📅 Time: ${registration.timeSlot}
-👶 Children: ${registration.numberOfKids}
-
-We look forward to seeing you!
-
-Questions? Reply to this message or call the office.
-
-- Pathway Christmas Store Team`;
-}
-
-// Email confirmation sending function
-async function sendEmailConfirmationAsync(registration: {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  timeSlot: string;
-  numberOfKids: number;
-  referredBy?: string;
-  children: Array<{ age: number | string; gender: string }>;
-}) {
-  try {
-    console.log('📧 Sending email confirmation');
-    console.log('📧 Email data:', {
-      firstName: registration.firstName,
-      lastName: registration.lastName,
-      email: registration.email,
-      phone: registration.phone,
-      timeSlot: registration.timeSlot,
-      numberOfKids: registration.numberOfKids
-    });
-    
-    // Call the Amplify backend function directly
-    const client = await getClient();
-    console.log('📧 About to call sendConfirmationEmail mutation');
-    
-    const result = await client.mutations.sendConfirmationEmail({
-      registration: {
-        firstName: registration.firstName,
-        lastName: registration.lastName,
-        email: registration.email,
-        phone: registration.phone,
-        timeSlot: registration.timeSlot,
-        numberOfKids: registration.numberOfKids,
-        referredBy: registration.referredBy || '',
-        children: registration.children
-      }
-    });
-
-    console.log('📧 Email mutation result:', result);
-    
-    if (result.data?.success) {
-      console.log('✅ Email confirmation sent successfully');
-    } else {
-      console.error('❌ Email function failed:', result.errors);
-      throw new Error(`Email function failed: ${result.errors?.[0]?.message || 'Unknown error'}`);
-    }
-  } catch (error) {
-    console.error('❌ Failed to send email confirmation:', error);
-    console.error('❌ Email error details:', JSON.stringify(error, null, 2));
-    throw error;
-  }
-}
 
 export async function POST(req: Request) {
   try {
@@ -419,32 +274,50 @@ export async function POST(req: Request) {
 
       console.log('🚀 Starting confirmation notifications...');
       
+      const client = await getClient();
+      
       // Send SMS confirmation (async, don't wait for completion)
-      console.log('📱 About to call SMS confirmation');
-      sendSmsConfirmationAsync({
-        firstName,
-        lastName,
-        email,
-        phone: rawPhone, // Use raw phone for SMS (it handles formatting internally)
-        timeSlot,
-        numberOfKids,
-        referredBy,
-        registrationDate: now
+      console.log('📱 About to call SMS confirmation mutation');
+      client.mutations.sendSmsConfirmation({
+        registration: {
+          firstName,
+          lastName,
+          email,
+          phone: rawPhone,
+          timeSlot,
+          numberOfKids,
+          referredBy: referredBy || '',
+          registrationDate: now
+        }
+      }).then(result => {
+        if (result.data?.success) {
+          console.log('✅ SMS confirmation sent successfully');
+        } else {
+          console.error('❌ SMS function failed:', result.errors);
+        }
       }).catch(error => {
         console.error('SMS confirmation failed (non-blocking):', error);
       });
 
       // Send email confirmation (async, don't wait for completion)
-      console.log('📧 About to call email confirmation');
-      sendEmailConfirmationAsync({
-        firstName,
-        lastName,
-        email,
-        phone: rawPhone,
-        timeSlot,
-        numberOfKids,
-        referredBy,
-        children
+      console.log('📧 About to call email confirmation mutation');
+      client.mutations.sendConfirmationEmail({
+        registration: {
+          firstName,
+          lastName,
+          email,
+          phone: rawPhone,
+          timeSlot,
+          numberOfKids,
+          referredBy: referredBy || '',
+          children
+        }
+      }).then(result => {
+        if (result.data?.success) {
+          console.log('✅ Email confirmation sent successfully');
+        } else {
+          console.error('❌ Email function failed:', result.errors);
+        }
       }).catch(error => {
         console.error('Email confirmation failed (non-blocking):', error);
       });
