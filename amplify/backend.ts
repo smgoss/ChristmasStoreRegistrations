@@ -35,3 +35,17 @@ backend.createAdminUser.resources.lambda.addToRolePolicy(
     resources: [backend.auth.resources.userPool.userPoolArn]
   })
 );
+
+// Grant email functions access to SES
+[backend.sendConfirmationEmail, backend.sendAttendanceConfirmation, backend.sendInviteEmail].forEach(emailFunction => {
+  emailFunction.resources.lambda.addToRolePolicy(
+    new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: [
+        'ses:SendEmail',
+        'ses:SendRawEmail'
+      ],
+      resources: ['*']
+    })
+  );
+});
