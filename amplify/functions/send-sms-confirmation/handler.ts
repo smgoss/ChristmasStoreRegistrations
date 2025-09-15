@@ -1,4 +1,3 @@
-import { secret } from '@aws-amplify/backend';
 import type { Handler } from 'aws-lambda';
 interface RegistrationData {
   firstName: string;
@@ -91,7 +90,7 @@ Questions? Reply to this message or call the office.
 async function sendClearstreamSms(phone: string, message: string) {
   try {
     // Get API key from environment variable (populated by Amplify secret)
-    const apiKey = secret('CLEAR_STREAM_API_KEY');
+    const apiKey = process.env.CLEAR_STREAM_API_KEY;
     const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
     
     console.log('Environment variables check:');
@@ -106,7 +105,7 @@ async function sendClearstreamSms(phone: string, message: string) {
     const response = await fetch('https://api.getclearstream.com/v1/texts', {
       method: 'POST',
       headers: {
-        'X-Api-Key': apiKey.resolve.toString(),
+        'X-Api-Key': apiKey,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: new URLSearchParams({
