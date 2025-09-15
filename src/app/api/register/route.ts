@@ -290,13 +290,14 @@ export async function POST(req: Request) {
           registrationDate: now
         }
       }).then(result => {
+        console.log('📱 SMS mutation result received:', JSON.stringify(result, null, 2));
         if (result.data?.success) {
           console.log('✅ SMS confirmation sent successfully');
         } else {
           console.error('❌ SMS function failed:', result.errors);
         }
       }).catch(error => {
-        console.error('SMS confirmation failed (non-blocking):', error);
+        console.error('SMS confirmation failed (non-blocking):', JSON.stringify(error, null, 2));
       });
 
       // Send email confirmation (async, don't wait for completion)
@@ -313,13 +314,14 @@ export async function POST(req: Request) {
           children
         }
       }).then(result => {
+        console.log('📧 Email mutation result received:', JSON.stringify(result, null, 2));
         if (result.data?.success) {
           console.log('✅ Email confirmation sent successfully');
         } else {
           console.error('❌ Email function failed:', result.errors);
         }
       }).catch(error => {
-        console.error('Email confirmation failed (non-blocking):', error);
+        console.error('Email confirmation failed (non-blocking):', JSON.stringify(error, null, 2));
       });
 
       console.log('✅ Registration complete, returning response');
