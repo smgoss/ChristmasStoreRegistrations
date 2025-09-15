@@ -1,5 +1,6 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import type { AppSyncResolverEvent } from 'aws-lambda';
+import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
 
@@ -14,7 +15,7 @@ interface RegistrationData {
   children: Array<{ age: number; gender: string }>;
 }
 
-export const handler = async (event: AppSyncResolverEvent<{ registration: RegistrationData }>) => {
+export const handler: Handler = async (event: AppSyncResolverEvent<{ registration: RegistrationData }>) => {
   try {
     const { registration } = event.arguments;
 
