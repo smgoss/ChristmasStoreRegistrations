@@ -11,6 +11,9 @@ applications:
             # Install function dependencies
             - cd amplify/functions/create-admin-user && npm install && cd ../../..
             - cd amplify/functions/send-confirmation-email && npm install && cd ../../..
+            - cd amplify/functions/send-sms-confirmation && npm install && cd ../../..
+            - cd amplify/functions/send-invite-email && npm install && cd ../../..
+            - cd amplify/functions/send-attendance-confirmation && npm install && cd ../../..
             - cd amplify/functions/reserve-registration && npm install && cd ../../..
             - cd amplify/functions/auto-close-registration && npm install && cd ../../..
             # Set location based on branch
