@@ -3,6 +3,7 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 import { z } from 'zod';
+import { secret } from '@aws-amplify/backend';
 
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = async () => {
@@ -122,7 +123,7 @@ async function sendSmsConfirmationAsync(registration: {
     const smsContent = generateSmsContent(registration);
     
     // Use the API key directly (you'll need to set this as an environment variable in Amplify console)
-    const apiKey = 'ce234b213c873c97535126f97770d47c'; // From your example
+    const apiKey = secret('CLEAR_STREAM_API_KEY').resolve.toString();
     const textHeader = 'Christmas Store';
     
     console.log('Sending SMS to:', cleanPhone);
