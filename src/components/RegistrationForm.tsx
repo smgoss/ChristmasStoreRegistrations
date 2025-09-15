@@ -168,6 +168,19 @@ export default function RegistrationForm({
         }
       });
       
+      // Sort time slots chronologically (earliest to latest)
+      activeTimeSlots.sort((a, b) => {
+        // Convert time strings like "09:00" to comparable numbers
+        const timeA = a.split(':').map(Number);
+        const timeB = b.split(':').map(Number);
+        
+        // Compare hours first, then minutes
+        if (timeA[0] !== timeB[0]) {
+          return timeA[0] - timeB[0];
+        }
+        return timeA[1] - timeB[1];
+      });
+      
       setTimeSlots(activeTimeSlots);
       setTimeSlotCapacities(capacities);
     } catch (error) {
