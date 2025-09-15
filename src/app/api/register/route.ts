@@ -185,11 +185,11 @@ Your registration is confirmed for:
 📅 Time: ${registration.timeSlot}
 👶 Children: ${registration.numberOfKids}
 
-We look forward to seeing you! Please arrive 15 minutes early and bring a photo ID.
+We look forward to seeing you!
 
 Questions? Reply to this message or call the office.
 
-- Christmas Store Team`;
+- Pathway Christmas Store Team`;
 }
 
 // Email confirmation sending function
@@ -205,9 +205,19 @@ async function sendEmailConfirmationAsync(registration: {
 }) {
   try {
     console.log('📧 Sending email confirmation');
+    console.log('📧 Email data:', {
+      firstName: registration.firstName,
+      lastName: registration.lastName,
+      email: registration.email,
+      phone: registration.phone,
+      timeSlot: registration.timeSlot,
+      numberOfKids: registration.numberOfKids
+    });
     
     // Call the Amplify backend function directly
     const client = await getClient();
+    console.log('📧 About to call sendConfirmationEmail mutation');
+    
     const result = await client.mutations.sendConfirmationEmail({
       registration: {
         firstName: registration.firstName,
@@ -221,6 +231,8 @@ async function sendEmailConfirmationAsync(registration: {
       }
     });
 
+    console.log('📧 Email mutation result:', result);
+    
     if (result.data?.success) {
       console.log('✅ Email confirmation sent successfully');
     } else {
@@ -229,6 +241,7 @@ async function sendEmailConfirmationAsync(registration: {
     }
   } catch (error) {
     console.error('❌ Failed to send email confirmation:', error);
+    console.error('❌ Email error details:', JSON.stringify(error, null, 2));
     throw error;
   }
 }

@@ -120,9 +120,7 @@ function generateEmailContent(registration: RegistrationData): string {
         
         <h3>📍 Important Information:</h3>
         <ul>
-          <li>Please arrive 15 minutes before your scheduled time slot</li>
-          <li>Bring a valid photo ID</li>
-          <li>Children must be accompanied by a parent or guardian</li>
+          <li>Please contact the office if you need to change or cancel your registration.</li>
         </ul>
         
         <p>If you need to make any changes to your registration or have questions, please contact us as soon as possible.</p>
