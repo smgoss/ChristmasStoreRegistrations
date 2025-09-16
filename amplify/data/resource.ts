@@ -118,7 +118,7 @@ const schema = a.schema({
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendSmsConfirmation)),
 
-  // Email confirmation mutation
+  // Email confirmation mutation - force resolver refresh
   sendConfirmationEmail: a
     .mutation()
     .arguments({
