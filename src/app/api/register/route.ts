@@ -302,6 +302,19 @@ export async function POST(req: Request) {
 
       // Send email confirmation (async, don't wait for completion)
       console.log('📧 About to call email confirmation mutation');
+      console.log('📧 Email mutation payload:', JSON.stringify({
+        registration: {
+          firstName,
+          lastName,
+          email,
+          phone: rawPhone,
+          timeSlot,
+          numberOfKids,
+          referredBy: referredBy || '',
+          children
+        }
+      }, null, 2));
+      
       client.mutations.sendConfirmationEmail({
         registration: {
           firstName,
@@ -321,7 +334,8 @@ export async function POST(req: Request) {
           console.error('❌ Email function failed:', result.errors);
         }
       }).catch(error => {
-        console.error('Email confirmation failed (non-blocking):', JSON.stringify(error, null, 2));
+        console.error('📧 Email confirmation CAUGHT ERROR:', JSON.stringify(error, null, 2));
+        console.error('📧 Error details:', error);
       });
 
       console.log('✅ Registration complete, returning response');
