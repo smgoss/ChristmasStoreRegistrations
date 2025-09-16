@@ -324,7 +324,7 @@ export async function POST(req: Request) {
           timeSlot,
           numberOfKids,
           referredBy: referredBy || '',
-          children
+          children: JSON.stringify(children)
         }
       }).then(result => {
         console.log('📧 Email mutation result received:', JSON.stringify(result, null, 2));
