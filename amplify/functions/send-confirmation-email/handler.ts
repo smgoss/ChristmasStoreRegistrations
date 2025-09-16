@@ -15,9 +15,11 @@ interface RegistrationData {
   children?: Array<{ age: number | string; gender: string }> | string;
 }
 
-export const handler: Handler = async (event: AppSyncResolverEvent<{ registration: RegistrationData }>) => {
+export const handler: Handler = async (event: any) => {
   try {
-    const { registration } = event.arguments;
+    console.log('📱 Sending Email confirmation:', event);
+    
+    const { registration }: { registration: RegistrationData } = event.arguments || event;
 
     const emailContent = generateEmailContent(registration);
 

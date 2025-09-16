@@ -77,7 +77,7 @@ function generateSmsContent(registration: RegistrationData): string {
 Hello ${registration.firstName}!
 
 Your registration is confirmed for:
-Time: ${registration.timeSlot}
+Time: ${registration.timeSlot} AM
 Children: ${registration.numberOfKids}
 
 We look forward to seeing you!
