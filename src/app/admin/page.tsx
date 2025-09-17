@@ -1301,7 +1301,6 @@ function AdminDashboard() {
               <h3 className="text-lg font-semibold text-black mb-4">
                 Existing Invite Links ({inviteLinks.length})
               </h3>
-              {console.log('🔍 Current inviteLinks state:', inviteLinks)}
               
               {inviteLinks.length === 0 ? (
                 <p className="text-black italic text-center py-8">No invite links have been generated yet.</p>
@@ -1348,7 +1347,7 @@ function AdminDashboard() {
                             */}
                           </div>
                           <div className="text-sm text-black">
-                            Created: {new Date(invite.createdAt).toLocaleString()}
+                            Created: {invite.createdAt ? new Date(invite.createdAt).toLocaleString() : 'Unknown'}
                             {invite.usedAt && (
                               <span className="ml-4">
                                 Used: {new Date(invite.usedAt).toLocaleString()}
