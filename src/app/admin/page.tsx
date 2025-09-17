@@ -517,7 +517,7 @@ function AdminDashboard() {
         token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       }
       
-      await (await getClient()).models.InviteLink.create({
+      const inviteResult = await (await getClient()).models.InviteLink.create({
         token,
         email: inviteEmail,
         isUsed: false,
@@ -527,31 +527,48 @@ function AdminDashboard() {
       const inviteUrl = `${window.location.origin}/register/${token}`;
       
       // Send invite email if email was provided
-      if (inviteEmail.trim()) {
+      if (inviteEmail.trim() && inviteResult.data) {
         try {
           console.log('📧 Sending invite email to:', inviteEmail);
-          const response = await fetch('/api/send-invite-email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+          const emailResult = await (await getClient()).mutations.sendInviteEmail({
+            invite: {
               email: inviteEmail,
-              inviteLink: inviteUrl,
-              token: token
-            }),
+              token: token,
+              inviteUrl: inviteUrl
+            },
+            inviteId: inviteResult.data.id
           });
 
-          if (response.ok) {
+          if (emailResult.data?.success) {
             console.log('✅ Invite email sent successfully');
-            setMessage(`Invite link generated and email sent to ${inviteEmail}. Link also copied to clipboard.`);
+            // Update invite link with successful email delivery status
+            await (await getClient()).models.InviteLink.update({
+              id: inviteResult.data.id,
+              emailDeliveryStatus: 'sent',
+              emailDeliveryAttemptedAt: new Date().toISOString()
+            });
+            setMessage(`✅ Invite link generated and email sent to ${inviteEmail}. Link also copied to clipboard.`);
           } else {
             console.warn('⚠️ Invite email failed to send');
-            setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+            // Update invite link with failed email delivery status
+            await (await getClient()).models.InviteLink.update({
+              id: inviteResult.data.id,
+              emailDeliveryStatus: 'failed',
+              emailDeliveryAttemptedAt: new Date().toISOString(),
+              emailFailureReason: emailResult.errors?.[0]?.message || 'Email sending failed'
+            });
+            setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
           }
         } catch (emailError) {
           console.error('❌ Error sending invite email:', emailError);
-          setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+          // Update invite link with failed email delivery status
+          await (await getClient()).models.InviteLink.update({
+            id: inviteResult.data.id,
+            emailDeliveryStatus: 'failed',
+            emailDeliveryAttemptedAt: new Date().toISOString(),
+            emailFailureReason: emailError instanceof Error ? emailError.message : 'Unknown error'
+          });
+          setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
         }
       } else {
         setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);
@@ -796,7 +813,7 @@ function AdminDashboard() {
 
   const exportRegistrations = () => {
     const csvContent = [
-      ['Name', 'Email', 'Phone', 'Time Slot', 'Number of Kids', 'Needs Childcare', 'Referred By', 'Registration Date'],
+      ['Name', 'Email', 'Phone', 'Time Slot', 'Number of Kids', 'Referred By', 'Registration Date', 'Email Status', 'SMS Status'],
       ...registrations.map(reg => [
         `${reg.firstName} ${reg.lastName}`,
         reg.email,
@@ -804,7 +821,9 @@ function AdminDashboard() {
         reg.timeSlot,
         reg.numberOfKids.toString(),
         reg.referredBy || '',
-        new Date(reg.registrationDate).toLocaleDateString()
+        new Date(reg.registrationDate).toLocaleDateString(),
+        (reg as any).emailDeliveryStatus || 'pending',
+        (reg as any).smsDeliveryStatus || 'pending'
       ])
     ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
 
@@ -1100,11 +1119,6 @@ function AdminDashboard() {
                   {registrations.reduce((sum, reg) => sum + reg.numberOfKids, 0)}
                 </p>
               </div>
-              <div className="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center">
-                <div className="text-4xl mb-2">🍼</div>
-                <h3 className="font-bold text-black text-lg">NEED CHILDCARE</h3>
-                <p className="text-3xl font-bold text-black">0</p>
-              </div>
             </div>
 
             <div className="space-y-4">
@@ -1198,6 +1212,28 @@ function AdminDashboard() {
                                   <span className="bg-yellow-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
                                 ) : (
                                   <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
+                                )}
+                              </p>
+                              <p className="text-black">
+                                <span className="font-bold">📧 Email:</span>
+                                {(reg as any).emailDeliveryStatus === 'sent' ? (
+                                  <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ SENT</span>
+                                ) : (reg as any).emailDeliveryStatus === 'failed' ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ FAILED</span>
+                                ) : (reg as any).emailDeliveryStatus === 'bounced' ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">🔄 BOUNCED</span>
+                                ) : (
+                                  <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
+                                )}
+                              </p>
+                              <p className="text-black">
+                                <span className="font-bold">📱 SMS:</span>
+                                {(reg as any).smsDeliveryStatus === 'sent' ? (
+                                  <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ SENT</span>
+                                ) : (reg as any).smsDeliveryStatus === 'failed' ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ FAILED</span>
+                                ) : (
+                                  <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
                                 )}
                               </p>
                             </div>
@@ -1310,6 +1346,19 @@ function AdminDashboard() {
                             {invite.email && (
                               <span className="text-sm text-black">
                                 📧 {invite.email}
+                              </span>
+                            )}
+                            {invite.email && (
+                              <span className={`px-2 py-1 rounded text-xs font-bold ml-2 ${
+                                (invite as any).emailDeliveryStatus === 'sent' ? 'bg-green-100 text-green-800' :
+                                (invite as any).emailDeliveryStatus === 'failed' ? 'bg-red-100 text-red-800' :
+                                (invite as any).emailDeliveryStatus === 'bounced' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {(invite as any).emailDeliveryStatus === 'sent' ? '✅ EMAIL SENT' :
+                                 (invite as any).emailDeliveryStatus === 'failed' ? '❌ EMAIL FAILED' :
+                                 (invite as any).emailDeliveryStatus === 'bounced' ? '🔄 EMAIL BOUNCED' :
+                                 '⏳ EMAIL PENDING'}
                               </span>
                             )}
                           </div>

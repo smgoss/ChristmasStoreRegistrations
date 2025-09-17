@@ -23,12 +23,12 @@ export const handler: Handler = async (event: any) => {
   try {
     console.log('📱 Sending Email confirmation:', event);
     
-    const { registration }: { registration: RegistrationData } = event.arguments || event;
+    const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
 
     const emailContent = generateEmailContent(registration);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
+      Source: process.env.FROM_EMAIL || 'Pathway Christmas Store <christmas-store@pathwayvineyard.com>',
       ReplyToAddresses: ['office@pathwayvineyard.com'],
       Destination: {
         ToAddresses: [registration.email],
@@ -47,17 +47,33 @@ export const handler: Handler = async (event: any) => {
       },
     });
 
-    await ses.send(command);
+    const result = await ses.send(command);
+    
+    // Update registration with successful email delivery status
+    if (registrationId) {
+      // Note: Would need to import and configure DynamoDB client to update the registration
+      console.log('✅ Email sent successfully, MessageId:', result.MessageId);
+      // TODO: Update registration record with emailDeliveryStatus: 'sent', emailDeliveryAttemptedAt: now
+    }
 
     return {
       success: true,
       message: 'Confirmation email sent successfully',
+      messageId: result.MessageId,
     };
   } catch (error) {
     console.error('Error sending confirmation email:', error);
+    
+    // Update registration with failed email delivery status
+    if (event.arguments?.registrationId || event.registrationId) {
+      console.log('❌ Email delivery failed, updating status');
+      // TODO: Update registration record with emailDeliveryStatus: 'failed', emailFailureReason: error.message
+    }
+    
     return {
       success: false,
       message: 'Failed to send confirmation email',
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 };

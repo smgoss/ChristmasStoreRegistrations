@@ -19,7 +19,7 @@ export const handler: Handler = async (event: any) => {
   try {
     console.log('📱 Sending SMS confirmation:', event);
     
-    const { registration }: { registration: RegistrationData } = event.arguments || event;
+    const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
     
     if (!registration.phone) {
       console.log('ℹ️ No phone number provided, skipping SMS');
@@ -38,22 +38,45 @@ export const handler: Handler = async (event: any) => {
     
     if (response.success) {
       console.log('✅ SMS confirmation sent successfully');
+      
+      // Update registration with successful SMS delivery status
+      if (registrationId) {
+        console.log('✅ SMS sent successfully for registration:', registrationId);
+        // TODO: Update registration record with smsDeliveryStatus: 'sent', smsDeliveryAttemptedAt: now
+      }
+      
       return {
         success: true,
         message: 'SMS confirmation sent successfully'
       };
     } else {
       console.error('❌ Failed to send SMS:', response.error);
+      
+      // Update registration with failed SMS delivery status
+      if (registrationId) {
+        console.log('❌ SMS delivery failed for registration:', registrationId);
+        // TODO: Update registration record with smsDeliveryStatus: 'failed', smsFailureReason: response.error
+      }
+      
       return {
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: response.error
       };
     }
   } catch (error) {
     console.error('❌ Error in SMS confirmation handler:', error);
+    
+    // Update registration with failed SMS delivery status
+    if (event.arguments?.registrationId || event.registrationId) {
+      console.log('❌ SMS delivery failed with exception');
+      // TODO: Update registration record with smsDeliveryStatus: 'failed', smsFailureReason: error.message
+    }
+    
     return {
       success: false,
-      message: 'Error sending SMS confirmation'
+      message: 'Error sending SMS confirmation',
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 };

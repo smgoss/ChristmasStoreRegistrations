@@ -399,8 +399,27 @@ export default function RegistrationForm({
         <div className="text-center">
           <h2 className="text-2xl font-bold text-green-600 mb-4">Registration Successful!</h2>
           <p className="text-gray-600 mb-4">
-            Thank you for registering for the Christmas Store. You will receive a confirmation email shortly.
+            Thank you for registering for the Christmas Store! 
           </p>
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <span className="text-2xl">📧</span>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-lg font-medium text-blue-800">Watch for Your Confirmation Email</h3>
+                <div className="mt-2 text-sm text-blue-700">
+                  <p className="mb-2">You will receive a confirmation email shortly from:</p>
+                  <p className="font-mono bg-white px-2 py-1 rounded border text-blue-900 font-semibold">
+                    christmas-store@pathwayvineyard.com
+                  </p>
+                  <p className="mt-2">
+                    <strong>📨 Don't see it?</strong> Please check your spam/junk folder as it may have been filtered there.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="bg-green-50 p-4 rounded-lg">
             <p className="text-gray-900"><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
             <p className="text-gray-900"><strong>Email:</strong> {formData.email}</p>
