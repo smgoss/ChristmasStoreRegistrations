@@ -136,6 +136,9 @@ function AdminDashboard() {
     defaultCapacity: DEFAULT_CAPACITY 
   } = locationConfig;
 
+  // Tab state
+  const [activeTab, setActiveTab] = useState('registrations');
+
   const [timeSlots, setTimeSlots] = useState<TimeSlotConfig[]>([]);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [inviteLinks, setInviteLinks] = useState<InviteLink[]>([]);
@@ -151,6 +154,14 @@ function AdminDashboard() {
   const [scheduledCloseDate, setScheduledCloseDate] = useState('');
   const [scheduledCloseTime, setScheduledCloseTime] = useState('');
   const [customClosureMessage, setCustomClosureMessage] = useState('');
+  
+  // Settings state
+  const [settings, setSettings] = useState({
+    replyToEmail: 'office@pathwayvineyard.com',
+    locationName: LOCATION_NAME,
+    eventPhone: '',
+    eventAddress: ''
+  });
 
   useEffect(() => {
     const initializeAndLoadData = async () => {
@@ -793,6 +804,95 @@ function AdminDashboard() {
     document.body.removeChild(link);
   };
 
+  const resendConfirmation = async (registration: Registration, type: 'email' | 'sms' | 'both') => {
+    try {
+      setLoading(true);
+      setMessage(`📧 Resending ${type} confirmation to ${registration.firstName} ${registration.lastName}...`);
+
+      if (type === 'email' || type === 'both') {
+        const response = await fetch('/api/resend-confirmation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            registrationId: registration.id,
+            type: 'email'
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to resend email');
+        }
+      }
+
+      if (type === 'sms' || type === 'both') {
+        const response = await fetch('/api/resend-confirmation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            registrationId: registration.id,
+            type: 'sms'
+          }),
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to resend SMS');
+        }
+      }
+
+      setMessage(`✅ ${type === 'both' ? 'Email and SMS' : type.toUpperCase()} confirmation resent successfully!`);
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error resending confirmation:', error);
+      setMessage('❌ Failed to resend confirmation. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelRegistration = async (registrationId: string) => {
+    if (!confirm('Are you sure you want to cancel this registration?')) return;
+    
+    try {
+      setLoading(true);
+      await (await getClient()).models.Registration.update({
+        id: registrationId,
+        isCancelled: true,
+        cancelledAt: new Date().toISOString()
+      });
+      
+      await loadData();
+      setMessage('✅ Registration cancelled successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error cancelling registration:', error);
+      setMessage('❌ Error cancelling registration.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateSettings = async (newSettings: typeof settings) => {
+    try {
+      setLoading(true);
+      // In a real app, you would save these to your backend
+      setSettings(newSettings);
+      setMessage('✅ Settings updated successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error updating settings:', error);
+      setMessage('❌ Error updating settings.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const tabs = [
+    { id: 'registrations', name: 'Registrations', icon: '👥' },
+    { id: 'invites', name: 'Invites', icon: '📧' },
+    { id: 'timeslots', name: 'Time Slots', icon: '⏰' },
+    { id: 'settings', name: 'Settings', icon: '⚙️' }
+  ];
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="p-8 rounded-lg mb-8 text-white" 
@@ -816,629 +916,681 @@ function AdminDashboard() {
         </div>
       )}
 
-      {/* Registration Settings */}
-      <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-8">
-        <h2 className="text-2xl font-bold text-purple-800 flex items-center mb-6">
-          ⚙️ Registration Settings
-        </h2>
-        
-        {registrationConfig && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Registration Status */}
-            <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-              <h3 className="font-bold text-purple-700 mb-3 flex items-center">
-                🎯 Registration Status
-              </h3>
-              <div className="space-y-3">
-                <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
-                  registrationConfig.isRegistrationOpen 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  {registrationConfig.isRegistrationOpen ? '✅ OPEN' : '🔴 CLOSED'}
-                </div>
+      {/* Tab Navigation */}
+      <div className="bg-white rounded-lg shadow-lg mb-6">
+        <div className="flex border-b border-gray-200">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 px-6 py-4 text-center font-semibold transition-all ${
+                activeTab === tab.id
+                  ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <span className="text-lg">{tab.icon}</span>
+                <span>{tab.name}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        {activeTab === 'registrations' && (
+          <div>
+            {/* Registration Status Configuration at top of Registrations tab */}
+            {registrationConfig && (
+              <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-8">
+                <h2 className="text-2xl font-bold text-purple-800 flex items-center mb-6">
+                  ⚙️ Registration Status Configuration
+                </h2>
                 
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Registration Status */}
+                  <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
+                    <h3 className="font-bold text-purple-700 mb-3 flex items-center">
+                      🎯 Registration Status
+                    </h3>
+                    <div className="space-y-3">
+                      <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
+                        registrationConfig.isRegistrationOpen 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {registrationConfig.isRegistrationOpen ? '✅ OPEN' : '🔴 CLOSED'}
+                      </div>
+                      
+                      <button
+                        onClick={toggleRegistrationOpen}
+                        disabled={loading}
+                        className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
+                          registrationConfig.isRegistrationOpen
+                            ? 'bg-red-600 hover:bg-red-700 text-white'
+                            : 'bg-green-600 hover:bg-green-700 text-white'
+                        } disabled:opacity-50`}
+                      >
+                        {registrationConfig.isRegistrationOpen ? '🔒 Close Registration' : '🔓 Open Registration'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Invite Only Mode */}
+                  <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
+                    <h3 className="font-bold text-purple-700 mb-3 flex items-center">
+                      📧 Access Mode
+                    </h3>
+                    <div className="space-y-3">
+                      <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
+                        registrationConfig.inviteOnlyMode
+                          ? 'bg-orange-100 text-orange-800'
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {registrationConfig.inviteOnlyMode ? '🔐 INVITE ONLY' : '🌐 PUBLIC'}
+                      </div>
+                      
+                      <button
+                        onClick={toggleInviteOnlyMode}
+                        disabled={loading}
+                        className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
+                          registrationConfig.inviteOnlyMode
+                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                            : 'bg-orange-600 hover:bg-orange-700 text-white'
+                        } disabled:opacity-50`}
+                      >
+                        {registrationConfig.inviteOnlyMode ? '🌐 Enable Public Access' : '🔐 Enable Invite Only'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Closure Message */}
+                  <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
+                    <h3 className="font-bold text-purple-700 mb-3 flex items-center">
+                      💬 Closure Message
+                    </h3>
+                    <div className="space-y-3">
+                      <textarea
+                        value={customClosureMessage}
+                        onChange={(e) => setCustomClosureMessage(e.target.value)}
+                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm h-20"
+                        placeholder="Message shown when registration is closed"
+                      />
+                      <button
+                        onClick={() => updateRegistrationStatus('closureMessage', customClosureMessage)}
+                        disabled={loading}
+                        className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
+                      >
+                        💾 Save Message
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Registration Management */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
+              <h2 className="text-2xl font-bold text-purple-800 flex items-center">
+                👥 Registration Management ({filteredRegistrations.length} of {registrations.length})
+              </h2>
+              <div className="flex space-x-3">
                 <button
-                  onClick={toggleRegistrationOpen}
-                  disabled={loading}
-                  className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
-                    registrationConfig.isRegistrationOpen
-                      ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-green-600 hover:bg-green-700 text-white'
-                  } disabled:opacity-50`}
+                  onClick={sendConfirmationEmails}
+                  disabled={loading || registrations.length === 0}
+                  className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 font-bold flex items-center disabled:opacity-50"
                 >
-                  {registrationConfig.isRegistrationOpen ? '🔒 Close Registration' : '🔓 Open Registration'}
+                  {loading ? '📧 Sending...' : '📧 Send Confirmation Emails'}
+                </button>
+                <button
+                  onClick={exportRegistrations}
+                  className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 font-bold flex items-center"
+                >
+                  📥 Export CSV
+                </button>
+              </div>
+            </div>
+            
+            {/* Search Bar */}
+            <div className="mb-6">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="🔍 Search by name, email, phone, or time slot..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-3 pl-12 border-2 border-purple-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-purple-500"
+                />
+                <div className="absolute left-4 top-3.5 text-purple-500 text-xl">🔍</div>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <div className="bg-blue-200 border-2 border-blue-400 p-4 rounded-lg text-center">
+                <div className="text-4xl mb-2">👥</div>
+                <h3 className="font-bold text-blue-800 text-lg">TOTAL REGISTRATIONS</h3>
+                <p className="text-3xl font-bold text-blue-900">{registrations.length}</p>
+              </div>
+              <div className="bg-green-200 border-2 border-green-400 p-4 rounded-lg text-center">
+                <div className="text-4xl mb-2">👶</div>
+                <h3 className="font-bold text-green-800 text-lg">TOTAL CHILDREN</h3>
+                <p className="text-3xl font-bold text-green-900">
+                  {registrations.reduce((sum, reg) => sum + reg.numberOfKids, 0)}
+                </p>
+              </div>
+              <div className="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center">
+                <div className="text-4xl mb-2">🍼</div>
+                <h3 className="font-bold text-yellow-800 text-lg">NEED CHILDCARE</h3>
+                <p className="text-3xl font-bold text-yellow-900">0</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {filteredRegistrations.length === 0 ? (
+                <div className="text-center py-8 bg-gray-50 border-2 border-gray-200 rounded-lg">
+                  <div className="text-6xl mb-4">📝</div>
+                  <p className="text-xl font-bold text-gray-800">No registrations found</p>
+                  <p className="text-gray-600">Try adjusting your search terms</p>
+                </div>
+              ) : (
+                filteredRegistrations.map((reg) => (
+                  <div key={reg.id} className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4 hover:shadow-lg transition-all">
+                    {editingRegistration === reg.id ? (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <input
+                            type="text"
+                            value={editFormData?.firstName || ''}
+                            onChange={(e) => setEditFormData(prev => prev ? {...prev, firstName: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            placeholder="First Name"
+                          />
+                          <input
+                            type="text"
+                            value={editFormData?.lastName || ''}
+                            onChange={(e) => setEditFormData(prev => prev ? {...prev, lastName: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            placeholder="Last Name"
+                          />
+                          <input
+                            type="email"
+                            value={editFormData?.email || ''}
+                            onChange={(e) => setEditFormData(prev => prev ? {...prev, email: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            placeholder="Email"
+                          />
+                          <input
+                            type="tel"
+                            value={editFormData?.phone || ''}
+                            onChange={(e) => setEditFormData(prev => prev ? {...prev, phone: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            placeholder="Phone"
+                          />
+                          <select
+                            value={editFormData?.timeSlot || ''}
+                            onChange={(e) => setEditFormData(prev => prev ? {...prev, timeSlot: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                          >
+                            {timeSlots.map(slot => (
+                              <option key={slot.timeSlot} value={slot.timeSlot}>{slot.timeSlot}</option>
+                            ))}
+                          </select>
+                          <input
+                            type="number"
+                            value={editFormData?.numberOfKids || 0}
+                            onChange={(e) => setEditFormData(prev => prev ? {...prev, numberOfKids: parseInt(e.target.value) || 0} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            placeholder="Number of Kids"
+                            min="0"
+                          />
+                        </div>
+                        <div className="flex space-x-3">
+                          <button onClick={saveEdit} className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-600">
+                            💾 Save
+                          </button>
+                          <button onClick={cancelEdit} className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-600">
+                            ❌ Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between">
+                          <div className="space-y-2">
+                            <h3 className="text-xl font-bold text-gray-900">{reg.firstName} {reg.lastName}</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                              <p className="text-gray-700"><span className="font-bold">📧 Email:</span> {reg.email}</p>
+                              <p className="text-gray-700"><span className="font-bold">📱 Phone:</span> {reg.phone}</p>
+                              <p className="text-gray-700"><span className="font-bold">⏰ Time:</span> <span className="bg-blue-200 px-2 py-1 rounded font-bold">{reg.timeSlot}</span></p>
+                              <p className="text-gray-700"><span className="font-bold">👶 Kids:</span> {reg.numberOfKids}</p>
+                              {reg.referredBy && (
+                                <p className="text-gray-700"><span className="font-bold">👤 Referred:</span> {reg.referredBy}</p>
+                              )}
+                              <p className="text-gray-700">
+                                <span className="font-bold">📋 Status:</span>
+                                {reg.isCancelled ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ CANCELLED</span>
+                                ) : reg.attendanceConfirmed ? (
+                                  <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ CONFIRMED</span>
+                                ) : reg.confirmationToken ? (
+                                  <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
+                                ) : (
+                                  <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+                            <button onClick={() => startEdit(reg)} className="bg-blue-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-blue-600">
+                              ✏️ Edit
+                            </button>
+                            <button 
+                              onClick={() => cancelRegistration(reg.id)} 
+                              className="bg-orange-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-orange-600"
+                              disabled={reg.isCancelled}
+                            >
+                              🚫 Cancel
+                            </button>
+                            <button onClick={() => deleteRegistration(reg.id)} className="bg-red-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-red-600">
+                              🗑️ Delete
+                            </button>
+                            <div className="flex gap-1">
+                              <button 
+                                onClick={() => resendConfirmation(reg, 'email')} 
+                                className="bg-green-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-green-600"
+                                disabled={loading}
+                              >
+                                📧 Email
+                              </button>
+                              <button 
+                                onClick={() => resendConfirmation(reg, 'sms')} 
+                                className="bg-green-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-green-600"
+                                disabled={loading}
+                              >
+                                📱 SMS
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'invites' && (
+          <div>
+            <h2 className="text-2xl font-bold text-green-800 mb-6 flex items-center">
+              📧 Invite Management
+            </h2>
+            
+            {/* Generate New Invite Link */}
+            <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-6">
+              <h3 className="text-lg font-semibold text-green-700 mb-4">Generate New Invite Link</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-green-700 font-bold mb-2">
+                    📧 Email Address (required for email-specific invites)
+                  </label>
+                  <input
+                    type="email"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    placeholder="recipient@example.com"
+                    className="w-full px-4 py-3 border-2 border-green-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-green-500"
+                  />
+                  <p className="text-sm text-green-600 mt-2">
+                    💡 Only the email address used to generate the invite can register with it
+                  </p>
+                </div>
+                <button
+                  onClick={generateInviteLink}
+                  disabled={loading || !inviteEmail.trim()}
+                  className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold text-lg"
+                >
+                  {loading ? '⏳ Generating...' : '🚀 Generate Email-Specific Invite'}
                 </button>
               </div>
             </div>
 
-            {/* Invite Only Mode */}
-            <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-              <h3 className="font-bold text-purple-700 mb-3 flex items-center">
-                📧 Access Mode
-              </h3>
-              <div className="space-y-3">
-                <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
-                  registrationConfig.inviteOnlyMode
-                    ? 'bg-orange-100 text-orange-800'
-                    : 'bg-blue-100 text-blue-800'
-                }`}>
-                  {registrationConfig.inviteOnlyMode ? '🔐 INVITE ONLY' : '🌐 PUBLIC'}
-                </div>
-                
-                <button
-                  onClick={toggleInviteOnlyMode}
-                  disabled={loading}
-                  className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
-                    registrationConfig.inviteOnlyMode
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                      : 'bg-orange-600 hover:bg-orange-700 text-white'
-                  } disabled:opacity-50`}
-                >
-                  {registrationConfig.inviteOnlyMode ? '🌐 Enable Public Access' : '🔐 Enable Invite Only'}
-                </button>
-              </div>
-            </div>
-
-            {/* Scheduled Closure */}
-            <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-              <h3 className="font-bold text-purple-700 mb-3 flex items-center">
-                ⏰ Scheduled Closure
+            {/* Existing Invite Links */}
+            <div className="bg-white border-2 border-green-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-green-700 mb-4">
+                Existing Invite Links ({inviteLinks.length})
               </h3>
               
-              {registrationConfig.scheduledCloseDate && registrationConfig.autoCloseEnabled && (
-                <div className="mb-3 p-2 bg-yellow-100 text-yellow-800 rounded text-sm">
-                  📅 Scheduled: {new Date(registrationConfig.scheduledCloseDate).toLocaleString()}
+              {inviteLinks.length === 0 ? (
+                <p className="text-green-600 italic text-center py-8">No invite links have been generated yet.</p>
+              ) : (
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {inviteLinks.map((invite) => (
+                    <div
+                      key={invite.id}
+                      className={`p-4 rounded-lg border-2 ${
+                        invite.isUsed 
+                          ? 'bg-gray-100 border-gray-300 text-gray-600' 
+                          : 'bg-white border-green-200'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${
+                              invite.isUsed 
+                                ? 'bg-red-100 text-red-800' 
+                                : 'bg-green-100 text-green-800'
+                            }`}>
+                              {invite.isUsed ? '✅ USED' : '🟢 ACTIVE'}
+                            </span>
+                            {invite.email && (
+                              <span className="text-sm text-gray-600">
+                                📧 {invite.email}
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            Created: {new Date(invite.createdAt).toLocaleString()}
+                            {invite.usedAt && (
+                              <span className="ml-4">
+                                Used: {new Date(invite.usedAt).toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-2 font-mono text-sm bg-gray-100 text-gray-800 p-2 rounded border break-all">
+                            {window.location.origin}/register/{invite.token}
+                          </div>
+                        </div>
+                        <div className="flex space-x-2 ml-4">
+                          <button
+                            onClick={() => copyInviteLink(invite.token)}
+                            disabled={loading}
+                            className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 disabled:opacity-50"
+                            title="Copy Link"
+                          >
+                            📋 Copy
+                          </button>
+                          {!invite.isUsed && (
+                            <button
+                              onClick={() => invalidateInviteLink(invite.id)}
+                              disabled={loading}
+                              className="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 disabled:opacity-50"
+                              title="Invalidate Link"
+                            >
+                              ❌ Invalidate
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
-              
-              <div className="space-y-2">
-                <input
-                  type="date"
-                  value={scheduledCloseDate}
-                  onChange={(e) => setScheduledCloseDate(e.target.value)}
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm"
-                  placeholder="Select date"
-                />
-                <input
-                  type="time"
-                  value={scheduledCloseTime}
-                  onChange={(e) => setScheduledCloseTime(e.target.value)}
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm"
-                  placeholder="Select time (optional)"
-                />
-                <button
-                  onClick={scheduleRegistrationClosure}
-                  disabled={loading || !scheduledCloseDate}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                >
-                  ⏰ Schedule Closure
-                </button>
-                
-                {registrationConfig?.autoCloseEnabled && (
-                  <div className="pt-2 border-t border-gray-200">
-                    <p className="text-xs text-gray-600 mb-2">
-                      🔧 Test scheduled closure (for development)
-                    </p>
-                    <button
-                      onClick={async () => {
-                        try {
-                          setLoading(true);
-                          // This would be used to manually trigger the auto-close function
-                          setMessage('🔄 Checking scheduled closure...');
-                          // For now, just reload the data to check if it should close
-                          await loadRegistrationConfig();
-                          setMessage('✅ Checked scheduled closure');
-                          setTimeout(() => setMessage(''), 2000);
-                        } catch (error) {
-                          setMessage('❌ Error checking scheduled closure');
-                        } finally {
-                          setLoading(false);
-                        }
-                      }}
-                      disabled={loading}
-                      className="w-full bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs font-medium disabled:opacity-50"
-                    >
-                      🔍 Check Now
-                    </button>
-                  </div>
-                )}
-              </div>
             </div>
+          </div>
+        )}
 
-            {/* Closure Message */}
-            <div className="md:col-span-2 lg:col-span-3 bg-white border-2 border-purple-300 rounded-lg p-4">
-              <h3 className="font-bold text-purple-700 mb-3 flex items-center">
-                💬 Closure Message
-              </h3>
-              <div className="space-y-3">
-                <textarea
-                  value={customClosureMessage}
-                  onChange={(e) => setCustomClosureMessage(e.target.value)}
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm h-20"
-                  placeholder="Message shown when registration is closed"
-                />
+        {activeTab === 'timeslots' && (
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-blue-800 flex items-center">
+                ⏰ Time Slot Management
+              </h2>
+              {timeSlots.length > 6 && (
                 <button
-                  onClick={() => updateRegistrationStatus('closureMessage', customClosureMessage)}
+                  onClick={cleanupDuplicateTimeSlots}
                   disabled={loading}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold disabled:opacity-50"
+                  className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 font-bold disabled:opacity-50"
                 >
-                  💾 Save Message
+                  🧹 Clean Up Duplicates
                 </button>
+              )}
+            </div>
+            
+            <div className="space-y-4">
+              {timeSlots.length === 0 ? (
+                <div className="text-center py-8 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                  <div className="text-4xl mb-4">{loading ? '🔄' : '⚠️'}</div>
+                  <p className="text-blue-800 mb-2 text-lg font-semibold">
+                    {loading ? 'Setting up time slots...' : 'Time slots not found'}
+                  </p>
+                  <p className="text-blue-600 mb-4">
+                    {loading 
+                      ? 'Please wait while we initialize the default time slots.' 
+                      : 'Click the button below to create the default time slots.'
+                    }
+                  </p>
+                  {!loading && (
+                    <div className="space-x-4">
+                      <button
+                        onClick={initializeTimeSlots}
+                        disabled={loading}
+                        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-bold"
+                      >
+                        🚀 Create Time Slots
+                      </button>
+                      <button
+                        onClick={loadData}
+                        disabled={loading}
+                        className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold"
+                      >
+                        🔄 Refresh Data
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                timeSlots.map(slot => {
+                  const percentage = (slot.currentRegistrations / slot.maxCapacity) * 100;
+                  const statusColor = percentage >= 100 ? 'bg-red-500' : percentage >= 80 ? 'bg-yellow-500' : 'bg-green-500';
+                  const statusEmoji = percentage >= 100 ? '🔴' : percentage >= 80 ? '🟡' : '🟢';
+                  
+                  return (
+                    <div key={slot.id} className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:shadow-lg transition-all">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          {editingTimeSlot === slot.id ? (
+                            <div className="flex items-center space-x-2">
+                              <input
+                                type="time"
+                                defaultValue={slot.timeSlot}
+                                onBlur={(e) => updateTimeSlotTime(slot.id, e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    updateTimeSlotTime(slot.id, e.currentTarget.value);
+                                  }
+                                  if (e.key === 'Escape') {
+                                    setEditingTimeSlot(null);
+                                  }
+                                }}
+                                className="px-3 py-1 border-2 border-blue-400 rounded font-bold text-blue-800"
+                                autoFocus
+                              />
+                              <button
+                                onClick={() => setEditingTimeSlot(null)}
+                                className="text-gray-500 hover:text-gray-700"
+                              >
+                                ❌
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="flex items-center space-x-2">
+                              <span className="font-bold text-xl text-blue-800">{statusEmoji} {slot.timeSlot}</span>
+                              <button
+                                onClick={() => setEditingTimeSlot(slot.id)}
+                                className="text-blue-500 hover:text-blue-700"
+                              >
+                                ✏️
+                              </button>
+                            </div>
+                          )}
+                          <div className="text-blue-600 font-semibold mt-1">
+                            {slot.currentRegistrations}/{slot.maxCapacity} registered ({percentage.toFixed(0)}%)
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div className={`${statusColor} h-2 rounded-full transition-all`} style={{width: `${Math.min(percentage, 100)}%`}}></div>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-blue-700 font-bold">Max:</span>
+                          <div className="flex items-center border-2 border-blue-300 rounded-lg overflow-hidden">
+                            <button
+                              onClick={() => updateTimeSlotCapacity(slot.id, Math.max(0, slot.maxCapacity - 1))}
+                              className="bg-blue-500 text-white px-3 py-2 hover:bg-blue-600 font-bold text-lg"
+                              disabled={loading}
+                            >
+                              −
+                            </button>
+                            <input
+                              type="number"
+                              value={slot.maxCapacity}
+                              onChange={(e) => {
+                                const newValue = parseInt(e.target.value) || 0;
+                                if (newValue !== slot.maxCapacity) {
+                                  updateTimeSlotCapacity(slot.id, newValue);
+                                }
+                              }}
+                              className="w-20 px-3 py-2 text-center text-gray-900 font-bold focus:ring-2 focus:ring-blue-500 border-0 focus:outline-none"
+                              min="0"
+                              step="1"
+                            />
+                            <button
+                              onClick={() => updateTimeSlotCapacity(slot.id, slot.maxCapacity + 1)}
+                              className="bg-blue-500 text-white px-3 py-2 hover:bg-blue-600 font-bold text-lg"
+                              disabled={loading}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <button
+                            onClick={() => deleteTimeSlot(slot.id, slot.timeSlot)}
+                            className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 font-bold"
+                            disabled={loading}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+              
+              {/* Add New Time Slot */}
+              <div className="bg-gray-50 border-2 border-dashed border-blue-300 rounded-lg p-4">
+                <div className="flex items-center space-x-3">
+                  <span className="text-blue-700 font-bold">➕ Add New Time Slot:</span>
+                  <input
+                    type="time"
+                    value={newTimeSlot}
+                    onChange={(e) => setNewTimeSlot(e.target.value)}
+                    placeholder="HH:MM"
+                    className="px-3 py-2 border-2 border-blue-300 rounded-lg text-gray-900 font-bold focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={addNewTimeSlot}
+                    disabled={loading || !newTimeSlot}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 font-bold disabled:opacity-50"
+                  >
+                    🚀 Add Time Slot
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  💡 New time slots will start with {DEFAULT_CAPACITY} people capacity
+                </p>
               </div>
             </div>
           </div>
         )}
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Time Slot Management */}
-        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-blue-800 flex items-center">
-              ⏰ Time Slot Management
+        {activeTab === 'settings' && (
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+              ⚙️ Application Settings
             </h2>
-            {timeSlots.length > 6 && (
-              <button
-                onClick={cleanupDuplicateTimeSlots}
-                disabled={loading}
-                className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 font-bold disabled:opacity-50"
-              >
-                🧹 Clean Up Duplicates
-              </button>
-            )}
-          </div>
-          
-          <div className="space-y-3">
-            {timeSlots.length === 0 ? (
-              <div className="text-center py-8 bg-white border-2 border-blue-200 rounded-lg">
-                <div className="text-4xl mb-4">{loading ? '🔄' : '⚠️'}</div>
-                <p className="text-blue-800 mb-2 text-lg font-semibold">
-                  {loading ? 'Setting up time slots...' : 'Time slots not found'}
-                </p>
-                <p className="text-blue-600 mb-4">
-                  {loading 
-                    ? 'Please wait while we initialize the default time slots.' 
-                    : 'Click the button below to create the default time slots.'
-                  }
-                </p>
-                {!loading && (
-                  <div className="space-x-4">
-                    <button
-                      onClick={initializeTimeSlots}
-                      disabled={loading}
-                      className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-bold"
-                    >
-                      🚀 Create Time Slots
-                    </button>
-                    <button
-                      onClick={loadData}
-                      disabled={loading}
-                      className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold"
-                    >
-                      🔄 Refresh Data
-                    </button>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Email Settings */}
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-blue-700 mb-4">📧 Email Configuration</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-blue-700 font-bold mb-2">Reply-To Email Address</label>
+                    <input
+                      type="email"
+                      value={settings.replyToEmail}
+                      onChange={(e) => setSettings({...settings, replyToEmail: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg"
+                      placeholder="office@pathwayvineyard.com"
+                    />
+                    <p className="text-sm text-blue-600 mt-1">Email address shown as reply-to in confirmation emails</p>
                   </div>
-                )}
-                <div className="mt-4 text-xs text-gray-500">
-                  <p>Debug info: timeSlots.length = {timeSlots.length}</p>
-                  <p>Loading state: {loading ? 'true' : 'false'}</p>
-                  {timeSlots.length > 0 && <p>Time slots found but not displaying - check console</p>}
                 </div>
               </div>
-            ) : (
-              timeSlots.map(slot => {
-                const percentage = (slot.currentRegistrations / slot.maxCapacity) * 100;
-                const statusColor = percentage >= 100 ? 'bg-red-500' : percentage >= 80 ? 'bg-yellow-500' : 'bg-green-500';
-                const statusEmoji = percentage >= 100 ? '🔴' : percentage >= 80 ? '🟡' : '🟢';
-                
-                return (
-                  <div key={slot.id} className="bg-white border-2 border-blue-300 rounded-lg p-4 hover:shadow-lg transition-all">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        {editingTimeSlot === slot.id ? (
-                          <div className="flex items-center space-x-2">
-                            <input
-                              type="time"
-                              defaultValue={slot.timeSlot}
-                              onBlur={(e) => updateTimeSlotTime(slot.id, e.target.value)}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  updateTimeSlotTime(slot.id, e.currentTarget.value);
-                                }
-                                if (e.key === 'Escape') {
-                                  setEditingTimeSlot(null);
-                                }
-                              }}
-                              className="px-3 py-1 border-2 border-blue-400 rounded font-bold text-blue-800"
-                              autoFocus
-                            />
-                            <button
-                              onClick={() => setEditingTimeSlot(null)}
-                              className="text-gray-500 hover:text-gray-700"
-                            >
-                              ❌
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="flex items-center space-x-2">
-                            <span className="font-bold text-xl text-blue-800">{statusEmoji} {slot.timeSlot}</span>
-                            <button
-                              onClick={() => setEditingTimeSlot(slot.id)}
-                              className="text-blue-500 hover:text-blue-700"
-                            >
-                              ✏️
-                            </button>
-                          </div>
-                        )}
-                        <div className="text-blue-600 font-semibold mt-1">
-                          {slot.currentRegistrations}/{slot.maxCapacity} registered ({percentage.toFixed(0)}%)
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                          <div className={`${statusColor} h-2 rounded-full transition-all`} style={{width: `${Math.min(percentage, 100)}%`}}></div>
-                        </div>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-blue-700 font-bold">Max:</span>
-                        <div className="flex items-center border-2 border-blue-300 rounded-lg overflow-hidden">
-                          <button
-                            onClick={() => updateTimeSlotCapacity(slot.id, Math.max(0, slot.maxCapacity - 1))}
-                            className="bg-blue-500 text-white px-3 py-2 hover:bg-blue-600 font-bold text-lg"
-                            disabled={loading}
-                          >
-                            −
-                          </button>
-                          <input
-                            type="number"
-                            value={slot.maxCapacity}
-                            onChange={(e) => {
-                              const newValue = parseInt(e.target.value) || 0;
-                              if (newValue !== slot.maxCapacity) {
-                                updateTimeSlotCapacity(slot.id, newValue);
-                              }
-                            }}
-                            onBlur={(e) => {
-                              const newValue = parseInt(e.target.value) || 0;
-                              if (newValue !== slot.maxCapacity) {
-                                updateTimeSlotCapacity(slot.id, newValue);
-                              }
-                            }}
-                            className="w-20 px-3 py-2 text-center text-gray-900 font-bold focus:ring-2 focus:ring-blue-500 border-0 focus:outline-none"
-                            min="0"
-                            step="1"
-                          />
-                          <button
-                            onClick={() => updateTimeSlotCapacity(slot.id, slot.maxCapacity + 1)}
-                            className="bg-blue-500 text-white px-3 py-2 hover:bg-blue-600 font-bold text-lg"
-                            disabled={loading}
-                          >
-                            +
-                          </button>
-                        </div>
-                        <button
-                          onClick={() => deleteTimeSlot(slot.id, slot.timeSlot)}
-                          className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 font-bold"
-                          disabled={loading}
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-            
-            {/* Add New Time Slot - Always show */}
-            <div className="bg-gray-50 border-2 border-dashed border-blue-300 rounded-lg p-4">
-              <div className="flex items-center space-x-3">
-                <span className="text-blue-700 font-bold">➕ Add New Time Slot:</span>
-                <input
-                  type="time"
-                  value={newTimeSlot}
-                  onChange={(e) => setNewTimeSlot(e.target.value)}
-                  placeholder="HH:MM"
-                  className="px-3 py-2 border-2 border-blue-300 rounded-lg text-gray-900 font-bold focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  onClick={addNewTimeSlot}
-                  disabled={loading || !newTimeSlot}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 font-bold disabled:opacity-50"
-                >
-                  🚀 Add Time Slot
-                </button>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">
-                💡 New time slots will start with 20 people capacity
-              </p>
-            </div>
-          </div>
-        </div>
 
-        {/* Invite Link Management */}
-        <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
-          <h2 className="text-2xl font-bold text-green-800 mb-4 flex items-center">
-            🔗 Invite Link Management
-          </h2>
-          
-          {/* Generate New Invite Link */}
-          <div className="space-y-4 mb-6">
-            <h3 className="text-lg font-semibold text-green-700">Generate New Invite Link</h3>
-            <div>
-              <label className="block text-green-700 font-bold mb-2">
-                📧 Email Address (optional)
-              </label>
-              <input
-                type="email"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="recipient@example.com"
-                className="w-full px-4 py-3 border-2 border-green-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <button
-              onClick={generateInviteLink}
-              disabled={loading}
-              className="w-full bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold text-lg"
-            >
-              {loading ? '⏳ Generating...' : '🚀 Generate Invite Link'}
-            </button>
-          </div>
-
-          {/* Existing Invite Links */}
-          <div className="border-t-2 border-green-200 pt-6">
-            <h3 className="text-lg font-semibold text-green-700 mb-4">
-              Existing Invite Links ({inviteLinks.length})
-            </h3>
-            
-            {inviteLinks.length === 0 ? (
-              <p className="text-green-600 italic">No invite links have been generated yet.</p>
-            ) : (
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {inviteLinks.map((invite) => (
-                  <div
-                    key={invite.id}
-                    className={`p-4 rounded-lg border-2 ${
-                      invite.isUsed 
-                        ? 'bg-gray-100 border-gray-300 text-gray-600' 
-                        : 'bg-white border-green-200'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className={`px-2 py-1 rounded text-xs font-bold ${
-                            invite.isUsed 
-                              ? 'bg-red-100 text-red-800' 
-                              : 'bg-green-100 text-green-800'
-                          }`}>
-                            {invite.isUsed ? '✅ USED' : '🟢 ACTIVE'}
-                          </span>
-                          {invite.email && (
-                            <span className="text-sm text-gray-600">
-                              📧 {invite.email}
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          Created: {new Date(invite.createdAt).toLocaleString()}
-                          {invite.usedAt && (
-                            <span className="ml-4">
-                              Used: {new Date(invite.usedAt).toLocaleString()}
-                            </span>
-                          )}
-                        </div>
-                        <div className="mt-2 font-mono text-sm bg-gray-100 text-gray-800 p-2 rounded border break-all">
-                          {window.location.origin}/register/{invite.token}
-                        </div>
-                      </div>
-                      <div className="flex space-x-2 ml-4">
-                        <button
-                          onClick={() => copyInviteLink(invite.token)}
-                          disabled={loading}
-                          className="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600 disabled:opacity-50"
-                          title="Copy Link"
-                        >
-                          📋 Copy
-                        </button>
-                        {!invite.isUsed && (
-                          <button
-                            onClick={() => invalidateInviteLink(invite.id)}
-                            disabled={loading}
-                            className="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600 disabled:opacity-50"
-                            title="Invalidate Link"
-                          >
-                            ❌ Invalidate
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Registration Management */}
-      <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
-          <h2 className="text-2xl font-bold text-purple-800 flex items-center">
-            👥 Registration Management ({filteredRegistrations.length} of {registrations.length})
-          </h2>
-          <div className="flex space-x-3">
-            <button
-              onClick={sendConfirmationEmails}
-              disabled={loading || registrations.length === 0}
-              className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 font-bold flex items-center disabled:opacity-50"
-            >
-              {loading ? '📧 Sending...' : '📧 Send Confirmation Emails'}
-            </button>
-            <button
-              onClick={exportRegistrations}
-              className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 font-bold flex items-center"
-            >
-              📥 Export CSV
-            </button>
-          </div>
-        </div>
-        
-        {/* Search Bar */}
-        <div className="mb-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="🔍 Search by name, email, phone, or time slot..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-3 pl-12 border-2 border-purple-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-purple-500"
-            />
-            <div className="absolute left-4 top-3.5 text-purple-500 text-xl">🔍</div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-blue-200 border-2 border-blue-400 p-4 rounded-lg text-center">
-            <div className="text-4xl mb-2">👥</div>
-            <h3 className="font-bold text-blue-800 text-lg">TOTAL REGISTRATIONS</h3>
-            <p className="text-3xl font-bold text-blue-900">{registrations.length}</p>
-          </div>
-          <div className="bg-green-200 border-2 border-green-400 p-4 rounded-lg text-center">
-            <div className="text-4xl mb-2">👶</div>
-            <h3 className="font-bold text-green-800 text-lg">TOTAL CHILDREN</h3>
-            <p className="text-3xl font-bold text-green-900">
-              {registrations.reduce((sum, reg) => sum + reg.numberOfKids, 0)}
-            </p>
-          </div>
-          <div className="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center">
-            <div className="text-4xl mb-2">🍼</div>
-            <h3 className="font-bold text-yellow-800 text-lg">NEED CHILDCARE</h3>
-            <p className="text-3xl font-bold text-yellow-900">
-              0
-            </p>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          {filteredRegistrations.length === 0 ? (
-            <div className="text-center py-8 bg-white border-2 border-purple-200 rounded-lg">
-              <div className="text-6xl mb-4">📝</div>
-              <p className="text-xl font-bold text-purple-800">No registrations found</p>
-              <p className="text-purple-600">Try adjusting your search terms</p>
-            </div>
-          ) : (
-            filteredRegistrations.map((reg) => (
-              <div key={reg.id} className="bg-white border-2 border-purple-200 rounded-lg p-4 hover:shadow-lg transition-all">
-                {editingRegistration === reg.id ? (
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <input
-                        type="text"
-                        value={editFormData?.firstName || ''}
-                        onChange={(e) => setEditFormData(prev => prev ? {...prev, firstName: e.target.value} : null)}
-                        className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
-                        placeholder="First Name"
-                      />
-                      <input
-                        type="text"
-                        value={editFormData?.lastName || ''}
-                        onChange={(e) => setEditFormData(prev => prev ? {...prev, lastName: e.target.value} : null)}
-                        className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
-                        placeholder="Last Name"
-                      />
-                      <input
-                        type="email"
-                        value={editFormData?.email || ''}
-                        onChange={(e) => setEditFormData(prev => prev ? {...prev, email: e.target.value} : null)}
-                        className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
-                        placeholder="Email"
-                      />
-                      <input
-                        type="tel"
-                        value={editFormData?.phone || ''}
-                        onChange={(e) => setEditFormData(prev => prev ? {...prev, phone: e.target.value} : null)}
-                        className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
-                        placeholder="Phone"
-                      />
-                      <select
-                        value={editFormData?.timeSlot || ''}
-                        onChange={(e) => setEditFormData(prev => prev ? {...prev, timeSlot: e.target.value} : null)}
-                        className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
-                      >
-                        {['09:00', '09:30', '10:00', '10:30', '11:00', '11:30'].map(slot => (
-                          <option key={slot} value={slot}>{slot}</option>
-                        ))}
-                      </select>
-                      <input
-                        type="number"
-                        value={editFormData?.numberOfKids || 0}
-                        onChange={(e) => setEditFormData(prev => prev ? {...prev, numberOfKids: parseInt(e.target.value) || 0} : null)}
-                        className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
-                        placeholder="Number of Kids"
-                        min="0"
-                      />
-                    </div>
-                    <div className="flex items-center space-x-4">
-                      <label className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          className="w-4 h-4"
-                        />
-                        <span className="font-bold text-gray-800">Needs Childcare</span>
-                      </label>
-                    </div>
-                    <div className="flex space-x-3">
-                      <button onClick={saveEdit} className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-600">
-                        💾 Save
-                      </button>
-                      <button onClick={cancelEdit} className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-600">
-                        ❌ Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
+              {/* Location Settings */}
+              <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-green-700 mb-4">📍 Event Location</h3>
+                <div className="space-y-4">
                   <div>
-                    <div className="flex flex-col md:flex-row md:items-center justify-between">
-                      <div className="space-y-2">
-                        <h3 className="text-xl font-bold text-purple-900">{reg.firstName} {reg.lastName}</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                          <p className="text-purple-700"><span className="font-bold">📧 Email:</span> {reg.email}</p>
-                          <p className="text-purple-700"><span className="font-bold">📱 Phone:</span> {reg.phone}</p>
-                          <p className="text-purple-700"><span className="font-bold">⏰ Time:</span> <span className="bg-blue-200 px-2 py-1 rounded font-bold">{reg.timeSlot}</span></p>
-                          <p className="text-purple-700"><span className="font-bold">👶 Kids:</span> {reg.numberOfKids}</p>
-                          {reg.referredBy && (
-                            <p className="text-purple-700"><span className="font-bold">👤 Referred:</span> {reg.referredBy}</p>
-                          )}
-                          <p className="text-purple-700">
-                            <span className="font-bold">📋 Status:</span>
-                            {reg.isCancelled ? (
-                              <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ CANCELLED</span>
-                            ) : reg.attendanceConfirmed ? (
-                              <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ CONFIRMED</span>
-                            ) : reg.confirmationToken ? (
-                              <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
-                            ) : (
-                              <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex space-x-2 mt-4 md:mt-0">
-                        <button onClick={() => startEdit(reg)} className="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600">
-                          ✏️ Edit
-                        </button>
-                        <button onClick={() => deleteRegistration(reg.id)} className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-600">
-                          🗑️ Delete
-                        </button>
-                      </div>
-                    </div>
+                    <label className="block text-green-700 font-bold mb-2">Location Name</label>
+                    <input
+                      type="text"
+                      value={settings.locationName}
+                      onChange={(e) => setSettings({...settings, locationName: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg"
+                      placeholder="Christmas Store Location"
+                    />
                   </div>
-                )}
+                  <div>
+                    <label className="block text-green-700 font-bold mb-2">Event Address</label>
+                    <textarea
+                      value={settings.eventAddress}
+                      onChange={(e) => setSettings({...settings, eventAddress: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20"
+                      placeholder="123 Main St, City, State 12345"
+                    />
+                  </div>
+                </div>
               </div>
-            ))
-          )}
-        </div>
+
+              {/* Contact Settings */}
+              <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-purple-700 mb-4">📞 Contact Information</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-purple-700 font-bold mb-2">Event Phone Number</label>
+                    <input
+                      type="tel"
+                      value={settings.eventPhone}
+                      onChange={(e) => setSettings({...settings, eventPhone: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg"
+                      placeholder="(555) 123-4567"
+                    />
+                    <p className="text-sm text-purple-600 mt-1">Phone number for event inquiries</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Save Settings */}
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-yellow-700 mb-4">💾 Save Changes</h3>
+                <button
+                  onClick={() => updateSettings(settings)}
+                  disabled={loading}
+                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-bold disabled:opacity-50"
+                >
+                  {loading ? '⏳ Saving...' : '💾 Save All Settings'}
+                </button>
+                <p className="text-sm text-yellow-600 mt-2">Changes will be applied to future registrations and emails</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

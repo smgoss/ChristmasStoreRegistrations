@@ -5,6 +5,7 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { useLocationConfig } from '../hooks/useLocationConfig';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
+import '../styles/christmas-theme.css';
 
 // Lazy client initialization with retry mechanism
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
@@ -467,17 +468,20 @@ export default function RegistrationForm({
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div className="text-center mb-8">
-        <div className="text-6xl mb-4">{BRANDING.locationEmoji}</div>
-        <h1 className="text-3xl font-bold mb-2" style={{ color: BRANDING.primaryColor }}>
-          Christmas Store Registration
-        </h1>
-        <h2 className="text-xl font-semibold mb-2" style={{ color: BRANDING.secondaryColor }}>
-          {LOCATION_NAME}
-        </h2>
-        <p className="text-gray-600">{LOCATION_ADDRESS}</p>
-      </div>
+    <div className="christmas-container">
+      <div className="christmas-card fade-in">
+        <div className="christmas-header">
+          <span className="christmas-emoji">{BRANDING.locationEmoji}</span>
+          <h1 className="christmas-title">
+            🎄 Christmas Store Registration 🎁
+          </h1>
+          <h2 className="christmas-subtitle">
+            {LOCATION_NAME}
+          </h2>
+          <p className="christmas-location">{LOCATION_ADDRESS}</p>
+        </div>
+        
+        <div className="christmas-content">
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {errors.submit && (
@@ -796,6 +800,8 @@ export default function RegistrationForm({
           </p>
         </div>
       </form>
+        </div>
+      </div>
     </div>
   );
 }
