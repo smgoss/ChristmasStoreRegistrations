@@ -1,47 +1,44 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
 
-interface InviteEmailData {
+interface InviteData {
   email: string;
-  inviteLink: string;
   token: string;
+  inviteUrl: string;
 }
 
-export const handler = async (event: any) => {
+export const handler: Handler = async (event: any) => {
   try {
     console.log('📧 Sending invite email:', event);
     
-    const { email, inviteLink, token }: InviteEmailData = event;
+    const { invite, inviteId }: { invite: InviteData; inviteId?: string } = event.arguments || event;
     
-    if (!email) {
+    if (!invite.email) {
       console.log('ℹ️ No email provided, skipping email send');
       return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'No email provided, invite link created without sending email' })
+        success: true,
+        message: 'No email provided, invite email skipped'
       };
     }
 
-    const emailContent = generateInviteEmailContent(email, inviteLink, token);
+    const emailContent = generateInviteEmailContent(invite);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
+      Source: process.env.FROM_EMAIL || 'Pathway Christmas Store <christmas-store@pathwayvineyard.com>',
       ReplyToAddresses: ['office@pathwayvineyard.com'],
       Destination: {
-        ToAddresses: [email],
+        ToAddresses: [invite.email],
       },
       Message: {
         Subject: {
-          Data: '🎄 You\'re Invited to Register for the Christmas Store!',
+          Data: '🎄 You\'re Invited to Register for Christmas Store!',
           Charset: 'UTF-8',
         },
         Body: {
           Html: {
-            Data: emailContent.html,
-            Charset: 'UTF-8',
-          },
-          Text: {
-            Data: emailContent.text,
+            Data: emailContent,
             Charset: 'UTF-8',
           },
         },
@@ -49,28 +46,36 @@ export const handler = async (event: any) => {
     });
 
     const result = await ses.send(command);
-    console.log('✅ Invite email sent successfully:', result.MessageId);
+    
+    // Update invite link with successful email delivery status
+    if (inviteId) {
+      console.log('✅ Invite email sent successfully, MessageId:', result.MessageId);
+      // TODO: Update invite link record with emailDeliveryStatus: 'sent', emailDeliveryAttemptedAt: now
+    }
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ 
-        message: 'Invite email sent successfully',
-        messageId: result.MessageId 
-      })
+      success: true,
+      message: 'Invite email sent successfully',
+      messageId: result.MessageId,
     };
   } catch (error) {
-    console.error('❌ Error sending invite email:', error);
+    console.error('Error sending invite email:', error);
+    
+    // Update invite link with failed email delivery status
+    if (event.arguments?.inviteId || event.inviteId) {
+      console.log('❌ Invite email delivery failed, updating status');
+      // TODO: Update invite link record with emailDeliveryStatus: 'failed', emailFailureReason: error.message
+    }
+    
     return {
-      statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Failed to send invite email',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      })
+      success: false,
+      message: 'Failed to send invite email',
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 };
 
-function generateInviteEmailContent(email: string, inviteLink: string, token: string) {
+function generateInviteEmailContent(invite: InviteData): string {
   const text = `
 🎄 You're Invited to the Christmas Store! 🎄
 
@@ -79,7 +84,7 @@ Hello!
 You have been personally invited to register for our Christmas Store event. This is a special opportunity to provide Christmas gifts for children in need in our community.
 
 Your personal invitation link:
-${inviteLink}
+${invite.inviteUrl}
 
 Important Information:
 - This invitation link is unique to you and can only be used once
@@ -101,8 +106,8 @@ With warm wishes,
 The Christmas Store Team
 
 ---
-This invitation was sent to: ${email}
-Invitation ID: ${token.slice(0, 8)}...
+This invitation was sent to: ${invite.email}
+Invitation ID: ${invite.token.slice(0, 8)}...
 `;
 
   const html = `
@@ -140,7 +145,7 @@ Invitation ID: ${token.slice(0, 8)}...
         
         <div class="invite-link">
             <p style="margin: 0 0 10px 0;">Your Personal Invitation Link:</p>
-            <a href="${inviteLink}" target="_blank">${inviteLink}</a>
+            <a href="${invite.inviteUrl}" target="_blank">${invite.inviteUrl}</a>
         </div>
         
         <div class="info-box">
@@ -171,12 +176,12 @@ Invitation ID: ${token.slice(0, 8)}...
     </div>
     
     <div class="footer">
-        <p>This invitation was sent to: ${email}</p>
-        <p>Invitation ID: ${token.slice(0, 8)}...</p>
+        <p>This invitation was sent to: ${invite.email}</p>
+        <p>Invitation ID: ${invite.token.slice(0, 8)}...</p>
     </div>
 </body>
 </html>
 `;
 
-  return { text, html };
+  return html;
 }

@@ -45,10 +45,10 @@ const schema = a.schema({
       confirmationToken: a.string(), // Unique token for confirmation links
       
       // Email/SMS delivery status tracking
-      emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']).default('pending'),
+      emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
       emailDeliveryAttemptedAt: a.datetime(),
       emailFailureReason: a.string(),
-      smsDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed']).default('pending'),
+      smsDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed']),
       smsDeliveryAttemptedAt: a.datetime(),
       smsFailureReason: a.string(),
     })
@@ -92,7 +92,7 @@ const schema = a.schema({
       usedAt: a.datetime(),
       
       // Email delivery status tracking for invite emails
-      emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']).default('pending'),
+      emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
       emailDeliveryAttemptedAt: a.datetime(),
       emailFailureReason: a.string(),
     })
