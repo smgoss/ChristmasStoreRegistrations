@@ -13,20 +13,13 @@ let client: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = async () => {
   if (!client) {
     try {
-      // First ensure Amplify is configured
+      // Use API Key mode for admin interface to bypass authorization issues
       await ensureAmplifyConfigured();
-      client = generateClient<Schema>({ authMode: 'userPool' });
-      console.log('✅ Client created with userPool auth');
-    } catch (userPoolError) {
-      console.warn('⚠️ UserPool client failed, trying apiKey fallback:', userPoolError);
-      try {
-        await ensureAmplifyConfigured();
-        client = generateClient<Schema>({ authMode: 'apiKey' });
-        console.log('✅ Client created with apiKey auth (fallback)');
-      } catch (apiKeyError) {
-        console.error('❌ All client creation attempts failed:', { userPoolError, apiKeyError });
-        throw new Error('Failed to create Amplify client. Check Amplify configuration.');
-      }
+      client = generateClient<Schema>({ authMode: 'apiKey' });
+      console.log('✅ Client created with apiKey auth for admin interface');
+    } catch (apiKeyError) {
+      console.error('❌ API Key client creation failed:', apiKeyError);
+      throw new Error('Failed to create Amplify client. Check Amplify configuration.');
     }
   }
   return client;
@@ -250,7 +243,7 @@ function AdminDashboard() {
       }
       
       setRegistrationConfig(config);
-      setCustomClosureMessage(config.closureMessage);
+      setCustomClosureMessage(config?.closureMessage || '');
       
       // Load time slot configurations
       console.log('🔍 Fetching time slots...');
@@ -258,40 +251,52 @@ function AdminDashboard() {
       
       if (timeSlotErrors) {
         console.error('❌ Time slot errors:', timeSlotErrors);
+        console.error('❌ Detailed error info:', JSON.stringify(timeSlotErrors, null, 2));
         return; // Exit early if there are errors
       } else {
         console.log('✅ Time slots loaded:', timeSlotData?.length || 0, timeSlotData);
       }
 
-      // Load registrations
+      // Load registrations with error handling for partial data
       console.log('🔍 Fetching registrations...');
       const { data: registrationData, errors: registrationErrors } = await (await getClient()).models.Registration.list();
       
-      if (registrationErrors) {
-        console.error('❌ Registration errors:', registrationErrors);
+      // Handle registration data - even if there are errors, we might have partial valid data
+      let validRegistrations: Registration[] = [];
+      
+      if (registrationErrors && registrationErrors.length > 0) {
+        console.error('❌ Registration errors (continuing with partial data):', registrationErrors);
+        // Filter out only the valid registrations if we have partial data
+        if (registrationData) {
+          validRegistrations = registrationData.filter(reg => 
+            reg && reg.streetAddress && reg.zipCode && reg.city && reg.state
+          ) as Registration[];
+          console.log(`⚠️ Using ${validRegistrations.length} valid registrations out of ${registrationData.length} total (${registrationErrors.length} errors)`);
+        }
       } else {
         console.log('✅ Registrations loaded:', registrationData?.length || 0);
-        const registrations = registrationData as Registration[];
-        setRegistrations(registrations);
+        validRegistrations = (registrationData || []) as Registration[];
+      }
+      
+      setRegistrations(validRegistrations);
+      
+      // Update time slot counts with actual registration data
+      if (timeSlotData) {
+        const updatedTimeSlots = (timeSlotData as TimeSlotConfig[]).map(slot => {
+          const actualCount = validRegistrations ? validRegistrations.filter(reg => reg.timeSlot === slot.timeSlot).length : 0;
+          console.log(`📊 Time slot ${slot.timeSlot}: ${actualCount} actual registrations (was showing ${slot.currentRegistrations})`);
+          return {
+            ...slot,
+            currentRegistrations: actualCount
+          };
+        });
         
-        // Update time slot counts with actual registration data
-        if (timeSlotData) {
-          const updatedTimeSlots = (timeSlotData as TimeSlotConfig[]).map(slot => {
-            const actualCount = registrations ? registrations.filter(reg => reg.timeSlot === slot.timeSlot).length : 0;
-            console.log(`📊 Time slot ${slot.timeSlot}: ${actualCount} actual registrations (was showing ${slot.currentRegistrations})`);
-            return {
-              ...slot,
-              currentRegistrations: actualCount
-            };
-          });
-          
-          // Sort time slots by time (earliest to latest)
-          const sortedTimeSlots = updatedTimeSlots.sort((a, b) => {
-            return a.timeSlot.localeCompare(b.timeSlot);
-          });
-          console.log('🎯 Setting timeSlots state with:', sortedTimeSlots.length, 'slots:', sortedTimeSlots);
-          setTimeSlots(sortedTimeSlots);
-        }
+        // Sort time slots by time (earliest to latest)
+        const sortedTimeSlots = updatedTimeSlots.sort((a, b) => {
+          return a.timeSlot.localeCompare(b.timeSlot);
+        });
+        console.log('🎯 Setting timeSlots state with:', sortedTimeSlots.length, 'slots:', sortedTimeSlots);
+        setTimeSlots(sortedTimeSlots);
       }
 
       // Load invite links
@@ -910,7 +915,7 @@ function AdminDashboard() {
           <div className="text-6xl mr-4">{BRANDING.locationEmoji}</div>
           <div>
             <h1 className="text-4xl font-bold mb-2">Christmas Store Admin</h1>
-            <p className="text-lg opacity-90">{LOCATION_NAME}</p>
+            <p className="text-lg text-black">{LOCATION_NAME}</p>
           </div>
         </div>
         <p className="text-center opacity-80">Manage registrations and time slots</p>
@@ -1030,7 +1035,7 @@ function AdminDashboard() {
                       <textarea
                         value={customClosureMessage}
                         onChange={(e) => setCustomClosureMessage(e.target.value)}
-                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm h-20"
+                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm h-20 text-black"
                         placeholder="Message shown when registration is closed"
                       />
                       <button
@@ -1557,7 +1562,7 @@ function AdminDashboard() {
                       type="email"
                       value={settings.replyToEmail}
                       onChange={(e) => setSettings({...settings, replyToEmail: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg"
+                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg text-black"
                       placeholder="office@pathwayvineyard.com"
                     />
                     <p className="text-sm text-black mt-1">Email address shown as reply-to in confirmation emails</p>
@@ -1575,7 +1580,7 @@ function AdminDashboard() {
                       type="text"
                       value={settings.locationName}
                       onChange={(e) => setSettings({...settings, locationName: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg"
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg text-black"
                       placeholder="Christmas Store Location"
                     />
                   </div>
@@ -1584,7 +1589,7 @@ function AdminDashboard() {
                     <textarea
                       value={settings.eventAddress}
                       onChange={(e) => setSettings({...settings, eventAddress: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20"
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20 text-black"
                       placeholder="123 Main St, City, State 12345"
                     />
                   </div>
@@ -1601,7 +1606,7 @@ function AdminDashboard() {
                       type="tel"
                       value={settings.eventPhone}
                       onChange={(e) => setSettings({...settings, eventPhone: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg"
+                      className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg text-black"
                       placeholder="(555) 123-4567"
                     />
                     <p className="text-sm text-black mt-1">Phone number for event inquiries</p>

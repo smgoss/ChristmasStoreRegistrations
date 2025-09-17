@@ -432,7 +432,7 @@ export default function RegistrationForm({
           <div className="text-6xl mb-4">🔒</div>
           <h2 className="text-2xl font-bold text-red-600 mb-4">Registration Closed</h2>
           <div className="bg-red-50 p-6 rounded-lg">
-            <p className="text-red-800">
+            <p className="text-red-900 font-medium">
               {registrationConfig?.closureMessage || 'Registration is currently closed. Please check back later.'}
             </p>
           </div>
