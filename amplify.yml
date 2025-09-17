@@ -6,24 +6,20 @@ applications:
         AMPLIFY_NODEJS_VERSION: '20'
         # Enable differential deploys for faster builds
         AMPLIFY_DIFF_DEPLOY: 'true'
-        # Optimize npm for build performance
-        NPM_CONFIG_CACHE: '/tmp/.npm'
-        NPM_CONFIG_PREFER_OFFLINE: 'true'
         # Next.js optimizations
         NEXT_TELEMETRY_DISABLED: '1'
       phases:
         preBuild:
           commands:
-            # Use npm ci with optimizations for faster installs
-            - npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund
-            # Install function dependencies (reverted to sequential for stability)
-            - cd amplify/functions/create-admin-user && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
-            - cd amplify/functions/send-confirmation-email && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
-            - cd amplify/functions/send-sms-confirmation && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
-            - cd amplify/functions/send-invite-email && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
-            - cd amplify/functions/send-attendance-confirmation && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
-            - cd amplify/functions/reserve-registration && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
-            - cd amplify/functions/auto-close-registration && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - npm ci
+            # Install function dependencies
+            - cd amplify/functions/create-admin-user && npm install && cd ../../..
+            - cd amplify/functions/send-confirmation-email && npm install && cd ../../..
+            - cd amplify/functions/send-sms-confirmation && npm install && cd ../../..
+            - cd amplify/functions/send-invite-email && npm install && cd ../../..
+            - cd amplify/functions/send-attendance-confirmation && npm install && cd ../../..
+            - cd amplify/functions/reserve-registration && npm install && cd ../../..
+            - cd amplify/functions/auto-close-registration && npm install && cd ../../..
             # Set location based on branch
             - |
               if [ "$AWS_BRANCH" = "lewiston" ]; then
@@ -51,13 +47,5 @@ applications:
           - "**/*"
       cache:
         paths:
-          # Main app dependencies and build cache
           - node_modules/**/*
           - .next/cache/**/*
-          - /tmp/.npm/**/*
-          # Function dependencies cache
-          - amplify/functions/*/node_modules/**/*
-          # TypeScript incremental cache
-          - .tsbuildinfo
-          # ESLint cache
-          - .eslintcache
