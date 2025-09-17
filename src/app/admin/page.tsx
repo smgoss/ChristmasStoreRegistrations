@@ -926,7 +926,7 @@ function AdminDashboard() {
               className={`flex-1 px-6 py-4 text-center font-semibold transition-all ${
                 activeTab === tab.id
                   ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                  : 'text-black hover:text-black hover:bg-gray-50'
               }`}
             >
               <div className="flex items-center justify-center space-x-2">
@@ -945,14 +945,14 @@ function AdminDashboard() {
             {/* Registration Status Configuration at top of Registrations tab */}
             {registrationConfig && (
               <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-8">
-                <h2 className="text-2xl font-bold text-purple-800 flex items-center mb-6">
+                <h2 className="text-2xl font-bold text-black flex items-center mb-6">
                   ⚙️ Registration Status Configuration
                 </h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Registration Status */}
                   <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-                    <h3 className="font-bold text-purple-700 mb-3 flex items-center">
+                    <h3 className="font-bold text-black mb-3 flex items-center">
                       🎯 Registration Status
                     </h3>
                     <div className="space-y-3">
@@ -980,14 +980,14 @@ function AdminDashboard() {
 
                   {/* Invite Only Mode */}
                   <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-                    <h3 className="font-bold text-purple-700 mb-3 flex items-center">
+                    <h3 className="font-bold text-black mb-3 flex items-center">
                       📧 Access Mode
                     </h3>
                     <div className="space-y-3">
                       <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
                         registrationConfig.inviteOnlyMode
                           ? 'bg-orange-100 text-orange-800'
-                          : 'bg-blue-100 text-blue-800'
+                          : 'bg-blue-100 text-black'
                       }`}>
                         {registrationConfig.inviteOnlyMode ? '🔐 INVITE ONLY' : '🌐 PUBLIC'}
                       </div>
@@ -1008,7 +1008,7 @@ function AdminDashboard() {
 
                   {/* Closure Message */}
                   <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-                    <h3 className="font-bold text-purple-700 mb-3 flex items-center">
+                    <h3 className="font-bold text-black mb-3 flex items-center">
                       💬 Closure Message
                     </h3>
                     <div className="space-y-3">
@@ -1033,7 +1033,7 @@ function AdminDashboard() {
 
             {/* Registration Management */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
-              <h2 className="text-2xl font-bold text-purple-800 flex items-center">
+              <h2 className="text-2xl font-bold text-black flex items-center">
                 👥 Registration Management ({filteredRegistrations.length} of {registrations.length})
               </h2>
               <div className="flex space-x-3">
@@ -1061,22 +1061,22 @@ function AdminDashboard() {
                   placeholder="🔍 Search by name, email, phone, or time slot..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 pl-12 border-2 border-purple-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 pl-12 border-2 border-purple-300 rounded-lg text-black font-medium focus:ring-2 focus:ring-purple-500"
                 />
-                <div className="absolute left-4 top-3.5 text-purple-500 text-xl">🔍</div>
+                <div className="absolute left-4 top-3.5 text-black text-xl">🔍</div>
               </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-blue-200 border-2 border-blue-400 p-4 rounded-lg text-center">
                 <div className="text-4xl mb-2">👥</div>
-                <h3 className="font-bold text-blue-800 text-lg">TOTAL REGISTRATIONS</h3>
-                <p className="text-3xl font-bold text-blue-900">{registrations.length}</p>
+                <h3 className="font-bold text-black text-lg">TOTAL REGISTRATIONS</h3>
+                <p className="text-3xl font-bold text-black">{registrations.length}</p>
               </div>
               <div className="bg-green-200 border-2 border-green-400 p-4 rounded-lg text-center">
                 <div className="text-4xl mb-2">👶</div>
-                <h3 className="font-bold text-green-800 text-lg">TOTAL CHILDREN</h3>
-                <p className="text-3xl font-bold text-green-900">
+                <h3 className="font-bold text-black text-lg">TOTAL CHILDREN</h3>
+                <p className="text-3xl font-bold text-black">
                   {registrations.reduce((sum, reg) => sum + reg.numberOfKids, 0)}
                 </p>
               </div>
@@ -1091,8 +1091,8 @@ function AdminDashboard() {
               {filteredRegistrations.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 border-2 border-gray-200 rounded-lg">
                   <div className="text-6xl mb-4">📝</div>
-                  <p className="text-xl font-bold text-gray-800">No registrations found</p>
-                  <p className="text-gray-600">Try adjusting your search terms</p>
+                  <p className="text-xl font-bold text-black">No registrations found</p>
+                  <p className="text-black">Try adjusting your search terms</p>
                 </div>
               ) : (
                 filteredRegistrations.map((reg) => (
@@ -1159,16 +1159,16 @@ function AdminDashboard() {
                       <div>
                         <div className="flex flex-col md:flex-row md:items-center justify-between">
                           <div className="space-y-2">
-                            <h3 className="text-xl font-bold text-gray-900">{reg.firstName} {reg.lastName}</h3>
+                            <h3 className="text-xl font-bold text-black">{reg.firstName} {reg.lastName}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                              <p className="text-gray-700"><span className="font-bold">📧 Email:</span> {reg.email}</p>
-                              <p className="text-gray-700"><span className="font-bold">📱 Phone:</span> {reg.phone}</p>
-                              <p className="text-gray-700"><span className="font-bold">⏰ Time:</span> <span className="bg-blue-200 px-2 py-1 rounded font-bold">{reg.timeSlot}</span></p>
-                              <p className="text-gray-700"><span className="font-bold">👶 Kids:</span> {reg.numberOfKids}</p>
+                              <p className="text-black"><span className="font-bold">📧 Email:</span> {reg.email}</p>
+                              <p className="text-black"><span className="font-bold">📱 Phone:</span> {reg.phone}</p>
+                              <p className="text-black"><span className="font-bold">⏰ Time:</span> <span className="bg-blue-200 px-2 py-1 rounded font-bold">{reg.timeSlot}</span></p>
+                              <p className="text-black"><span className="font-bold">👶 Kids:</span> {reg.numberOfKids}</p>
                               {reg.referredBy && (
-                                <p className="text-gray-700"><span className="font-bold">👤 Referred:</span> {reg.referredBy}</p>
+                                <p className="text-black"><span className="font-bold">👤 Referred:</span> {reg.referredBy}</p>
                               )}
-                              <p className="text-gray-700">
+                              <p className="text-black">
                                 <span className="font-bold">📋 Status:</span>
                                 {reg.isCancelled ? (
                                   <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ CANCELLED</span>
@@ -1177,7 +1177,7 @@ function AdminDashboard() {
                                 ) : reg.confirmationToken ? (
                                   <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
                                 ) : (
-                                  <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
+                                  <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
                                 )}
                               </p>
                             </div>
@@ -1225,16 +1225,16 @@ function AdminDashboard() {
 
         {activeTab === 'invites' && (
           <div>
-            <h2 className="text-2xl font-bold text-green-800 mb-6 flex items-center">
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center">
               📧 Invite Management
             </h2>
             
             {/* Generate New Invite Link */}
             <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-6">
-              <h3 className="text-lg font-semibold text-green-700 mb-4">Generate New Invite Link</h3>
+              <h3 className="text-lg font-semibold text-black mb-4">Generate New Invite Link</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-green-700 font-bold mb-2">
+                  <label className="block text-black font-bold mb-2">
                     📧 Email Address (required for email-specific invites)
                   </label>
                   <input
@@ -1242,9 +1242,9 @@ function AdminDashboard() {
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                     placeholder="recipient@example.com"
-                    className="w-full px-4 py-3 border-2 border-green-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-green-500"
+                    className="w-full px-4 py-3 border-2 border-green-300 rounded-lg text-black font-medium focus:ring-2 focus:ring-green-500"
                   />
-                  <p className="text-sm text-green-600 mt-2">
+                  <p className="text-sm text-black mt-2">
                     💡 Only the email address used to generate the invite can register with it
                   </p>
                 </div>
@@ -1260,12 +1260,12 @@ function AdminDashboard() {
 
             {/* Existing Invite Links */}
             <div className="bg-white border-2 border-green-200 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-green-700 mb-4">
+              <h3 className="text-lg font-semibold text-black mb-4">
                 Existing Invite Links ({inviteLinks.length})
               </h3>
               
               {inviteLinks.length === 0 ? (
-                <p className="text-green-600 italic text-center py-8">No invite links have been generated yet.</p>
+                <p className="text-black italic text-center py-8">No invite links have been generated yet.</p>
               ) : (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {inviteLinks.map((invite) => (
@@ -1273,7 +1273,7 @@ function AdminDashboard() {
                       key={invite.id}
                       className={`p-4 rounded-lg border-2 ${
                         invite.isUsed 
-                          ? 'bg-gray-100 border-gray-300 text-gray-600' 
+                          ? 'bg-gray-100 border-gray-300 text-black' 
                           : 'bg-white border-green-200'
                       }`}
                     >
@@ -1288,12 +1288,12 @@ function AdminDashboard() {
                               {invite.isUsed ? '✅ USED' : '🟢 ACTIVE'}
                             </span>
                             {invite.email && (
-                              <span className="text-sm text-gray-600">
+                              <span className="text-sm text-black">
                                 📧 {invite.email}
                               </span>
                             )}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-black">
                             Created: {new Date(invite.createdAt).toLocaleString()}
                             {invite.usedAt && (
                               <span className="ml-4">
@@ -1301,7 +1301,7 @@ function AdminDashboard() {
                               </span>
                             )}
                           </div>
-                          <div className="mt-2 font-mono text-sm bg-gray-100 text-gray-800 p-2 rounded border break-all">
+                          <div className="mt-2 font-mono text-sm bg-gray-100 text-black p-2 rounded border break-all">
                             {window.location.origin}/register/{invite.token}
                           </div>
                         </div>
@@ -1337,7 +1337,7 @@ function AdminDashboard() {
         {activeTab === 'timeslots' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-blue-800 flex items-center">
+              <h2 className="text-2xl font-bold text-black flex items-center">
                 ⏰ Time Slot Management
               </h2>
               {timeSlots.length > 6 && (
@@ -1355,10 +1355,10 @@ function AdminDashboard() {
               {timeSlots.length === 0 ? (
                 <div className="text-center py-8 bg-blue-50 border-2 border-blue-200 rounded-lg">
                   <div className="text-4xl mb-4">{loading ? '🔄' : '⚠️'}</div>
-                  <p className="text-blue-800 mb-2 text-lg font-semibold">
+                  <p className="text-black mb-2 text-lg font-semibold">
                     {loading ? 'Setting up time slots...' : 'Time slots not found'}
                   </p>
-                  <p className="text-blue-600 mb-4">
+                  <p className="text-black mb-4">
                     {loading 
                       ? 'Please wait while we initialize the default time slots.' 
                       : 'Click the button below to create the default time slots.'
@@ -1407,28 +1407,28 @@ function AdminDashboard() {
                                     setEditingTimeSlot(null);
                                   }
                                 }}
-                                className="px-3 py-1 border-2 border-blue-400 rounded font-bold text-blue-800"
+                                className="px-3 py-1 border-2 border-blue-400 rounded font-bold text-black"
                                 autoFocus
                               />
                               <button
                                 onClick={() => setEditingTimeSlot(null)}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="text-black hover:text-black"
                               >
                                 ❌
                               </button>
                             </div>
                           ) : (
                             <div className="flex items-center space-x-2">
-                              <span className="font-bold text-xl text-blue-800">{statusEmoji} {slot.timeSlot}</span>
+                              <span className="font-bold text-xl text-black">{statusEmoji} {slot.timeSlot}</span>
                               <button
                                 onClick={() => setEditingTimeSlot(slot.id)}
-                                className="text-blue-500 hover:text-blue-700"
+                                className="text-black hover:text-gray-700"
                               >
                                 ✏️
                               </button>
                             </div>
                           )}
-                          <div className="text-blue-600 font-semibold mt-1">
+                          <div className="text-black font-semibold mt-1">
                             {slot.currentRegistrations}/{slot.maxCapacity} registered ({percentage.toFixed(0)}%)
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
@@ -1436,7 +1436,7 @@ function AdminDashboard() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="text-blue-700 font-bold">Max:</span>
+                          <span className="text-black font-bold">Max:</span>
                           <div className="flex items-center border-2 border-blue-300 rounded-lg overflow-hidden">
                             <button
                               onClick={() => updateTimeSlotCapacity(slot.id, Math.max(0, slot.maxCapacity - 1))}
@@ -1454,7 +1454,7 @@ function AdminDashboard() {
                                   updateTimeSlotCapacity(slot.id, newValue);
                                 }
                               }}
-                              className="w-20 px-3 py-2 text-center text-gray-900 font-bold focus:ring-2 focus:ring-blue-500 border-0 focus:outline-none"
+                              className="w-20 px-3 py-2 text-center text-black font-bold focus:ring-2 focus:ring-blue-500 border-0 focus:outline-none"
                               min="0"
                               step="1"
                             />
@@ -1483,13 +1483,13 @@ function AdminDashboard() {
               {/* Add New Time Slot */}
               <div className="bg-gray-50 border-2 border-dashed border-blue-300 rounded-lg p-4">
                 <div className="flex items-center space-x-3">
-                  <span className="text-blue-700 font-bold">➕ Add New Time Slot:</span>
+                  <span className="text-black font-bold">➕ Add New Time Slot:</span>
                   <input
                     type="time"
                     value={newTimeSlot}
                     onChange={(e) => setNewTimeSlot(e.target.value)}
                     placeholder="HH:MM"
-                    className="px-3 py-2 border-2 border-blue-300 rounded-lg text-gray-900 font-bold focus:ring-2 focus:ring-blue-500"
+                    className="px-3 py-2 border-2 border-blue-300 rounded-lg text-black font-bold focus:ring-2 focus:ring-blue-500"
                   />
                   <button
                     onClick={addNewTimeSlot}
@@ -1499,7 +1499,7 @@ function AdminDashboard() {
                     🚀 Add Time Slot
                   </button>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-black mt-2">
                   💡 New time slots will start with {DEFAULT_CAPACITY} people capacity
                 </p>
               </div>
@@ -1509,17 +1509,17 @@ function AdminDashboard() {
 
         {activeTab === 'settings' && (
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center">
               ⚙️ Application Settings
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Email Settings */}
               <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-blue-700 mb-4">📧 Email Configuration</h3>
+                <h3 className="text-lg font-semibold text-black mb-4">📧 Email Configuration</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-blue-700 font-bold mb-2">Reply-To Email Address</label>
+                    <label className="block text-black font-bold mb-2">Reply-To Email Address</label>
                     <input
                       type="email"
                       value={settings.replyToEmail}
@@ -1527,17 +1527,17 @@ function AdminDashboard() {
                       className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg"
                       placeholder="office@pathwayvineyard.com"
                     />
-                    <p className="text-sm text-blue-600 mt-1">Email address shown as reply-to in confirmation emails</p>
+                    <p className="text-sm text-black mt-1">Email address shown as reply-to in confirmation emails</p>
                   </div>
                 </div>
               </div>
 
               {/* Location Settings */}
               <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-green-700 mb-4">📍 Event Location</h3>
+                <h3 className="text-lg font-semibold text-black mb-4">📍 Event Location</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-green-700 font-bold mb-2">Location Name</label>
+                    <label className="block text-black font-bold mb-2">Location Name</label>
                     <input
                       type="text"
                       value={settings.locationName}
@@ -1547,7 +1547,7 @@ function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <label className="block text-green-700 font-bold mb-2">Event Address</label>
+                    <label className="block text-black font-bold mb-2">Event Address</label>
                     <textarea
                       value={settings.eventAddress}
                       onChange={(e) => setSettings({...settings, eventAddress: e.target.value})}
@@ -1560,10 +1560,10 @@ function AdminDashboard() {
 
               {/* Contact Settings */}
               <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-purple-700 mb-4">📞 Contact Information</h3>
+                <h3 className="text-lg font-semibold text-black mb-4">📞 Contact Information</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-purple-700 font-bold mb-2">Event Phone Number</label>
+                    <label className="block text-black font-bold mb-2">Event Phone Number</label>
                     <input
                       type="tel"
                       value={settings.eventPhone}
@@ -1571,7 +1571,7 @@ function AdminDashboard() {
                       className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg"
                       placeholder="(555) 123-4567"
                     />
-                    <p className="text-sm text-purple-600 mt-1">Phone number for event inquiries</p>
+                    <p className="text-sm text-black mt-1">Phone number for event inquiries</p>
                   </div>
                 </div>
               </div>
@@ -1616,16 +1616,16 @@ const components = {
     return (
       <div className="text-center mb-8">
         <div className="text-6xl mb-4">🎄</div>
-        <h1 className="text-4xl font-bold text-green-800 mb-2">Christmas Store</h1>
+        <h1 className="text-4xl font-bold text-black mb-2">Christmas Store</h1>
         <h2 className="text-2xl font-semibold text-red-600">Admin Portal</h2>
-        <p className="text-gray-600 mt-2">Please sign in to manage registrations</p>
+        <p className="text-black mt-2">Please sign in to manage registrations</p>
       </div>
     );
   },
   Footer() {
     return (
       <div className="text-center mt-6">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-black">
           🎅 Ho ho ho! Welcome to the Christmas Store Admin Portal 🤶
         </p>
       </div>
