@@ -1405,7 +1405,6 @@ function AdminDashboard() {
 
         {activeTab === 'timeslots' && (
           <div>
-            {console.log('🚀 Time Slots tab rendering, timeSlots.length:', timeSlots.length, 'timeSlots:', timeSlots)}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-black flex items-center">
                 ⏰ Time Slot Management
