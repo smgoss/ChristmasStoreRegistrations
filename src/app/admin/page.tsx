@@ -114,7 +114,7 @@ interface InviteLink {
   token: string;
   email?: string;
   isUsed?: boolean;
-  createdAt: string;
+  createdAt?: string;
   usedAt?: string;
 }
 
@@ -524,12 +524,20 @@ function AdminDashboard() {
         token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       }
       
+      console.log('Creating invite link with data:', { token, email: inviteEmail, isUsed: false });
       const inviteResult = await (await getClient()).models.InviteLink.create({
         token,
         email: inviteEmail,
-        isUsed: false,
-        createdAt: new Date().toISOString()
+        isUsed: false
       });
+
+      console.log('Invite creation result:', inviteResult);
+      
+      if (inviteResult.errors) {
+        console.error('Invite creation errors:', inviteResult.errors);
+        setMessage('Error creating invite: ' + JSON.stringify(inviteResult.errors));
+        return;
+      }
 
       const inviteUrl = `${window.location.origin}/register/${token}`;
       
@@ -1293,6 +1301,7 @@ function AdminDashboard() {
               <h3 className="text-lg font-semibold text-black mb-4">
                 Existing Invite Links ({inviteLinks.length})
               </h3>
+              {console.log('🔍 Current inviteLinks state:', inviteLinks)}
               
               {inviteLinks.length === 0 ? (
                 <p className="text-black italic text-center py-8">No invite links have been generated yet.</p>
