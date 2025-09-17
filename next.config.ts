@@ -10,8 +10,6 @@ const nextConfig: NextConfig = {
   experimental: {
     // Use native ES modules for faster builds
     esmExternals: true,
-    // Enable build worker threads for faster compilation
-    cpus: Math.max(1, (require('os').cpus().length) - 1),
   },
   
   // TypeScript optimizations
@@ -39,8 +37,6 @@ const nextConfig: NextConfig = {
     return config;
   },
   
-  // Output optimization
-  output: 'standalone',
   
   // Image optimization (if using next/image)
   images: {

@@ -16,16 +16,14 @@ applications:
           commands:
             # Use npm ci with optimizations for faster installs
             - npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund
-            # Install function dependencies in parallel for speed
-            - |
-              (cd amplify/functions/create-admin-user && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              (cd amplify/functions/send-confirmation-email && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              (cd amplify/functions/send-sms-confirmation && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              (cd amplify/functions/send-invite-email && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              (cd amplify/functions/send-attendance-confirmation && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              (cd amplify/functions/reserve-registration && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              (cd amplify/functions/auto-close-registration && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund) &
-              wait
+            # Install function dependencies (reverted to sequential for stability)
+            - cd amplify/functions/create-admin-user && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - cd amplify/functions/send-confirmation-email && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - cd amplify/functions/send-sms-confirmation && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - cd amplify/functions/send-invite-email && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - cd amplify/functions/send-attendance-confirmation && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - cd amplify/functions/reserve-registration && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
+            - cd amplify/functions/auto-close-registration && npm ci --cache /tmp/.npm --prefer-offline --no-audit --no-fund && cd ../../..
             # Set location based on branch
             - |
               if [ "$AWS_BRANCH" = "lewiston" ]; then
