@@ -134,6 +134,7 @@ function generateEmailContent(registration: RegistrationData): string {
         <h1>🎄 Christmas Store Registration Confirmed! 🎁</h1>
         <h2>${locationName}</h2>
         <p>${locationAddress}</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Friday, December 6th, 2024</p>
       </div>
       
       <div class="content">
@@ -163,6 +164,9 @@ function generateEmailContent(registration: RegistrationData): string {
         
         <h3>📍 Important Information:</h3>
         <ul>
+          <li><strong>Event Date:</strong> Friday, December 6th, 2024</li>
+          <li><strong>Your Time Slot:</strong> ${registration.timeSlot}</li>
+          <li><strong>Location:</strong> ${locationAddress}</li>
           <li>Please contact the office if you need to change or cancel your registration.</li>
         </ul>
         
