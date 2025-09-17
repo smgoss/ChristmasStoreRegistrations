@@ -219,6 +219,14 @@ function AdminDashboard() {
     initializeAndLoadData();
   }, []);
 
+  // Effect to handle tab changes and ensure data is loaded
+  useEffect(() => {
+    if (activeTab === 'timeslots' && timeSlots.length === 0 && !loading) {
+      console.log('🔄 Time slots tab selected but no slots found, reloading...');
+      loadData();
+    }
+  }, [activeTab, timeSlots.length, loading]);
+
   const loadData = async () => {
     try {
       console.log('📥 Loading data with user pool auth...');
@@ -922,7 +930,13 @@ function AdminDashboard() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                // Refresh data when switching to time slots tab
+                if (tab.id === 'timeslots' && timeSlots.length === 0) {
+                  loadData();
+                }
+              }}
               className={`flex-1 px-6 py-4 text-center font-semibold transition-all ${
                 activeTab === tab.id
                   ? 'border-b-2 border-blue-500 text-blue-600 bg-blue-50'
