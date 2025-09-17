@@ -289,6 +289,7 @@ function AdminDashboard() {
           const sortedTimeSlots = updatedTimeSlots.sort((a, b) => {
             return a.timeSlot.localeCompare(b.timeSlot);
           });
+          console.log('🎯 Setting timeSlots state with:', sortedTimeSlots.length, 'slots:', sortedTimeSlots);
           setTimeSlots(sortedTimeSlots);
         }
       }
@@ -1096,8 +1097,8 @@ function AdminDashboard() {
               </div>
               <div className="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center">
                 <div className="text-4xl mb-2">🍼</div>
-                <h3 className="font-bold text-yellow-800 text-lg">NEED CHILDCARE</h3>
-                <p className="text-3xl font-bold text-yellow-900">0</p>
+                <h3 className="font-bold text-black text-lg">NEED CHILDCARE</h3>
+                <p className="text-3xl font-bold text-black">0</p>
               </div>
             </div>
 
@@ -1189,7 +1190,7 @@ function AdminDashboard() {
                                 ) : reg.attendanceConfirmed ? (
                                   <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ CONFIRMED</span>
                                 ) : reg.confirmationToken ? (
-                                  <span className="bg-yellow-200 text-yellow-800 px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
+                                  <span className="bg-yellow-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
                                 ) : (
                                   <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
                                 )}
@@ -1350,6 +1351,7 @@ function AdminDashboard() {
 
         {activeTab === 'timeslots' && (
           <div>
+            {console.log('🚀 Time Slots tab rendering, timeSlots.length:', timeSlots.length, 'timeSlots:', timeSlots)}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-black flex items-center">
                 ⏰ Time Slot Management
@@ -1393,6 +1395,23 @@ function AdminDashboard() {
                         className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold"
                       >
                         🔄 Refresh Data
+                      </button>
+                      <button
+                        onClick={async () => {
+                          console.log('🔧 Direct time slot query test...');
+                          try {
+                            const { data: testSlots } = await (await getClient()).models.TimeSlotConfig.list();
+                            console.log('🧪 Direct query result:', testSlots?.length || 0, testSlots);
+                            setMessage(`Direct query found ${testSlots?.length || 0} time slots. Check console for details.`);
+                          } catch (error) {
+                            console.error('🚨 Direct query failed:', error);
+                            setMessage('❌ Direct query failed. Check console for error details.');
+                          }
+                        }}
+                        disabled={loading}
+                        className="bg-yellow-600 text-white px-6 py-3 rounded-lg hover:bg-yellow-700 disabled:opacity-50 font-bold"
+                      >
+                        🧪 Test Query
                       </button>
                     </div>
                   )}
@@ -1592,7 +1611,7 @@ function AdminDashboard() {
 
               {/* Save Settings */}
               <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-yellow-700 mb-4">💾 Save Changes</h3>
+                <h3 className="text-lg font-semibold text-black mb-4">💾 Save Changes</h3>
                 <button
                   onClick={() => updateSettings(settings)}
                   disabled={loading}
@@ -1600,7 +1619,7 @@ function AdminDashboard() {
                 >
                   {loading ? '⏳ Saving...' : '💾 Save All Settings'}
                 </button>
-                <p className="text-sm text-yellow-600 mt-2">Changes will be applied to future registrations and emails</p>
+                <p className="text-sm text-black mt-2">Changes will be applied to future registrations and emails</p>
               </div>
             </div>
           </div>
