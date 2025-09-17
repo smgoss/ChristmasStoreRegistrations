@@ -305,10 +305,17 @@ function AdminDashboard() {
       
       if (inviteErrors) {
         console.error('❌ Invite link errors:', inviteErrors);
+        setMessage('Error loading invite links: ' + JSON.stringify(inviteErrors));
       } else {
         console.log('✅ Invite links loaded:', inviteData?.length || 0);
+        console.log('Raw invite data:', inviteData);
         const inviteLinks = inviteData as InviteLink[];
-        setInviteLinks(inviteLinks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+        // Sort with fallback for missing createdAt
+        setInviteLinks(inviteLinks.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        }));
       }
     } catch (error) {
       console.error('💥 Error loading data:', error);

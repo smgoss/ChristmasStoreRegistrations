@@ -498,7 +498,7 @@ export default function RegistrationForm({
             {LOCATION_NAME}
           </h2>
           <p className="christmas-location">{LOCATION_ADDRESS}</p>
-          <p className="christmas-date" style={{fontSize: '1.1rem', fontWeight: 'bold', color: '#c41e3a', marginTop: '0.5rem'}}>
+          <p className="christmas-date" style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'black', marginTop: '0.5rem'}}>
             📅 Friday, December 6th, 2024
           </p>
         </div>
