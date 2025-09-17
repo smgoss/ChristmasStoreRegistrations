@@ -530,45 +530,12 @@ function AdminDashboard() {
       if (inviteEmail.trim() && inviteResult.data) {
         try {
           console.log('📧 Sending invite email to:', inviteEmail);
-          const emailResult = await (await getClient()).mutations.sendInviteEmail({
-            invite: {
-              email: inviteEmail,
-              token: token,
-              inviteUrl: inviteUrl
-            },
-            inviteId: inviteResult.data.id
-          });
-
-          if (emailResult.data?.success) {
-            console.log('✅ Invite email sent successfully');
-            // Update invite link with successful email delivery status
-            await (await getClient()).models.InviteLink.update({
-              id: inviteResult.data.id,
-              emailDeliveryStatus: 'sent',
-              emailDeliveryAttemptedAt: new Date().toISOString()
-            });
-            setMessage(`✅ Invite link generated and email sent to ${inviteEmail}. Link also copied to clipboard.`);
-          } else {
-            console.warn('⚠️ Invite email failed to send');
-            // Update invite link with failed email delivery status
-            await (await getClient()).models.InviteLink.update({
-              id: inviteResult.data.id,
-              emailDeliveryStatus: 'failed',
-              emailDeliveryAttemptedAt: new Date().toISOString(),
-              emailFailureReason: emailResult.errors?.[0]?.message || 'Email sending failed'
-            });
-            setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
-          }
+          // Temporarily disabled invite email for deployment
+          console.log('📧 Invite email functionality temporarily disabled');
+          setMessage(`✅ Invite link generated and copied to clipboard: ${inviteUrl}. (Email functionality temporarily disabled)`);
         } catch (emailError) {
-          console.error('❌ Error sending invite email:', emailError);
-          // Update invite link with failed email delivery status
-          await (await getClient()).models.InviteLink.update({
-            id: inviteResult.data.id,
-            emailDeliveryStatus: 'failed',
-            emailDeliveryAttemptedAt: new Date().toISOString(),
-            emailFailureReason: emailError instanceof Error ? emailError.message : 'Unknown error'
-          });
-          setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+          console.error('❌ Error in invite email (temporarily disabled):', emailError);
+          setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. (Email functionality temporarily disabled)`);
         }
       } else {
         setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);
@@ -813,7 +780,7 @@ function AdminDashboard() {
 
   const exportRegistrations = () => {
     const csvContent = [
-      ['Name', 'Email', 'Phone', 'Time Slot', 'Number of Kids', 'Referred By', 'Registration Date', 'Email Status', 'SMS Status'],
+      ['Name', 'Email', 'Phone', 'Time Slot', 'Number of Kids', 'Referred By', 'Registration Date'],
       ...registrations.map(reg => [
         `${reg.firstName} ${reg.lastName}`,
         reg.email,
@@ -821,9 +788,7 @@ function AdminDashboard() {
         reg.timeSlot,
         reg.numberOfKids.toString(),
         reg.referredBy || '',
-        new Date(reg.registrationDate).toLocaleDateString(),
-        (reg as any).emailDeliveryStatus || 'pending',
-        (reg as any).smsDeliveryStatus || 'pending'
+        new Date(reg.registrationDate).toLocaleDateString()
       ])
     ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
 
@@ -1214,6 +1179,7 @@ function AdminDashboard() {
                                   <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
                                 )}
                               </p>
+                              {/* Delivery status temporarily disabled for deployment
                               <p className="text-black">
                                 <span className="font-bold">📧 Email:</span>
                                 {(reg as any).emailDeliveryStatus === 'sent' ? (
@@ -1236,6 +1202,7 @@ function AdminDashboard() {
                                   <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
                                 )}
                               </p>
+                              */}
                             </div>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
@@ -1348,6 +1315,7 @@ function AdminDashboard() {
                                 📧 {invite.email}
                               </span>
                             )}
+                            {/* Email status temporarily disabled for deployment
                             {invite.email && (
                               <span className={`px-2 py-1 rounded text-xs font-bold ml-2 ${
                                 (invite as any).emailDeliveryStatus === 'sent' ? 'bg-green-100 text-green-800' :
@@ -1361,6 +1329,7 @@ function AdminDashboard() {
                                  '⏳ EMAIL PENDING'}
                               </span>
                             )}
+                            */}
                           </div>
                           <div className="text-sm text-black">
                             Created: {new Date(invite.createdAt).toLocaleString()}

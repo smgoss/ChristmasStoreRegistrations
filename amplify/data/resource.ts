@@ -1,7 +1,7 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { sendSmsConfirmation } from '../functions/send-sms-confirmation/resource';
 import { sendConfirmationEmail } from '../functions/send-confirmation-email/resource';
-import { sendInviteEmail } from '../functions/send-invite-email/resource';
+// import { sendInviteEmail } from '../functions/send-invite-email/resource'; // Temporarily disabled
 
 const schema = a.schema({
   Registration: a
@@ -44,13 +44,13 @@ const schema = a.schema({
       cancelledAt: a.datetime(),
       confirmationToken: a.string(), // Unique token for confirmation links
       
-      // Email/SMS delivery status tracking
-      emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
-      emailDeliveryAttemptedAt: a.datetime(),
-      emailFailureReason: a.string(),
-      smsDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed']),
-      smsDeliveryAttemptedAt: a.datetime(),
-      smsFailureReason: a.string(),
+      // Email/SMS delivery status tracking - temporarily disabled for deployment
+      // emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
+      // emailDeliveryAttemptedAt: a.datetime(),
+      // emailFailureReason: a.string(),
+      // smsDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed']),
+      // smsDeliveryAttemptedAt: a.datetime(),
+      // smsFailureReason: a.string(),
     })
     .authorization((allow) => [
       // Public can read and create registrations (server route handles validation)
@@ -91,10 +91,10 @@ const schema = a.schema({
       createdAt: a.datetime(),
       usedAt: a.datetime(),
       
-      // Email delivery status tracking for invite emails
-      emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
-      emailDeliveryAttemptedAt: a.datetime(),
-      emailFailureReason: a.string(),
+      // Email delivery status tracking for invite emails - temporarily disabled for deployment
+      // emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
+      // emailDeliveryAttemptedAt: a.datetime(),
+      // emailFailureReason: a.string(),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(['read', 'update']),
@@ -168,24 +168,24 @@ const schema = a.schema({
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendConfirmationEmail)),
 
-  // Invite email mutation
-  sendInviteEmail: a
-    .mutation()
-    .arguments({
-      invite: a.customType({
-        email: a.string().required(),
-        token: a.string().required(),
-        inviteUrl: a.string().required(),
-      }),
-      inviteId: a.string()
-    })
-    .returns(a.customType({
-      success: a.boolean().required(),
-      message: a.string(),
-      messageId: a.string(),
-    }))
-    .authorization((allow) => [allow.publicApiKey()])
-    .handler(a.handler.function(sendInviteEmail)),
+  // Invite email mutation - temporarily disabled for deployment
+  // sendInviteEmail: a
+  //   .mutation()
+  //   .arguments({
+  //     invite: a.customType({
+  //       email: a.string().required(),
+  //       token: a.string().required(),
+  //       inviteUrl: a.string().required(),
+  //     }),
+  //     inviteId: a.string()
+  //   })
+  //   .returns(a.customType({
+  //     success: a.boolean().required(),
+  //     message: a.string(),
+  //     messageId: a.string(),
+  //   }))
+  //   .authorization((allow) => [allow.publicApiKey()])
+  //   .handler(a.handler.function(sendInviteEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;
