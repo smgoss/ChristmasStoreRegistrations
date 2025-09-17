@@ -4,6 +4,10 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
+  streetAddress: string;
+  zipCode: string;
+  city: string;
+  state: string;
   timeSlot: string;
   numberOfKids: number;
   referredBy?: string;

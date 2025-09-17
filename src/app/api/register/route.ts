@@ -68,6 +68,10 @@ const RegistrationSchema = z.object({
   lastName: z.string().trim().min(1),
   email: z.string().trim().email(),
   phone: z.string().trim().min(7),
+  streetAddress: z.string().trim().min(1),
+  zipCode: z.string().trim().regex(/^\d{5}(-\d{4})?$/, 'Invalid zip code format'),
+  city: z.string().trim().min(1),
+  state: z.string().trim().min(1),
   numberOfKids: z.number().int().min(0),
   timeSlot: z.string().trim().min(1),
   referredBy: z.string().optional(),
@@ -115,11 +119,11 @@ export async function POST(req: Request) {
       console.log('Schema validation failed:', parsed.error);
       return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
     }
-    const { firstName, lastName, email, phone: rawPhone, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
+    const { firstName, lastName, email, phone: rawPhone, streetAddress, zipCode, city, state, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
     
     // Format phone number to E.164 format for database storage
     const phone = formatPhoneForStorage(rawPhone);
-    console.log('Parsed registration data:', { firstName, lastName, email, phone, numberOfKids, timeSlot, referredBy, inviteToken });
+    console.log('Parsed registration data:', { firstName, lastName, email, phone, streetAddress, zipCode, city, state, numberOfKids, timeSlot, referredBy, inviteToken });
 
     // Check duplicates on server (check both formatted and raw phone)
     const [emailCheck, phoneCheck, rawPhoneCheck] = await Promise.all([
@@ -221,6 +225,10 @@ export async function POST(req: Request) {
           lastName,
           email,
           phone,
+          streetAddress,
+          zipCode,
+          city,
+          state,
           numberOfKids,
           timeSlot,
           needsChildcare: false, // Temporary: until schema migration completes
@@ -284,6 +292,10 @@ export async function POST(req: Request) {
           lastName,
           email,
           phone: rawPhone,
+          streetAddress,
+          zipCode,
+          city,
+          state,
           timeSlot,
           numberOfKids,
           referredBy: referredBy || '',
@@ -308,6 +320,10 @@ export async function POST(req: Request) {
           lastName,
           email,
           phone: rawPhone,
+          streetAddress,
+          zipCode,
+          city,
+          state,
           timeSlot,
           numberOfKids,
           referredBy: referredBy || '',
@@ -321,6 +337,10 @@ export async function POST(req: Request) {
           lastName,
           email,
           phone: rawPhone,
+          streetAddress,
+          zipCode,
+          city,
+          state,
           timeSlot,
           numberOfKids,
           referredBy: referredBy || '',

@@ -42,6 +42,10 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
+  streetAddress: string;
+  zipCode: string;
+  city: string;
+  state: string;
   numberOfKids: number;
   timeSlot: string;
   referredBy: string;
@@ -77,6 +81,10 @@ export default function RegistrationForm({
     lastName: '',
     email: prefillEmail || '',
     phone: '',
+    streetAddress: '',
+    zipCode: '',
+    city: '',
+    state: '',
     numberOfKids: 0,
     timeSlot: '',
     referredBy: '',
@@ -86,6 +94,8 @@ export default function RegistrationForm({
   const [timeSlotCapacities, setTimeSlotCapacities] = useState<Record<string, { max: number; current: number }>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [zipLookupLoading, setZipLookupLoading] = useState(false);
+  const [cityOptions, setCityOptions] = useState<Array<{city: string, state: string}>>([]);
   const [submitted, setSubmitted] = useState(false);
   const [registrationConfig, setRegistrationConfig] = useState<RegistrationConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
@@ -188,6 +198,52 @@ export default function RegistrationForm({
     }
   };
 
+  const lookupZipCode = async (zipCode: string) => {
+    if (!zipCode || zipCode.length < 5) {
+      setCityOptions([]);
+      return;
+    }
+
+    setZipLookupLoading(true);
+    try {
+      const response = await fetch(`/api/lookup-zip?zip=${zipCode}`);
+      if (response.ok) {
+        const data = await response.json();
+        const options = data.results.map((result: any) => ({
+          city: result.city,
+          state: result.stateAbbreviation
+        }));
+        setCityOptions(options);
+        
+        // Auto-fill if there's only one option
+        if (options.length === 1) {
+          setFormData(prev => ({
+            ...prev,
+            city: options[0].city,
+            state: options[0].state
+          }));
+        } else {
+          // Clear city/state if multiple options, let user choose
+          setFormData(prev => ({
+            ...prev,
+            city: '',
+            state: ''
+          }));
+        }
+      } else {
+        setCityOptions([]);
+        if (response.status === 404) {
+          setErrors(prev => ({ ...prev, zipCode: 'Zip code not found' }));
+        }
+      }
+    } catch (error) {
+      console.error('Zip code lookup failed:', error);
+      setCityOptions([]);
+    } finally {
+      setZipLookupLoading(false);
+    }
+  };
+
   const validateForm = async (): Promise<boolean> => {
     const newErrors: Record<string, string> = {};
 
@@ -238,7 +294,16 @@ export default function RegistrationForm({
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.streetAddress.trim()) newErrors.streetAddress = 'Street address is required';
+    if (!formData.zipCode.trim()) newErrors.zipCode = 'Zip code is required';
+    if (!formData.city.trim()) newErrors.city = 'City is required';
+    if (!formData.state.trim()) newErrors.state = 'State is required';
     if (!formData.timeSlot) newErrors.timeSlot = 'Please select a time slot';
+    
+    // Validate zip code format
+    if (formData.zipCode && !/^\d{5}(-\d{4})?$/.test(formData.zipCode)) {
+      newErrors.zipCode = 'Please enter a valid zip code (e.g., 12345 or 12345-6789)';
+    }
     
     if (formData.numberOfKids < 0) {
       newErrors.numberOfKids = 'Number of kids cannot be negative';
@@ -479,6 +544,114 @@ export default function RegistrationForm({
             required
           />
           {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
+            Address Information
+          </h3>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Street Address *
+            </label>
+            <input
+              type="text"
+              value={formData.streetAddress}
+              onChange={(e) => setFormData(prev => ({ ...prev, streetAddress: e.target.value }))}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+              placeholder="123 Main Street"
+              required
+            />
+            {errors.streetAddress && <p className="text-red-500 text-sm mt-1">{errors.streetAddress}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Zip Code *
+              </label>
+              <input
+                type="text"
+                value={formData.zipCode}
+                onChange={(e) => {
+                  const zipCode = e.target.value;
+                  setFormData(prev => ({ ...prev, zipCode }));
+                  // Clear previous zip code error
+                  if (errors.zipCode) {
+                    setErrors(prev => ({ ...prev, zipCode: '' }));
+                  }
+                  // Trigger lookup when zip code is 5 digits
+                  if (zipCode.length === 5) {
+                    lookupZipCode(zipCode);
+                  }
+                }}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                placeholder="12345"
+                maxLength={10}
+                required
+              />
+              {zipLookupLoading && (
+                <p className="text-blue-500 text-sm mt-1">Looking up zip code...</p>
+              )}
+              {errors.zipCode && <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                City *
+              </label>
+              {cityOptions.length > 1 ? (
+                <select
+                  value={formData.city}
+                  onChange={(e) => {
+                    const selectedOption = cityOptions.find(opt => opt.city === e.target.value);
+                    setFormData(prev => ({
+                      ...prev,
+                      city: e.target.value,
+                      state: selectedOption?.state || prev.state
+                    }));
+                  }}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  required
+                >
+                  <option value="">Select city...</option>
+                  {cityOptions.map((option, index) => (
+                    <option key={index} value={option.city}>
+                      {option.city}, {option.state}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  placeholder="City"
+                  required
+                />
+              )}
+              {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                State *
+              </label>
+              <input
+                type="text"
+                value={formData.state}
+                onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                placeholder="State"
+                maxLength={2}
+                required
+                readOnly={cityOptions.length > 0}
+              />
+              {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+            </div>
+          </div>
         </div>
 
         <div>

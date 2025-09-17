@@ -9,6 +9,10 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
+  streetAddress: string;
+  zipCode: string;
+  city: string;
+  state: string;
   timeSlot: string;
   numberOfKids: number;
   referredBy?: string;
@@ -127,6 +131,7 @@ function generateEmailContent(registration: RegistrationData): string {
             <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
             <li><strong>Email:</strong> ${registration.email}</li>
             <li><strong>Phone:</strong> ${registration.phone}</li>
+            <li><strong>Address:</strong> ${registration.streetAddress}, ${registration.city}, ${registration.state} ${registration.zipCode}</li>
             <li><strong>Time Slot:</strong> ${registration.timeSlot}</li>
             <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
             ${registration.referredBy ? `<li><strong>Referred by:</strong> ${registration.referredBy}</li>` : ''}

@@ -11,6 +11,12 @@ const schema = a.schema({
       email: a.email().required(),
       phone: a.phone().required(),
       
+      // Address info
+      streetAddress: a.string().required(),
+      zipCode: a.string().required(),
+      city: a.string().required(),
+      state: a.string().required(),
+      
       // Children info
       numberOfKids: a.integer().required(),
       children: a.hasMany('Child', 'registrationId'),
@@ -105,6 +111,10 @@ const schema = a.schema({
         lastName: a.string().required(),
         email: a.string().required(),
         phone: a.string().required(),
+        streetAddress: a.string().required(),
+        zipCode: a.string().required(),
+        city: a.string().required(),
+        state: a.string().required(),
         timeSlot: a.string().required(),
         numberOfKids: a.integer().required(),
         referredBy: a.string(),
@@ -127,6 +137,10 @@ const schema = a.schema({
         lastName: a.string().required(),
         email: a.string().required(),
         phone: a.string().required(),
+        streetAddress: a.string().required(),
+        zipCode: a.string().required(),
+        city: a.string().required(),
+        state: a.string().required(),
         timeSlot: a.string().required(),
         numberOfKids: a.integer().required(),
         referredBy: a.string(),
