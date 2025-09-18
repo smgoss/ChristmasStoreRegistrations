@@ -1539,6 +1539,38 @@ function AdminDashboard() {
               )}
             </div>
             
+            {/* Time Slots Summary */}
+            {timeSlots.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {timeSlots.length}
+                  </div>
+                  <div className="text-sm font-semibold text-blue-800">
+                    Total Time Slots
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {timeSlots.reduce((sum, slot) => sum + slot.currentRegistrations, 0)}
+                  </div>
+                  <div className="text-sm font-semibold text-green-800">
+                    Total Registrations
+                  </div>
+                </div>
+                
+                <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {timeSlots.reduce((sum, slot) => sum + (slot.maxCapacity - slot.currentRegistrations), 0)}
+                  </div>
+                  <div className="text-sm font-semibold text-orange-800">
+                    Remaining Capacity
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div className="space-y-4">
               {timeSlots.length === 0 ? (
                 <div className="text-center py-8 bg-blue-50 border-2 border-blue-200 rounded-lg">
