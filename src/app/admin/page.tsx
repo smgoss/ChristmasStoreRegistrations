@@ -655,6 +655,39 @@ function AdminDashboard() {
     }
   };
 
+  const deleteInviteLink = async (inviteId: string, email?: string) => {
+    const confirmMessage = email 
+      ? `Are you sure you want to permanently delete the invalidated invite for ${email}? This action cannot be undone.`
+      : 'Are you sure you want to permanently delete this invalidated invite? This action cannot be undone.';
+      
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('🗑️ Deleting invite link:', inviteId);
+      
+      const result = await (await getClient()).models.InviteLink.delete({ id: inviteId });
+      
+      console.log('✅ Delete result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Delete errors:', result.errors);
+        setMessage('❌ Error deleting invite: ' + JSON.stringify(result.errors));
+        return;
+      }
+      
+      setMessage('✅ Invite deleted permanently.');
+      loadData(); // Reload to update the list
+    } catch (error) {
+      console.error('❌ Error deleting invite:', error);
+      setMessage('❌ Error deleting invite: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const copyInviteLink = async (token: string) => {
     const inviteUrl = `${window.location.origin}/register/${token}`;
     try {
@@ -1467,6 +1500,16 @@ function AdminDashboard() {
                               title="Invalidate Link"
                             >
                               ❌ Invalidate
+                            </button>
+                          )}
+                          {invite.isUsed && (
+                            <button
+                              onClick={() => deleteInviteLink(invite.id, invite.email)}
+                              disabled={loading}
+                              className="px-3 py-1 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 disabled:opacity-50"
+                              title="Delete Permanently"
+                            >
+                              🗑️ Delete
                             </button>
                           )}
                         </div>
