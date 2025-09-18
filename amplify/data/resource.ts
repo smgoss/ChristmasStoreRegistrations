@@ -97,7 +97,7 @@ const schema = a.schema({
       // emailFailureReason: a.string(),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read', 'update']),
+      allow.publicApiKey().to(['read', 'create', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
 
