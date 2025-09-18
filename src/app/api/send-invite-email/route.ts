@@ -1,18 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { z } from 'zod';
+import { createErrorResponse, createSuccessResponse, validateRequestBody, applyRateLimit } from '@/lib/api-utils';
 
 const lambda = new LambdaClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
+const InviteEmailSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  inviteLink: z.string().url('Invalid invite link URL'),
+  token: z.string().min(1, 'Token is required')
+});
+
 export async function POST(request: NextRequest) {
   try {
-    const { email, inviteLink, token } = await request.json();
-
-    if (!email || !inviteLink || !token) {
-      return NextResponse.json(
-        { error: 'Missing required fields: email, inviteLink, token' },
-        { status: 400 }
-      );
+    // Apply rate limiting
+    const rateLimitResponse = applyRateLimit(request, 15, 60000);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
     }
+
+    // Validate request body
+    const validation = await validateRequestBody(request, InviteEmailSchema);
+    if (!validation.success) {
+      return validation.response;
+    }
+    
+    const { email, inviteLink, token } = validation.data;
 
     console.log('📧 Invoking send-invite-email Lambda function');
 
@@ -33,26 +46,17 @@ export async function POST(request: NextRequest) {
       
       if (result.statusCode === 200) {
         console.log('✅ Invite email sent successfully');
-        return NextResponse.json({ success: true, message: 'Invite email sent successfully' });
+        return createSuccessResponse({ message: 'Invite email sent successfully' });
       } else {
         console.error('❌ Lambda function failed:', result);
-        return NextResponse.json(
-          { error: 'Failed to send invite email', details: result },
-          { status: 500 }
-        );
+        return createErrorResponse('Failed to send invite email', 'EMAIL_SEND_FAILED', 500, result);
       }
     }
 
-    return NextResponse.json(
-      { error: 'No response from Lambda function' },
-      { status: 500 }
-    );
+    return createErrorResponse('No response from Lambda function', 'NO_LAMBDA_RESPONSE', 500);
 
   } catch (error) {
     console.error('❌ Error in send-invite-email API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return createErrorResponse('Internal server error', 'INTERNAL_ERROR', 500, error instanceof Error ? error.message : 'Unknown error');
   }
 }

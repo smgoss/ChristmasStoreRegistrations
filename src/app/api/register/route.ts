@@ -3,6 +3,7 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 import { z } from 'zod';
+import { createErrorResponse, createSuccessResponse, validateRequestBody, applyRateLimit } from '@/lib/api-utils';
 
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = async () => {
@@ -13,31 +14,6 @@ const getClient = async () => {
   return client;
 };
 
-// In-memory rate limiting (best-effort; use durable store in production)
-const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
-const RATE_LIMIT_MAX = 10; // max requests per window per IP
-const rateMap = new Map<string, { count: number; windowStart: number }>();
-
-function getClientIp(req: Request) {
-  const xff = req.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
-  const xfci = req.headers.get('x-client-ip');
-  if (xfci) return xfci;
-  return 'unknown';
-}
-
-function checkRateLimit(req: Request) {
-  const ip = getClientIp(req);
-  const now = Date.now();
-  const rec = rateMap.get(ip);
-  if (!rec || now - rec.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateMap.set(ip, { count: 1, windowStart: now });
-    return true;
-  }
-  if (rec.count >= RATE_LIMIT_MAX) return false;
-  rec.count += 1;
-  return true;
-}
 
 // Per-timeSlot in-memory mutex to reduce race conditions on capacity
 const slotQueues = new Map<string, Promise<void>>();
@@ -108,18 +84,21 @@ function formatPhoneForStorage(phone: string): string {
 export async function POST(req: Request) {
   try {
     console.log('Registration API called');
-    if (!checkRateLimit(req)) {
-      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 });
+    
+    // Apply rate limiting
+    const rateLimitResponse = applyRateLimit(req, 10, 60000);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
     }
 
-    const json = await req.json();
-    console.log('Received registration data:', json);
-    const parsed = RegistrationSchema.safeParse(json);
-    if (!parsed.success) {
-      console.log('Schema validation failed:', parsed.error);
-      return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
+    // Validate request body
+    const validation = await validateRequestBody(req, RegistrationSchema);
+    if (!validation.success) {
+      return validation.response;
     }
-    const { firstName, lastName, email, phone: rawPhone, streetAddress, zipCode, city, state, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = parsed.data;
+    
+    console.log('Received registration data:', validation.data);
+    const { firstName, lastName, email, phone: rawPhone, streetAddress, zipCode, city, state, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = validation.data;
     
     // Format phone number to E.164 format for database storage
     const phone = formatPhoneForStorage(rawPhone);
@@ -133,10 +112,10 @@ export async function POST(req: Request) {
     ]);
 
     if (emailCheck.data?.length) {
-      return NextResponse.json({ error: 'Someone is already registered with this email address' }, { status: 409 });
+      return createErrorResponse('Someone is already registered with this email address', 'DUPLICATE_EMAIL', 409);
     }
     if (phoneCheck.data?.length || rawPhoneCheck.data?.length) {
-      return NextResponse.json({ error: 'Someone is already registered with this phone number' }, { status: 409 });
+      return createErrorResponse('Someone is already registered with this phone number', 'DUPLICATE_PHONE', 409);
     }
 
     // Enforce registration status
@@ -144,10 +123,10 @@ export async function POST(req: Request) {
     const config = configData?.[0];
     if (config) {
       if (!config.isRegistrationOpen) {
-        return NextResponse.json({ error: config.closureMessage || 'Registration is currently closed.' }, { status: 403 });
+        return createErrorResponse(config.closureMessage || 'Registration is currently closed.', 'REGISTRATION_CLOSED', 403);
       }
       if (config.inviteOnlyMode && !inviteToken) {
-        return NextResponse.json({ error: 'Registration is invite-only. An invite token is required.' }, { status: 403 });
+        return createErrorResponse('Registration is invite-only. An invite token is required.', 'INVITE_REQUIRED', 403);
       }
     }
 
@@ -164,9 +143,9 @@ export async function POST(req: Request) {
         const payloadStr = res.Payload ? new TextDecoder().decode(res.Payload) : '{}';
         const payload = JSON.parse(payloadStr || '{}');
         if (payload?.ok) {
-          return NextResponse.json({ id: payload.id }, { status: 201 });
+          return createSuccessResponse({ id: payload.id }, 201);
         } else {
-          return NextResponse.json({ error: payload?.error || 'Reservation failed' }, { status: 409 });
+          return createErrorResponse(payload?.error || 'Reservation failed', 'RESERVATION_FAILED', 409);
         }
       } catch (e) {
         console.error('Durable reservation failed; falling back', e);
@@ -183,7 +162,7 @@ export async function POST(req: Request) {
       const slot = slotList?.[0];
       if (!slot) {
         console.log('Time slot not found:', timeSlot);
-        return NextResponse.json({ error: 'Selected time slot is not available' }, { status: 400 });
+        return createErrorResponse('Selected time slot is not available', 'TIMESLOT_NOT_FOUND', 400);
       }
 
       const { data: regsInSlot } = await (await getClient()).models.Registration.list({
@@ -191,7 +170,7 @@ export async function POST(req: Request) {
       });
       const currentCount = regsInSlot?.length ?? 0;
       if (currentCount >= (slot.maxCapacity || 0)) {
-        return NextResponse.json({ error: 'This time slot is full' }, { status: 409 });
+        return createErrorResponse('This time slot is full', 'TIMESLOT_FULL', 409);
       }
 
       // If invite token is present, validate not used
@@ -199,7 +178,7 @@ export async function POST(req: Request) {
         const { data: invites } = await (await getClient()).models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
         const invite = invites?.[0];
         if (!invite || invite.isUsed) {
-          return NextResponse.json({ error: 'Invalid or already used invite token' }, { status: 400 });
+          return createErrorResponse('Invalid or already used invite token', 'INVALID_INVITE', 400);
         }
       }
 
@@ -238,14 +217,14 @@ export async function POST(req: Request) {
         });
       } catch (createError) {
         console.error('Error during registration creation:', createError);
-        return NextResponse.json({ error: 'Database error during registration creation', details: createError instanceof Error ? createError.message : 'Unknown error' }, { status: 500 });
+        return createErrorResponse('Database error during registration creation', 'DATABASE_ERROR', 500, createError instanceof Error ? createError.message : 'Unknown error');
       }
 
       console.log('Registration creation result:', regResult);
       const reg = regResult.data;
       if (!reg) {
         console.error('Registration creation failed - no data returned');
-        return NextResponse.json({ error: 'Failed to create registration' }, { status: 500 });
+        return createErrorResponse('Failed to create registration', 'CREATION_FAILED', 500);
       }
 
       // Create child records if provided
@@ -268,7 +247,7 @@ export async function POST(req: Request) {
       if (newCount > (slot.maxCapacity || 0)) {
         // Roll back this registration
         await (await getClient()).models.Registration.delete({ id: reg.id });
-        return NextResponse.json({ error: 'This time slot just filled up. Please choose another.' }, { status: 409 });
+        return createErrorResponse('This time slot just filled up. Please choose another.', 'TIMESLOT_FILLED', 409);
       }
 
       // Mark invite as used (best effort) if applicable
@@ -359,10 +338,10 @@ export async function POST(req: Request) {
       });
 
       console.log('✅ Registration complete, returning response');
-      return NextResponse.json({ id: reg.id }, { status: 201 });
+      return createSuccessResponse({ id: reg.id }, 201);
     });
   } catch (err) {
     console.error('Registration error:', err);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return createErrorResponse('Server error', 'INTERNAL_ERROR', 500, err instanceof Error ? err.message : 'Unknown error');
   }
 }
