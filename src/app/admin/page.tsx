@@ -598,12 +598,26 @@ function AdminDashboard() {
 
     setLoading(true);
     try {
-      await (await getClient()).models.InviteLink.delete({ id: inviteId });
-      setMessage('Invite link invalidated successfully.');
-      loadData(); // Reload to update the list
+      console.log('🔥 Invalidating invite link:', inviteId);
+      // Mark as used instead of deleting to preserve records
+      const result = await (await getClient()).models.InviteLink.update({
+        id: inviteId,
+        isUsed: true,
+        usedAt: new Date().toISOString()
+      });
+      
+      console.log('✅ Invalidation result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Invalidation errors:', result.errors);
+        setMessage('Error invalidating invite link: ' + JSON.stringify(result.errors));
+      } else {
+        setMessage('✅ Invite link invalidated successfully.');
+        loadData(); // Reload to update the list
+      }
     } catch (error) {
-      console.error('Error invalidating invite link:', error);
-      setMessage('Error invalidating invite link.');
+      console.error('❌ Error invalidating invite link:', error);
+      setMessage('❌ Error invalidating invite link: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
