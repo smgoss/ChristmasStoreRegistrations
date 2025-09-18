@@ -545,12 +545,25 @@ function AdminDashboard() {
       if (inviteEmail.trim() && inviteResult.data) {
         try {
           console.log('📧 Sending invite email to:', inviteEmail);
-          // Temporarily disabled invite email for deployment
-          console.log('📧 Invite email functionality temporarily disabled');
-          setMessage(`✅ Invite link generated and copied to clipboard: ${inviteUrl}. (Email functionality temporarily disabled)`);
+          const emailResult = await (await getClient()).mutations.sendInviteEmail({
+            invite: {
+              email: inviteEmail,
+              token: token,
+              inviteUrl: inviteUrl
+            },
+            inviteId: inviteResult.data.id
+          });
+          
+          console.log('📧 Email result:', emailResult);
+          
+          if (emailResult.data?.success) {
+            setMessage(`✅ Invite link generated and email sent to ${inviteEmail}! Link copied to clipboard: ${inviteUrl}`);
+          } else {
+            setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. Email failed to send: ${emailResult.data?.message || 'Unknown error'}`);
+          }
         } catch (emailError) {
-          console.error('❌ Error in invite email (temporarily disabled):', emailError);
-          setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. (Email functionality temporarily disabled)`);
+          console.error('❌ Error sending invite email:', emailError);
+          setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. Email failed to send.`);
         }
       } else {
         setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);

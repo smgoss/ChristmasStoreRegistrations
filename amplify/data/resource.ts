@@ -1,7 +1,7 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { sendSmsConfirmation } from '../functions/send-sms-confirmation/resource';
 import { sendConfirmationEmail } from '../functions/send-confirmation-email/resource';
-// import { sendInviteEmail } from '../functions/send-invite-email/resource'; // Temporarily disabled
+import { sendInviteEmail } from '../functions/send-invite-email/resource';
 
 const schema = a.schema({
   Registration: a
@@ -168,24 +168,23 @@ const schema = a.schema({
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendConfirmationEmail)),
 
-  // Invite email mutation - temporarily disabled for deployment
-  // sendInviteEmail: a
-  //   .mutation()
-  //   .arguments({
-  //     invite: a.customType({
-  //       email: a.string().required(),
-  //       token: a.string().required(),
-  //       inviteUrl: a.string().required(),
-  //     }),
-  //     inviteId: a.string()
-  //   })
-  //   .returns(a.customType({
-  //     success: a.boolean().required(),
-  //     message: a.string(),
-  //     messageId: a.string(),
-  //   }))
-  //   .authorization((allow) => [allow.publicApiKey()])
-  //   .handler(a.handler.function(sendInviteEmail)),
+  sendInviteEmail: a
+    .mutation()
+    .arguments({
+      invite: a.customType({
+        email: a.string().required(),
+        token: a.string().required(),
+        inviteUrl: a.string().required(),
+      }),
+      inviteId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+      messageId: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendInviteEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;
