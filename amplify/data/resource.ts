@@ -79,7 +79,7 @@ const schema = a.schema({
       isActive: a.boolean().default(true),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
+      allow.publicApiKey().to(['read', 'create', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   

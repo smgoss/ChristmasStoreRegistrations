@@ -361,6 +361,8 @@ function AdminDashboard() {
   };
 
   const updateTimeSlotCapacity = async (id: string, newCapacity: number) => {
+    console.log('🔧 Updating time slot capacity:', { id, newCapacity });
+    
     if (newCapacity < 0) {
       setMessage('❌ Capacity cannot be negative!');
       return;
@@ -368,10 +370,20 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.update({
+      console.log('📝 Calling TimeSlotConfig.update...');
+      
+      const result = await (await getClient()).models.TimeSlotConfig.update({
         id,
         maxCapacity: newCapacity
       });
+      
+      console.log('✅ Update result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Update errors:', result.errors);
+        setMessage('❌ Error updating capacity: ' + JSON.stringify(result.errors));
+        return;
+      }
       
       // Update local state immediately for better UX
       setTimeSlots(prev => prev.map(slot => 
@@ -383,8 +395,8 @@ function AdminDashboard() {
       // Reload data to ensure consistency
       setTimeout(() => loadData(), 500);
     } catch (error) {
-      console.error('Error updating capacity:', error);
-      setMessage('❌ Error updating capacity. Please try again.');
+      console.error('❌ Error updating capacity:', error);
+      setMessage('❌ Error updating capacity: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -405,19 +417,29 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.create({
+      console.log('➕ Creating new time slot:', newTimeSlot);
+      
+      const result = await (await getClient()).models.TimeSlotConfig.create({
         timeSlot: newTimeSlot,
         maxCapacity: DEFAULT_CAPACITY,
         currentRegistrations: 0,
         isActive: true
       });
       
+      console.log('✅ Create result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Create errors:', result.errors);
+        setMessage('❌ Error adding time slot: ' + JSON.stringify(result.errors));
+        return;
+      }
+      
       setMessage(`✅ New time slot "${newTimeSlot}" added successfully!`);
       setNewTimeSlot('');
       loadData();
     } catch (error) {
-      console.error('Error adding time slot:', error);
-      setMessage('❌ Error adding time slot. Please try again.');
+      console.error('❌ Error adding time slot:', error);
+      setMessage('❌ Error adding time slot: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -454,13 +476,23 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.delete({ id });
+      console.log('🗑️ Deleting time slot:', { id, timeSlot });
+      
+      const result = await (await getClient()).models.TimeSlotConfig.delete({ id });
+      
+      console.log('✅ Delete result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Delete errors:', result.errors);
+        setMessage('❌ Error deleting time slot: ' + JSON.stringify(result.errors));
+        return;
+      }
       
       setMessage(`✅ Time slot "${timeSlot}" deleted successfully!`);
       loadData();
     } catch (error) {
-      console.error('Error deleting time slot:', error);
-      setMessage('❌ Error deleting time slot. Please try again.');
+      console.error('❌ Error deleting time slot:', error);
+      setMessage('❌ Error deleting time slot: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
