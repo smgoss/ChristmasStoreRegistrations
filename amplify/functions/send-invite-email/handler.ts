@@ -103,7 +103,7 @@ Questions? Please contact us or simply reply to this email.
 Thank you for being part of our Christmas Store community!
 
 With warm wishes,
-The Christmas Store Team
+The Pathway Christmas Store Team
 
 ---
 This invitation was sent to: ${invite.email}
@@ -173,7 +173,7 @@ Invitation ID: ${invite.token.slice(0, 8)}...
         
         <p>Thank you for being part of our Christmas Store community!</p>
         
-        <p><strong>With warm wishes,<br>The Christmas Store Team</strong></p>
+        <p><strong>With warm wishes,<br>The Pathway Christmas Store Team</strong></p>
     </div>
     
     <div class="footer">

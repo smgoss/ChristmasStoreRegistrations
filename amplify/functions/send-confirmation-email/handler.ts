@@ -174,7 +174,7 @@ function generateEmailContent(registration: RegistrationData): string {
         
         <p>We look forward to seeing you at the Christmas Store!</p>
         
-        <p>Warm regards,<br>The Christmas Store Team<br>${locationName}</p>
+        <p>Warm regards,<br>The Pathway Christmas Store Team<br>${locationName}</p>
       </div>
       
       <div class="church-info">
