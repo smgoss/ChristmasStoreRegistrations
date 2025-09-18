@@ -36,6 +36,7 @@ interface RegistrationConfig {
   scheduledCloseDate?: string;
   autoCloseEnabled: boolean;
   closureMessage: string;
+  replyToEmail?: string;
 }
 
 interface RegistrationData {
@@ -99,6 +100,7 @@ export default function RegistrationForm({
   const [cityOptions, setCityOptions] = useState<Array<{city: string, state: string}>>([]);
   const [submitted, setSubmitted] = useState(false);
   const [registrationConfig, setRegistrationConfig] = useState<RegistrationConfig | null>(null);
+  const [contactEmail, setContactEmail] = useState(CONTACT_EMAIL); // Default to location config, will be updated
   const [configLoading, setConfigLoading] = useState(true);
   
 
@@ -115,6 +117,11 @@ export default function RegistrationForm({
       const { data: configData } = await client.models.RegistrationConfig.list();
       const config = configData?.[0] as RegistrationConfig;
       setRegistrationConfig(config);
+      
+      // Update contact email if available in config
+      if (config?.replyToEmail) {
+        setContactEmail(config.replyToEmail);
+      }
       
       // Check if we need to auto-close based on scheduled date
       if (config?.autoCloseEnabled && config.scheduledCloseDate) {
@@ -804,8 +811,8 @@ export default function RegistrationForm({
           <div className="mb-4">
             <h3 className="font-semibold text-gray-800 mb-2">Questions?</h3>
             <p className="text-sm text-gray-600 mb-1">
-              📧 <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-600 hover:underline">
-                {CONTACT_EMAIL}
+              📧 <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:underline">
+                {contactEmail}
               </a>
             </p>
             <p className="text-sm text-gray-600 mb-1">

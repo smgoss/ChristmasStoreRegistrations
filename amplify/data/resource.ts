@@ -109,6 +109,7 @@ const schema = a.schema({
       scheduledCloseDate: a.datetime(),
       autoCloseEnabled: a.boolean().default(false),
       closureMessage: a.string().default('Registration is currently closed. Please check back later.'),
+      replyToEmail: a.string().default('office@pathwayvineyard.com'),
       updatedBy: a.string(),
       updatedAt: a.datetime(),
     })

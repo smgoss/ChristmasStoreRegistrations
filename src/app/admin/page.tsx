@@ -105,6 +105,7 @@ interface RegistrationConfig {
   scheduledCloseDate?: string;
   autoCloseEnabled: boolean;
   closureMessage: string;
+  replyToEmail?: string;
   updatedBy?: string;
   updatedAt?: string;
 }
@@ -244,6 +245,11 @@ function AdminDashboard() {
       
       setRegistrationConfig(config);
       setCustomClosureMessage(config?.closureMessage || '');
+      
+      // Load reply-to email from config
+      if (config?.replyToEmail) {
+        setSettings(prev => ({ ...prev, replyToEmail: config.replyToEmail! }));
+      }
       
       // Load time slot configurations
       console.log('🔍 Fetching time slots...');
@@ -701,6 +707,33 @@ function AdminDashboard() {
     } catch (error) {
       console.error('Error scheduling closure:', error);
       setMessage('❌ Error scheduling registration closure.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveEmailSettings = async () => {
+    if (!registrationConfig) {
+      setMessage('❌ Registration config not loaded');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const updatedConfig = await (await getClient()).models.RegistrationConfig.update({
+        id: registrationConfig.id,
+        replyToEmail: settings.replyToEmail,
+        updatedAt: new Date().toISOString(),
+        updatedBy: 'admin'
+      });
+
+      setRegistrationConfig(updatedConfig.data as RegistrationConfig);
+      setMessage('✅ Email settings saved successfully!');
+      
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error saving email settings:', error);
+      setMessage('❌ Failed to save email settings');
     } finally {
       setLoading(false);
     }
@@ -1612,6 +1645,13 @@ function AdminDashboard() {
                     />
                     <p className="text-sm text-black mt-1">Email address shown as reply-to in confirmation emails</p>
                   </div>
+                  <button
+                    onClick={() => saveEmailSettings()}
+                    disabled={loading}
+                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {loading ? 'Saving...' : 'Save Email Settings'}
+                  </button>
                 </div>
               </div>
 
