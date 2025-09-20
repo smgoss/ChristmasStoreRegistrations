@@ -2,6 +2,7 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { sendSmsConfirmation } from '../functions/send-sms-confirmation/resource';
 import { sendConfirmationEmail } from '../functions/send-confirmation-email/resource';
 import { sendInviteEmail } from '../functions/send-invite-email/resource';
+import { sendCancellationEmail } from '../functions/send-cancellation-email/resource';
 
 const schema = a.schema({
   Registration: a
@@ -110,6 +111,10 @@ const schema = a.schema({
       autoCloseEnabled: a.boolean().default(false),
       closureMessage: a.string().default('Registration is currently closed. Please check back later.'),
       replyToEmail: a.string().default('office@pathwayvineyard.com'),
+      contactPhone: a.string().default('(208) 746-9089'),
+      textingNumber: a.string().default('(208) 746-9089'),
+      locationName: a.string().default('Christmas Store'),
+      eventAddress: a.string().default(''),
       updatedBy: a.string(),
       updatedAt: a.datetime(),
     })
@@ -186,6 +191,33 @@ const schema = a.schema({
     }))
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendInviteEmail)),
+
+  sendCancellationEmail: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        streetAddress: a.string().required(),
+        zipCode: a.string().required(),
+        city: a.string().required(),
+        state: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        referredBy: a.string(),
+        children: a.json(),
+      }),
+      registrationId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+      messageId: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendCancellationEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

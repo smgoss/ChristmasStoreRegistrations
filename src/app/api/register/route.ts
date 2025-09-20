@@ -59,23 +59,23 @@ function formatPhoneForStorage(phone: string): string {
   // Remove all non-numeric characters
   const digits = phone.replace(/\D/g, '');
   
-  // Add +1 if it's a 10-digit US number
+  // For US numbers, store as 10-digit format without +1
   if (digits.length === 10) {
-    return `+1${digits}`;
+    return digits;
   }
   
-  // Add + if it starts with country code but missing +
+  // If it's 11 digits starting with 1, remove the leading 1
   if (digits.length === 11 && digits.startsWith('1')) {
-    return `+${digits}`;
+    return digits.substring(1);
   }
   
-  // If already has +, return as-is
-  if (phone.startsWith('+')) {
-    return phone;
+  // If it starts with +1, remove the +1 prefix
+  if (phone.startsWith('+1')) {
+    return phone.substring(2).replace(/\D/g, '');
   }
   
-  // Return with + prefix
-  return `+${digits}`;
+  // For other formats, just return the cleaned digits
+  return digits;
 }
 
 
@@ -270,7 +270,7 @@ export async function POST(req: Request) {
           firstName,
           lastName,
           email,
-          phone: rawPhone,
+          phone: phone,
           streetAddress,
           zipCode,
           city,
@@ -298,7 +298,7 @@ export async function POST(req: Request) {
           firstName,
           lastName,
           email,
-          phone: rawPhone,
+          phone: phone,
           streetAddress,
           zipCode,
           city,
@@ -315,7 +315,7 @@ export async function POST(req: Request) {
           firstName,
           lastName,
           email,
-          phone: rawPhone,
+          phone: phone,
           streetAddress,
           zipCode,
           city,

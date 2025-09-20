@@ -9,6 +9,7 @@ import { autoCloseRegistration } from './functions/auto-close-registration/resou
 import { createAdminUser } from './functions/create-admin-user/resource';
 import { sendInviteEmail } from './functions/send-invite-email/resource';
 import { sendSmsConfirmation } from './functions/send-sms-confirmation/resource';
+import { sendCancellationEmail } from './functions/send-cancellation-email/resource';
 
 export const backend = defineBackend({
   auth,
@@ -20,6 +21,7 @@ export const backend = defineBackend({
   createAdminUser,
   sendInviteEmail,
   sendSmsConfirmation,
+  sendCancellationEmail,
 });
 
 // Grant the createAdminUser function access to Cognito User Pool
@@ -37,7 +39,7 @@ backend.createAdminUser.resources.lambda.addToRolePolicy(
 );
 
 // Grant email functions access to SES
-[backend.sendConfirmationEmail, backend.sendAttendanceConfirmation, backend.sendInviteEmail].forEach(emailFunction => {
+[backend.sendConfirmationEmail, backend.sendAttendanceConfirmation, backend.sendInviteEmail, backend.sendCancellationEmail].forEach(emailFunction => {
   emailFunction.resources.lambda.addToRolePolicy(
     new PolicyStatement({
       effect: Effect.ALLOW,
@@ -47,5 +49,34 @@ backend.createAdminUser.resources.lambda.addToRolePolicy(
       ],
       resources: ['*']
     })
+  );
+});
+
+// Grant SMS function access to Secrets Manager
+backend.sendSmsConfirmation.resources.lambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'secretsmanager:GetSecretValue'
+    ],
+    resources: ['*']
+  })
+);
+
+// Grant email confirmation and cancellation functions access to DynamoDB for reading config
+[backend.sendConfirmationEmail, backend.sendCancellationEmail].forEach(emailFunction => {
+  emailFunction.resources.lambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'dynamodb:Scan',
+      'dynamodb:GetItem',
+      'dynamodb:ListTables'
+    ],
+    resources: [
+      `arn:aws:dynamodb:*:*:table/RegistrationConfig-*`,
+      '*' // ListTables requires wildcard resource
+    ]
+  })
   );
 });

@@ -1,0 +1,270 @@
+<mxfile host="Electron" modified="2025-09-18T14:24:15.000Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" version="22.0.2" etag="architecture-diagram-v1" type="device">
+  <diagram id="christmas-store-architecture" name="Christmas Store Registration System">
+    <mxGraphModel dx="1426" dy="872" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Title -->
+        <mxCell id="title" value="Christmas Store Registration System Architecture" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=24;fontStyle=1;fontColor=#2E8B57;" vertex="1" parent="1">
+          <mxGeometry x="527" y="30" width="600" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- User Layer -->
+        <mxCell id="user-layer" value="🌐 User Layer" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="1574" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="public-user" value="👤 Public User&#xa;Registration Form&#xa;(Christmas Background)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="user-layer">
+          <mxGeometry x="40" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin-user" value="👨‍💼 Admin User&#xa;Management Dashboard&#xa;Settings & Invites" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="user-layer">
+          <mxGeometry x="220" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="mobile-user" value="📱 Mobile User&#xa;Registration Form&#xa;Responsive Design" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="user-layer">
+          <mxGeometry x="400" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Frontend Layer -->
+        <mxCell id="frontend-layer" value="⚛️ Frontend Layer (Next.js 15)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="1574" height="180" as="geometry" />
+        </mxCell>
+        
+        <!-- Pages -->
+        <mxCell id="pages-group" value="📄 Pages" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="frontend-layer">
+          <mxGeometry x="20" y="30" width="300" height="130" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="home-page" value="🏠 / (Home)&#xa;Registration Form" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="pages-group">
+          <mxGeometry x="20" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin-page" value="👨‍💼 /admin&#xa;Dashboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="pages-group">
+          <mxGeometry x="110" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="register-page" value="📝 /register/[token]&#xa;Invite Registration" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="pages-group">
+          <mxGeometry x="200" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="cancel-page" value="❌ /cancel/[token]&#xa;Cancellation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="pages-group">
+          <mxGeometry x="20" y="80" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="confirm-page" value="✅ /confirm/[token]&#xa;Confirmation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="pages-group">
+          <mxGeometry x="110" y="80" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Components -->
+        <mxCell id="components-group" value="🧩 Components" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="frontend-layer">
+          <mxGeometry x="340" y="30" width="280" height="130" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="registration-form" value="📋 RegistrationForm&#xa;• Dynamic Contact Info&#xa;• Zod Validation&#xa;• Christmas Theme" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="components-group">
+          <mxGeometry x="20" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin-dashboard" value="🎛️ Admin Dashboard&#xa;• User Management&#xa;• Settings Config&#xa;• Invite Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="components-group">
+          <mxGeometry x="150" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Styles -->
+        <mxCell id="styles-group" value="🎨 Styles" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="frontend-layer">
+          <mxGeometry x="640" y="30" width="200" height="130" as="geometry" />
+        </mxCell>
+
+        <mxCell id="christmas-theme" value="🎄 christmas-theme.css&#xa;• Christmas Colors&#xa;• Background Image&#xa;• Festive Styling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="styles-group">
+          <mxGeometry x="20" y="30" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- API Layer -->
+        <mxCell id="api-layer" value="🔗 API Layer (Hardened with Zod)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="460" width="1574" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="api-register" value="📝 /api/register&#xa;• Zod Validation&#xa;• Rate Limiting&#xa;• Error Handling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="api-layer">
+          <mxGeometry x="40" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="api-lookup" value="🔍 /api/lookup-zip&#xa;• ZIP Code Lookup&#xa;• External API&#xa;• Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="api-layer">
+          <mxGeometry x="180" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="api-sms" value="📱 /api/send-sms-confirmation&#xa;• SMS via Lambda&#xa;• Clearstream API&#xa;• Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="api-layer">
+          <mxGeometry x="320" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="api-email" value="📧 /api/send-invite-email&#xa;• Email via Lambda&#xa;• SES Integration&#xa;• Validation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="api-layer">
+          <mxGeometry x="480" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="api-utils" value="🛠️ api-utils.ts&#xa;• Standardized Responses&#xa;• Rate Limiting&#xa;• Error Codes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="api-layer">
+          <mxGeometry x="640" y="40" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- AWS Amplify Layer -->
+        <mxCell id="amplify-layer" value="☁️ AWS Amplify Gen 2 Backend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f3e2f3;strokeColor=#82b366;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="610" width="1574" height="280" as="geometry" />
+        </mxCell>
+
+        <!-- Authentication -->
+        <mxCell id="auth-group" value="🔐 Authentication (Cognito)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" vertex="1" parent="amplify-layer">
+          <mxGeometry x="20" y="30" width="200" height="230" as="geometry" />
+        </mxCell>
+
+        <mxCell id="user-pool" value="👥 User Pool&#xa;Email Login&#xa;Admin Group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="auth-group">
+          <mxGeometry x="20" y="30" width="80" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="identity-pool" value="🆔 Identity Pool&#xa;Role-based Access&#xa;Public API Key" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="auth-group">
+          <mxGeometry x="110" y="30" width="80" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Data Layer -->
+        <mxCell id="data-group" value="📊 Data Layer (GraphQL + DynamoDB)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;" vertex="1" parent="amplify-layer">
+          <mxGeometry x="240" y="30" width="400" height="230" as="geometry" />
+        </mxCell>
+
+        <mxCell id="graphql-api" value="🔗 GraphQL API&#xa;AppSync&#xa;Public + Auth Access" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="data-group">
+          <mxGeometry x="20" y="30" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="registration-model" value="📋 Registration&#xa;User Data&#xa;Time Slots&#xa;Children Info" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="data-group">
+          <mxGeometry x="140" y="30" width="80" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="config-model" value="⚙️ RegistrationConfig&#xa;• isRegistrationOpen&#xa;• replyToEmail&#xa;• contactPhone&#xa;• closureMessage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="data-group">
+          <mxGeometry x="240" y="30" width="120" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="timeslot-model" value="🕐 TimeSlotConfig&#xa;Time Management&#xa;Capacity Control" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="data-group">
+          <mxGeometry x="20" y="110" width="100" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="invite-model" value="📧 InviteLink&#xa;Token Management&#xa;Email Tracking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="data-group">
+          <mxGeometry x="140" y="110" width="80" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="child-model" value="👶 Child&#xa;Age & Gender&#xa;Registration Link" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="data-group">
+          <mxGeometry x="240" y="110" width="80" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Lambda Functions -->
+        <mxCell id="lambda-group" value="⚡ Lambda Functions" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;" vertex="1" parent="amplify-layer">
+          <mxGeometry x="660" y="30" width="440" height="230" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sms-lambda" value="📱 send-sms-confirmation&#xa;• Clearstream API&#xa;• Phone Validation&#xa;• SMS Templates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="lambda-group">
+          <mxGeometry x="20" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="email-lambda" value="📧 send-confirmation-email&#xa;• AWS SES&#xa;• HTML Templates&#xa;• Reply-To Config" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="lambda-group">
+          <mxGeometry x="160" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="invite-lambda" value="📨 send-invite-email&#xa;• Invite Links&#xa;• Email Templates&#xa;• Token Generation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="lambda-group">
+          <mxGeometry x="300" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="admin-lambda" value="👨‍💼 create-admin-user&#xa;• User Creation&#xa;• Group Assignment&#xa;• Setup Automation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="lambda-group">
+          <mxGeometry x="20" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="reserve-lambda" value="🔒 reserve-registration&#xa;• Capacity Management&#xa;• Race Condition Prevention&#xa;• Durable Reservations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="lambda-group">
+          <mxGeometry x="160" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="close-lambda" value="⏰ auto-close-registration&#xa;• Scheduled Closure&#xa;• Time-based Control&#xa;• Status Updates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="lambda-group">
+          <mxGeometry x="300" y="110" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- External Services -->
+        <mxCell id="external-layer" value="🌍 External Services" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="920" width="1574" height="120" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ses-service" value="📧 AWS SES&#xa;Email Delivery&#xa;Domain Verification&#xa;Bounce Handling" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="external-layer">
+          <mxGeometry x="40" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="clearstream-service" value="📱 Clearstream API&#xa;SMS Delivery&#xa;Text Messages&#xa;Custom Headers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="external-layer">
+          <mxGeometry x="180" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zippopotam-service" value="🔍 Zippopotam API&#xa;ZIP Code Lookup&#xa;City/State Data&#xa;Free Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="external-layer">
+          <mxGeometry x="320" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="unsplash-service" value="🖼️ Unsplash CDN&#xa;Christmas Background&#xa;Image Optimization&#xa;CDN Delivery" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="external-layer">
+          <mxGeometry x="460" y="40" width="120" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Development Tools -->
+        <mxCell id="dev-tools-group" value="🛠️ Development Tools" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=14;fontStyle=1;" vertex="1" parent="external-layer">
+          <mxGeometry x="620" y="30" width="300" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="jest-testing" value="🧪 Jest Testing&#xa;API Route Tests&#xa;Validation Tests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="dev-tools-group">
+          <mxGeometry x="20" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="eslint-tool" value="🔍 ESLint&#xa;Code Quality&#xa;Style Checking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="dev-tools-group">
+          <mxGeometry x="110" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="typescript-tool" value="📝 TypeScript&#xa;Type Safety&#xa;Compile Checks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=10;" vertex="1" parent="dev-tools-group">
+          <mxGeometry x="200" y="30" width="80" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Data Flow Arrows -->
+        <!-- User to Frontend -->
+        <mxCell id="user-to-frontend" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="public-user" target="registration-form">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Frontend to API -->
+        <mxCell id="frontend-to-api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="registration-form" target="api-register">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- API to Lambda -->
+        <mxCell id="api-to-lambda" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d79b00;strokeWidth=2;" edge="1" parent="1" source="api-sms" target="sms-lambda">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- GraphQL to Models -->
+        <mxCell id="graphql-to-models" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="graphql-api" target="registration-model">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Lambda to External -->
+        <mxCell id="lambda-to-external" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#9673a6;strokeWidth=2;" edge="1" parent="1" source="sms-lambda" target="clearstream-service">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Key Features Box -->
+        <mxCell id="features-box" value="🎯 Key Features&#xa;&#xa;✅ Hardened API Routes with Zod Validation&#xa;✅ Rate Limiting & Error Handling&#xa;✅ Dynamic Contact Information&#xa;✅ Christmas-Themed UI with Background&#xa;✅ Comprehensive Testing Suite&#xa;✅ Admin Dashboard with Full Control&#xa;✅ SMS & Email Confirmations&#xa;✅ Invite-Only Registration Mode&#xa;✅ Time Slot Management&#xa;✅ Real-time Capacity Tracking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6ffcc;strokeColor=#36c539;fontSize=12;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="100" width="280" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- Technology Stack Box -->
+        <mxCell id="tech-stack-box" value="🔧 Technology Stack&#xa;&#xa;Frontend: Next.js 15 + TypeScript&#xa;Styling: TailwindCSS + Custom Christmas Theme&#xa;Backend: AWS Amplify Gen 2&#xa;Database: DynamoDB via GraphQL&#xa;Authentication: AWS Cognito&#xa;Functions: AWS Lambda (Node.js)&#xa;Email: AWS SES&#xa;SMS: Clearstream API&#xa;Validation: Zod Schemas&#xa;Testing: Jest + TypeScript&#xa;CI/CD: GitHub Actions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="320" width="280" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- Security Features Box -->
+        <mxCell id="security-box" value="🔒 Security Features&#xa;&#xa;🛡️ Input Validation (Zod)&#xa;🛡️ Rate Limiting (10 req/min)&#xa;🛡️ SQL Injection Prevention&#xa;🛡️ XSS Protection&#xa;🛡️ CSRF Tokens&#xa;🛡️ Role-Based Access Control&#xa;🛡️ Secure Headers&#xa;🛡️ Environment Variable Validation&#xa;🛡️ Error Message Standardization&#xa;🛡️ API Key Protection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#d32f2f;fontSize=12;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="540" width="280" height="200" as="geometry" />
+        </mxCell>
+
+        <!-- Data Flow Legend -->
+        <mxCell id="legend-box" value="📊 Data Flow Legend&#xa;&#xa;🟠 User Interaction Flow&#xa;🔵 GraphQL Data Flow&#xa;🟣 External Service Calls&#xa;&#xa;All API routes include:&#xa;• Zod validation&#xa;• Rate limiting&#xa;• Standardized error responses&#xa;• Comprehensive logging" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#666666;fontSize=12;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="760" width="280" height="160" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -81,7 +81,7 @@ function generateInviteEmailContent(invite: InviteData): string {
 
 Hello!
 
-You have been personally invited to register for our Christmas Store event on Friday, December 6th, 2024. This is a special opportunity to provide Christmas gifts for children in need in our community.
+You have been personally invited to register for our Christmas Store event on Friday, December 6th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
 
 Your personal invitation link:
 ${invite.inviteUrl}
@@ -119,9 +119,31 @@ Invitation ID: ${invite.token.slice(0, 8)}...
     <title>Christmas Store Invitation</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #c41e3a, #228b22); color: white; padding: 30px; text-align: center; border-radius: 10px; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 28px; }
-        .header p { margin: 10px 0 0 0; font-size: 18px; }
+        .header { 
+          background: linear-gradient(rgba(185, 28, 28, 0.7), rgba(5, 150, 105, 0.7)), url('https://images.unsplash.com/photo-1545048702-79362596cdc9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          color: white; 
+          padding: 48px 30px; 
+          text-align: center; 
+          border-radius: 16px; 
+          margin-bottom: 30px; 
+          position: relative;
+          overflow: hidden;
+        }
+        .header h1 { 
+          margin: 0; 
+          font-size: 2rem; 
+          font-weight: 700; 
+          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5); 
+        }
+        .header p { 
+          margin: 10px 0 0 0; 
+          font-size: 18px; 
+          opacity: 0.9; 
+          text-shadow: 0 2px 6px rgb(0 0 0 / 0.7); 
+        }
         .content { background: #f9f9f9; padding: 30px; border-radius: 10px; margin-bottom: 20px; }
         .invite-link { background: #228b22; color: white; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; }
         .invite-link a { color: white; text-decoration: none; font-weight: bold; font-size: 18px; }
@@ -136,13 +158,13 @@ Invitation ID: ${invite.token.slice(0, 8)}...
     <div class="header">
         <h1>🎄 You're Invited! 🎄</h1>
         <p>Christmas Store Registration</p>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Friday, December 6th, 2024</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Friday, December 6th, 2025</p>
     </div>
     
     <div class="content">
         <p><strong>Hello!</strong></p>
         
-        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Friday, December 6th, 2024</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
+        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Friday, December 6th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
         
         <div class="invite-link">
             <p style="margin: 0 0 10px 0;">Your Personal Invitation Link:</p>
