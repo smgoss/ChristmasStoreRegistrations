@@ -4,6 +4,10 @@ applications:
     frontend:
       environmentVariables:
         AMPLIFY_NODEJS_VERSION: '20'
+        # Enable differential deploys for faster builds
+        AMPLIFY_DIFF_DEPLOY: 'true'
+        # Next.js optimizations
+        NEXT_TELEMETRY_DISABLED: '1'
       phases:
         preBuild:
           commands:

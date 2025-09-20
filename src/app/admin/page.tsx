@@ -10,6 +10,8 @@ import { ensureAmplifyConfigured } from '@/lib/amplify';
 
 // Client initialization with proper error handling and fallback
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
+let adminClient: ReturnType<typeof generateClient<Schema>> | null = null;
+
 const getClient = async () => {
   if (!client) {
     try {
@@ -31,6 +33,28 @@ const getClient = async () => {
     }
   }
   return client;
+};
+
+const getAdminClient = async () => {
+  if (!adminClient) {
+    try {
+      // Use UserPool mode for admin operations (create, update, delete)
+      await ensureAmplifyConfigured();
+      adminClient = generateClient<Schema>({ authMode: 'userPool' });
+      console.log('✅ Admin client created with userPool auth for admin operations');
+    } catch (userPoolError) {
+      console.error('❌ UserPool client creation failed:', userPoolError);
+      // Fallback to API Key for admin operations if userPool fails
+      try {
+        adminClient = generateClient<Schema>({ authMode: 'apiKey' });
+        console.log('⚠️ Fallback: Using apiKey auth for admin operations');
+      } catch (fallbackError) {
+        console.error('❌ Fallback client creation failed:', fallbackError);
+        throw new Error('Failed to create admin client. Check authentication.');
+      }
+    }
+  }
+  return adminClient;
 };
 
 const christmasTheme: Theme = ({
@@ -97,6 +121,7 @@ interface Registration {
   phone: string;
   timeSlot: string;
   numberOfKids: number;
+  children?: Array<{ age: string; gender: 'boy' | 'girl' }>;
   referredBy?: string;
   registrationDate: string;
   attendanceConfirmed?: boolean;
@@ -113,6 +138,11 @@ interface RegistrationConfig {
   scheduledCloseDate?: string;
   autoCloseEnabled: boolean;
   closureMessage: string;
+  replyToEmail?: string;
+  contactPhone?: string;
+  textingNumber?: string;
+  locationName?: string;
+  eventAddress?: string;
   updatedBy?: string;
   updatedAt?: string;
 }
@@ -122,7 +152,7 @@ interface InviteLink {
   token: string;
   email?: string;
   isUsed?: boolean;
-  createdAt: string;
+  createdAt?: string;
   usedAt?: string;
 }
 
@@ -146,6 +176,7 @@ function AdminDashboard() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [skipNextReload, setSkipNextReload] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [editingRegistration, setEditingRegistration] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Registration | null>(null);
@@ -159,6 +190,8 @@ function AdminDashboard() {
   // Settings state
   const [settings, setSettings] = useState({
     replyToEmail: 'office@pathwayvineyard.com',
+    contactPhone: '(208) 746-9089',
+    textingNumber: '(208) 746-9089',
     locationName: LOCATION_NAME,
     eventPhone: '',
     eventAddress: ''
@@ -170,7 +203,12 @@ function AdminDashboard() {
         console.log('🔍 Loading admin dashboard...');
         setLoading(true);
         
-        // Check if time slots exist first
+        // Load data first to get registration config
+        console.log('📥 Loading all dashboard data first...');
+        await loadData();
+        console.log('✅ Dashboard data loaded successfully');
+        
+        // Check if time slots exist after loading config
         const { data: existingSlots } = await (await getClient()).models.TimeSlotConfig.list();
         console.log('📊 Found existing slots:', existingSlots.length, existingSlots);
         
@@ -182,7 +220,7 @@ function AdminDashboard() {
             // Auto-initialize time slots with location-specific capacity
             const createPromises = TIME_SLOTS.map(async (slot, index) => {
               console.log(`⏰ Creating time slot ${index + 1}: ${slot}`);
-              const result = await (await getClient()).models.TimeSlotConfig.create({
+              const result = await (await getAdminClient()).models.TimeSlotConfig.create({
                 timeSlot: slot,
                 maxCapacity: DEFAULT_CAPACITY,
                 currentRegistrations: 0,
@@ -198,16 +236,14 @@ function AdminDashboard() {
             
             // Small delay to show success message
             setTimeout(() => setMessage(''), 2000);
+            
+            // Reload data to include new time slots
+            await loadData();
           } catch (createError) {
             console.error('❌ Error creating time slots:', createError);
             setMessage('❌ Error setting up time slots. Please try refreshing the page.');
           }
         }
-        
-        // Load all data (this will now include the newly created slots if any)
-        console.log('📥 Loading all dashboard data...');
-        await loadData();
-        console.log('✅ Dashboard data loaded successfully');
         
       } catch (error) {
         console.error('💥 Critical error in admin dashboard:', error);
@@ -228,30 +264,78 @@ function AdminDashboard() {
     }
   }, [activeTab, timeSlots.length, loading]);
 
-  const loadData = async () => {
+  const loadData = async (force = false) => {
+    if (skipNextReload && !force) {
+      console.log('⏭️ Skipping data reload due to skipNextReload flag');
+      setSkipNextReload(false);
+      return;
+    }
+    
     try {
       console.log('📥 Loading data with user pool auth...');
       
       // Load registration configuration (singleton)
       console.log('🔍 Fetching registration config...');
-      const { data: configData } = await (await getClient()).models.RegistrationConfig.list();
+      const { data: configData, errors: configErrors } = await (await getClient()).models.RegistrationConfig.list();
+      
+      if (configErrors) {
+        console.error('❌ Config errors:', configErrors);
+      }
+      
+      console.log('📋 Config data received:', configData);
       let config = configData?.[0] as RegistrationConfig;
       
       if (!config) {
-        // Create default config if none exists
+        // Create default config if none exists using admin client
         console.log('🚀 Creating default registration config...');
-        const { data: newConfig } = await (await getClient()).models.RegistrationConfig.create({
-          id: 'main',
-          isRegistrationOpen: true,
-          inviteOnlyMode: false,
-          autoCloseEnabled: false,
-          closureMessage: 'Registration is currently closed. Please check back later.',
-        });
-        config = newConfig as RegistrationConfig;
+        try {
+          const createResult = await (await getAdminClient()).models.RegistrationConfig.create({
+            id: 'main',
+            isRegistrationOpen: true,
+            inviteOnlyMode: false,
+            autoCloseEnabled: false,
+            closureMessage: 'Registration is currently closed. Please check back later.',
+            replyToEmail: 'office@pathwayvineyard.com',
+            contactPhone: '(208) 746-9089'
+          });
+          
+          if (createResult.errors) {
+            console.error('❌ Error creating config:', createResult.errors);
+            setMessage('❌ Error creating registration config: ' + JSON.stringify(createResult.errors));
+          } else {
+            console.log('✅ Created config:', createResult.data);
+            config = createResult.data as RegistrationConfig;
+          }
+        } catch (createError) {
+          console.error('❌ Exception creating config:', createError);
+          setMessage('❌ Failed to create registration config');
+        }
       }
       
+      console.log('🎯 Final config to set:', config);
       setRegistrationConfig(config);
-      setCustomClosureMessage(config.closureMessage);
+      setCustomClosureMessage(config?.closureMessage || '');
+      
+      // Load reply-to email from config
+      if (config?.replyToEmail) {
+        setSettings(prev => ({ ...prev, replyToEmail: config.replyToEmail! }));
+      }
+      
+      // Load contact phone and texting number from config
+      if (config?.contactPhone) {
+        setSettings(prev => ({ ...prev, contactPhone: config.contactPhone! }));
+      }
+      if (config?.textingNumber) {
+        setSettings(prev => ({ ...prev, textingNumber: config.textingNumber! }));
+      }
+      
+      // Load location settings from config
+      if (config?.locationName) {
+        setSettings(prev => ({ ...prev, locationName: config.locationName! }));
+      }
+      if (config?.eventAddress) {
+        setSettings(prev => ({ ...prev, eventAddress: config.eventAddress! }));
+      }
       
       // Load time slot configurations
       console.log('🔍 Fetching time slots...');
@@ -259,40 +343,57 @@ function AdminDashboard() {
       
       if (timeSlotErrors) {
         console.error('❌ Time slot errors:', timeSlotErrors);
+        console.error('❌ Detailed error info:', JSON.stringify(timeSlotErrors, null, 2));
         return; // Exit early if there are errors
       } else {
         console.log('✅ Time slots loaded:', timeSlotData?.length || 0, timeSlotData);
       }
 
-      // Load registrations
+      // Load registrations with error handling for partial data
       console.log('🔍 Fetching registrations...');
-      const { data: registrationData, errors: registrationErrors } = await (await getClient()).models.Registration.list();
+      const { data: registrationData, errors: registrationErrors } = await (await getClient()).models.Registration.list({
+        selectionSet: ['id', 'firstName', 'lastName', 'email', 'phone', 'streetAddress', 'zipCode', 'city', 'state', 'timeSlot', 'numberOfKids', 'referredBy', 'isConfirmed', 'registrationDate', 'attendanceConfirmed', 'isCancelled', 'children.*']
+      });
       
-      if (registrationErrors) {
-        console.error('❌ Registration errors:', registrationErrors);
+      // Handle registration data - even if there are errors, we might have partial valid data
+      let validRegistrations: Registration[] = [];
+      
+      if (registrationErrors && registrationErrors.length > 0) {
+        console.error('❌ Registration errors (continuing with partial data):', registrationErrors);
+        // Filter out only the valid registrations if we have partial data
+        if (registrationData) {
+          validRegistrations = registrationData.filter(reg => 
+            reg && reg.streetAddress && reg.zipCode && reg.city && reg.state
+          ) as Registration[];
+          console.log(`⚠️ Using ${validRegistrations.length} valid registrations out of ${registrationData.length} total (${registrationErrors.length} errors)`);
+        }
       } else {
         console.log('✅ Registrations loaded:', registrationData?.length || 0);
-        const registrations = registrationData as Registration[];
-        setRegistrations(registrations);
+        validRegistrations = (registrationData || []) as Registration[];
+      }
+      
+      console.log('📊 Loaded registrations:', validRegistrations.length, 'total');
+      setRegistrations(validRegistrations);
+      
+      // Update time slot counts with actual registration data (excluding cancelled registrations)
+      if (timeSlotData) {
+        const updatedTimeSlots = (timeSlotData as TimeSlotConfig[]).map(slot => {
+          const actualCount = validRegistrations ? validRegistrations.filter(reg => 
+            reg.timeSlot === slot.timeSlot && !reg.isCancelled
+          ).length : 0;
+          console.log(`📊 Time slot ${slot.timeSlot}: ${actualCount} active registrations (excluding cancelled)`);
+          return {
+            ...slot,
+            currentRegistrations: actualCount
+          };
+        });
         
-        // Update time slot counts with actual registration data
-        if (timeSlotData) {
-          const updatedTimeSlots = (timeSlotData as TimeSlotConfig[]).map(slot => {
-            const actualCount = registrations ? registrations.filter(reg => reg.timeSlot === slot.timeSlot).length : 0;
-            console.log(`📊 Time slot ${slot.timeSlot}: ${actualCount} actual registrations (was showing ${slot.currentRegistrations})`);
-            return {
-              ...slot,
-              currentRegistrations: actualCount
-            };
-          });
-          
-          // Sort time slots by time (earliest to latest)
-          const sortedTimeSlots = updatedTimeSlots.sort((a, b) => {
-            return a.timeSlot.localeCompare(b.timeSlot);
-          });
-          console.log('🎯 Setting timeSlots state with:', sortedTimeSlots.length, 'slots:', sortedTimeSlots);
-          setTimeSlots(sortedTimeSlots);
-        }
+        // Sort time slots by time (earliest to latest)
+        const sortedTimeSlots = updatedTimeSlots.sort((a, b) => {
+          return a.timeSlot.localeCompare(b.timeSlot);
+        });
+        console.log('🎯 Setting timeSlots state with:', sortedTimeSlots.length, 'slots:', sortedTimeSlots);
+        setTimeSlots(sortedTimeSlots);
       }
 
       // Load invite links
@@ -301,10 +402,17 @@ function AdminDashboard() {
       
       if (inviteErrors) {
         console.error('❌ Invite link errors:', inviteErrors);
+        setMessage('Error loading invite links: ' + JSON.stringify(inviteErrors));
       } else {
         console.log('✅ Invite links loaded:', inviteData?.length || 0);
+        console.log('Raw invite data:', inviteData);
         const inviteLinks = inviteData as InviteLink[];
-        setInviteLinks(inviteLinks.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+        // Sort with fallback for missing createdAt
+        setInviteLinks(inviteLinks.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return dateB - dateA;
+        }));
       }
     } catch (error) {
       console.error('💥 Error loading data:', error);
@@ -321,7 +429,7 @@ function AdminDashboard() {
       if (existingSlots.length === 0) {
         // Create default time slots with capacity of 20 each
         const promises = TIME_SLOTS.map(async slot =>
-          (await getClient()).models.TimeSlotConfig.create({
+          (await getAdminClient()).models.TimeSlotConfig.create({
             timeSlot: slot,
             maxCapacity: DEFAULT_CAPACITY,
             currentRegistrations: 0,
@@ -344,6 +452,8 @@ function AdminDashboard() {
   };
 
   const updateTimeSlotCapacity = async (id: string, newCapacity: number) => {
+    console.log('🔧 Updating time slot capacity:', { id, newCapacity });
+    
     if (newCapacity < 0) {
       setMessage('❌ Capacity cannot be negative!');
       return;
@@ -351,10 +461,20 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.update({
+      console.log('📝 Calling TimeSlotConfig.update...');
+      
+      const result = await (await getAdminClient()).models.TimeSlotConfig.update({
         id,
         maxCapacity: newCapacity
       });
+      
+      console.log('✅ Update result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Update errors:', result.errors);
+        setMessage('❌ Error updating capacity: ' + JSON.stringify(result.errors));
+        return;
+      }
       
       // Update local state immediately for better UX
       setTimeSlots(prev => prev.map(slot => 
@@ -366,8 +486,8 @@ function AdminDashboard() {
       // Reload data to ensure consistency
       setTimeout(() => loadData(), 500);
     } catch (error) {
-      console.error('Error updating capacity:', error);
-      setMessage('❌ Error updating capacity. Please try again.');
+      console.error('❌ Error updating capacity:', error);
+      setMessage('❌ Error updating capacity: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -388,19 +508,29 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.create({
+      console.log('➕ Creating new time slot:', newTimeSlot);
+      
+      const result = await (await getAdminClient()).models.TimeSlotConfig.create({
         timeSlot: newTimeSlot,
         maxCapacity: DEFAULT_CAPACITY,
         currentRegistrations: 0,
         isActive: true
       });
       
+      console.log('✅ Create result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Create errors:', result.errors);
+        setMessage('❌ Error adding time slot: ' + JSON.stringify(result.errors));
+        return;
+      }
+      
       setMessage(`✅ New time slot "${newTimeSlot}" added successfully!`);
       setNewTimeSlot('');
       loadData();
     } catch (error) {
-      console.error('Error adding time slot:', error);
-      setMessage('❌ Error adding time slot. Please try again.');
+      console.error('❌ Error adding time slot:', error);
+      setMessage('❌ Error adding time slot: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -414,7 +544,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.update({
+      await (await getAdminClient()).models.TimeSlotConfig.update({
         id,
         timeSlot: newTime
       });
@@ -437,13 +567,23 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      await (await getClient()).models.TimeSlotConfig.delete({ id });
+      console.log('🗑️ Deleting time slot:', { id, timeSlot });
+      
+      const result = await (await getAdminClient()).models.TimeSlotConfig.delete({ id });
+      
+      console.log('✅ Delete result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Delete errors:', result.errors);
+        setMessage('❌ Error deleting time slot: ' + JSON.stringify(result.errors));
+        return;
+      }
       
       setMessage(`✅ Time slot "${timeSlot}" deleted successfully!`);
       loadData();
     } catch (error) {
-      console.error('Error deleting time slot:', error);
-      setMessage('❌ Error deleting time slot. Please try again.');
+      console.error('❌ Error deleting time slot:', error);
+      setMessage('❌ Error deleting time slot: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -454,38 +594,72 @@ function AdminDashboard() {
       setLoading(true);
       setMessage('🧹 Cleaning up duplicate time slots...');
 
+      // Use read client to get all slots
       const { data: allSlots } = await (await getClient()).models.TimeSlotConfig.list();
+      
+      if (!allSlots || allSlots.length === 0) {
+        setMessage('ℹ️ No time slots found to clean up.');
+        return;
+      }
+
+      console.log('🔍 Found time slots to analyze:', allSlots.length);
       
       // Group by time slot to find duplicates
       const timeSlotGroups: { [key: string]: TimeSlotConfig[] } = {};
-      allSlots?.forEach(slot => {
+      allSlots.forEach(slot => {
         if (!timeSlotGroups[slot.timeSlot]) {
           timeSlotGroups[slot.timeSlot] = [];
         }
         timeSlotGroups[slot.timeSlot].push(slot as TimeSlotConfig);
       });
 
+      console.log('📊 Time slot groups:', Object.keys(timeSlotGroups).map(ts => `${ts}: ${timeSlotGroups[ts].length} entries`));
+
       // Remove duplicates (keep the first one of each time)
       let deletedCount = 0;
+      const adminClient = await getAdminClient();
+      
       for (const [timeSlot, slots] of Object.entries(timeSlotGroups)) {
         if (slots.length > 1) {
+          console.log(`🔄 Processing ${slots.length} duplicates for time slot: ${timeSlot}`);
+          
+          // Sort by creation date or ID to keep the oldest/first one
+          slots.sort((a, b) => a.id.localeCompare(b.id));
+          
           // Keep the first one, delete the rest
           for (let i = 1; i < slots.length; i++) {
-            await (await getClient()).models.TimeSlotConfig.delete({ id: slots[i].id });
-            deletedCount++;
-            console.log(`🗑️ Deleted duplicate time slot: ${timeSlot} (${slots[i].id})`);
+            try {
+              console.log(`🗑️ Deleting duplicate: ${timeSlot} (ID: ${slots[i].id})`);
+              const deleteResult = await adminClient.models.TimeSlotConfig.delete({ id: slots[i].id });
+              
+              if (deleteResult.errors) {
+                console.error(`❌ Error deleting ${slots[i].id}:`, deleteResult.errors);
+              } else {
+                deletedCount++;
+                console.log(`✅ Successfully deleted duplicate time slot: ${timeSlot} (${slots[i].id})`);
+              }
+            } catch (deleteError) {
+              console.error(`❌ Exception deleting ${slots[i].id}:`, deleteError);
+            }
           }
         }
       }
 
-      setMessage(`✅ Cleaned up ${deletedCount} duplicate time slots!`);
-      setTimeout(() => setMessage(''), 3000);
+      if (deletedCount > 0) {
+        setMessage(`✅ Cleaned up ${deletedCount} duplicate time slots!`);
+        // Reload data to reflect changes
+        setTimeout(async () => {
+          await loadData();
+          setMessage('');
+        }, 2000);
+      } else {
+        setMessage('ℹ️ No duplicate time slots found to clean up.');
+        setTimeout(() => setMessage(''), 3000);
+      }
       
-      // Reload data
-      await loadData();
     } catch (error) {
-      console.error('Error cleaning up duplicates:', error);
-      setMessage('❌ Error cleaning up duplicates.');
+      console.error('❌ Error cleaning up duplicates:', error);
+      setMessage('❌ Error cleaning up duplicates: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -513,41 +687,46 @@ function AdminDashboard() {
         token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       }
       
-      await (await getClient()).models.InviteLink.create({
+      console.log('Creating invite link with data:', { token, email: inviteEmail, isUsed: false });
+      const inviteResult = await (await getClient()).models.InviteLink.create({
         token,
         email: inviteEmail,
-        isUsed: false,
-        createdAt: new Date().toISOString()
+        isUsed: false
       });
+
+      console.log('Invite creation result:', inviteResult);
+      
+      if (inviteResult.errors) {
+        console.error('Invite creation errors:', inviteResult.errors);
+        setMessage('Error creating invite: ' + JSON.stringify(inviteResult.errors));
+        return;
+      }
 
       const inviteUrl = `${window.location.origin}/register/${token}`;
       
       // Send invite email if email was provided
-      if (inviteEmail.trim()) {
+      if (inviteEmail.trim() && inviteResult.data) {
         try {
           console.log('📧 Sending invite email to:', inviteEmail);
-          const response = await fetch('/api/send-invite-email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+          const emailResult = await (await getClient()).mutations.sendInviteEmail({
+            invite: {
               email: inviteEmail,
-              inviteLink: inviteUrl,
-              token: token
-            }),
+              token: token,
+              inviteUrl: inviteUrl
+            },
+            inviteId: inviteResult.data.id
           });
-
-          if (response.ok) {
-            console.log('✅ Invite email sent successfully');
-            setMessage(`Invite link generated and email sent to ${inviteEmail}. Link also copied to clipboard.`);
+          
+          console.log('📧 Email result:', emailResult);
+          
+          if (emailResult.data?.success) {
+            setMessage(`✅ Invite link generated and email sent to ${inviteEmail}! Link copied to clipboard: ${inviteUrl}`);
           } else {
-            console.warn('⚠️ Invite email failed to send');
-            setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+            setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. Email failed to send: ${emailResult.data?.message || 'Unknown error'}`);
           }
         } catch (emailError) {
           console.error('❌ Error sending invite email:', emailError);
-          setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}. (Email sending failed)`);
+          setMessage(`⚠️ Invite link generated and copied to clipboard: ${inviteUrl}. Email failed to send.`);
         }
       } else {
         setMessage(`Invite link generated and copied to clipboard: ${inviteUrl}`);
@@ -576,12 +755,59 @@ function AdminDashboard() {
 
     setLoading(true);
     try {
-      await (await getClient()).models.InviteLink.delete({ id: inviteId });
-      setMessage('Invite link invalidated successfully.');
+      console.log('🔥 Invalidating invite link:', inviteId);
+      // Mark as used instead of deleting to preserve records
+      const result = await (await getClient()).models.InviteLink.update({
+        id: inviteId,
+        isUsed: true,
+        usedAt: new Date().toISOString()
+      });
+      
+      console.log('✅ Invalidation result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Invalidation errors:', result.errors);
+        setMessage('Error invalidating invite link: ' + JSON.stringify(result.errors));
+      } else {
+        setMessage('✅ Invite link invalidated successfully.');
+        loadData(); // Reload to update the list
+      }
+    } catch (error) {
+      console.error('❌ Error invalidating invite link:', error);
+      setMessage('❌ Error invalidating invite link: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteInviteLink = async (inviteId: string, email?: string) => {
+    const confirmMessage = email 
+      ? `Are you sure you want to permanently delete the invalidated invite for ${email}? This action cannot be undone.`
+      : 'Are you sure you want to permanently delete this invalidated invite? This action cannot be undone.';
+      
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('🗑️ Deleting invite link:', inviteId);
+      
+      const result = await (await getClient()).models.InviteLink.delete({ id: inviteId });
+      
+      console.log('✅ Delete result:', result);
+      
+      if (result.errors) {
+        console.error('❌ Delete errors:', result.errors);
+        setMessage('❌ Error deleting invite: ' + JSON.stringify(result.errors));
+        return;
+      }
+      
+      setMessage('✅ Invite deleted permanently.');
       loadData(); // Reload to update the list
     } catch (error) {
-      console.error('Error invalidating invite link:', error);
-      setMessage('Error invalidating invite link.');
+      console.error('❌ Error deleting invite:', error);
+      setMessage('❌ Error deleting invite: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -635,7 +861,7 @@ function AdminDashboard() {
 
     try {
       setLoading(true);
-      const updatedConfig = await (await getClient()).models.RegistrationConfig.update({
+      const updatedConfig = await (await getAdminClient()).models.RegistrationConfig.update({
         id: registrationConfig.id,
         [field]: value,
         updatedAt: new Date().toISOString()
@@ -690,6 +916,101 @@ function AdminDashboard() {
     }
   };
 
+  const saveEmailSettings = async () => {
+    if (!registrationConfig) {
+      setMessage('❌ Registration config not loaded');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('💾 Saving contact settings:', {
+        id: registrationConfig.id,
+        replyToEmail: settings.replyToEmail,
+        contactPhone: settings.contactPhone,
+        textingNumber: settings.textingNumber
+      });
+      
+      const updateResult = await (await getAdminClient()).models.RegistrationConfig.update({
+        id: registrationConfig.id,
+        replyToEmail: settings.replyToEmail,
+        contactPhone: settings.contactPhone,
+        textingNumber: settings.textingNumber,
+        updatedAt: new Date().toISOString(),
+        updatedBy: 'admin'
+      });
+
+      if (updateResult.errors) {
+        console.error('❌ Update errors:', updateResult.errors);
+        setMessage('❌ Failed to save contact settings: ' + JSON.stringify(updateResult.errors));
+        return;
+      }
+
+      console.log('✅ Update successful:', updateResult.data);
+      setRegistrationConfig(updateResult.data as RegistrationConfig);
+      setMessage('✅ Contact settings saved successfully!');
+      
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('❌ Error saving contact settings:', error);
+      setMessage('❌ Failed to save contact settings: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveAllSettings = async () => {
+    if (!registrationConfig) {
+      setMessage('❌ Registration config not loaded');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('💾 Saving all settings (contact + location):', {
+        contact: {
+          id: registrationConfig.id,
+          replyToEmail: settings.replyToEmail,
+          contactPhone: settings.contactPhone,
+          textingNumber: settings.textingNumber
+        },
+        location: settings
+      });
+      
+      // Save contact and location settings to database
+      const updateResult = await (await getAdminClient()).models.RegistrationConfig.update({
+        id: registrationConfig.id,
+        replyToEmail: settings.replyToEmail,
+        contactPhone: settings.contactPhone,
+        textingNumber: settings.textingNumber,
+        locationName: settings.locationName,
+        eventAddress: settings.eventAddress,
+        updatedAt: new Date().toISOString(),
+        updatedBy: 'admin'
+      });
+
+      if (updateResult.errors) {
+        console.error('❌ Update errors:', updateResult.errors);
+        setMessage('❌ Failed to save contact settings: ' + JSON.stringify(updateResult.errors));
+        return;
+      }
+
+      console.log('✅ Contact settings update successful:', updateResult.data);
+      setRegistrationConfig(updateResult.data as RegistrationConfig);
+      
+      // Save location settings (local state - in a real app this would go to backend)
+      setSettings(settings);
+      
+      setMessage('✅ All settings saved successfully! Both contact and location settings have been updated.');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('❌ Error saving all settings:', error);
+      setMessage('❌ Failed to save all settings: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const sendConfirmationEmails = async () => {
     try {
       setLoading(true);
@@ -735,6 +1056,9 @@ function AdminDashboard() {
     }
   };
 
+  const activeRegistrations = registrations.filter(reg => !reg.isCancelled);
+  const totalChildren = activeRegistrations.reduce((sum, reg) => sum + reg.numberOfKids, 0);
+  
   const filteredRegistrations = registrations.filter(reg => 
     reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -757,7 +1081,8 @@ function AdminDashboard() {
     if (!editFormData || !editingRegistration) return;
 
     try {
-      await (await getClient()).models.Registration.update({
+      // Update registration basic info
+      await (await getAdminClient()).models.Registration.update({
         id: editingRegistration,
         firstName: editFormData.firstName,
         lastName: editFormData.lastName,
@@ -767,6 +1092,32 @@ function AdminDashboard() {
         numberOfKids: editFormData.numberOfKids,
         referredBy: editFormData.referredBy
       });
+
+      // Handle children updates
+      if (editFormData.children && editFormData.children.length > 0) {
+        // Get existing children for this registration
+        const { data: existingChildren } = await (await getAdminClient()).models.Child.list({
+          filter: { registrationId: { eq: editingRegistration } }
+        });
+
+        // Delete all existing children first (simpler approach)
+        if (existingChildren) {
+          for (const child of existingChildren) {
+            await (await getAdminClient()).models.Child.delete({ id: child.id });
+          }
+        }
+
+        // Create new children records
+        for (const child of editFormData.children) {
+          if (child.age && child.gender) {
+            await (await getAdminClient()).models.Child.create({
+              registrationId: editingRegistration,
+              age: child.age.toString(),
+              gender: child.gender
+            });
+          }
+        }
+      }
       
       await loadData();
       setMessage('Registration updated successfully!');
@@ -778,21 +1129,32 @@ function AdminDashboard() {
   };
 
   const deleteRegistration = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this registration?')) return;
+    console.log('🗑️ Delete button clicked for registration:', id);
+    if (!confirm('Are you sure you want to delete this registration?')) {
+      console.log('🚫 User cancelled deletion');
+      return;
+    }
+    
+    console.log('✅ User confirmed deletion, proceeding...');
     
     try {
-      await (await getClient()).models.Registration.delete({ id });
+      console.log('🔄 Calling admin client to delete registration...');
+      const result = await (await getAdminClient()).models.Registration.delete({ id });
+      console.log('✅ Delete result:', result);
+      
+      console.log('🔄 Reloading data...');
       await loadData();
       setMessage('Registration deleted successfully!');
+      console.log('🎉 Delete completed successfully');
     } catch (error) {
-      console.error('Error deleting registration:', error);
-      setMessage('Error deleting registration.');
+      console.error('❌ Error deleting registration:', error);
+      setMessage('Error deleting registration: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
   const exportRegistrations = () => {
     const csvContent = [
-      ['Name', 'Email', 'Phone', 'Time Slot', 'Number of Kids', 'Needs Childcare', 'Referred By', 'Registration Date'],
+      ['Name', 'Email', 'Phone', 'Time Slot', 'Number of Kids', 'Referred By', 'Registration Date'],
       ...registrations.map(reg => [
         `${reg.firstName} ${reg.lastName}`,
         reg.email,
@@ -820,33 +1182,56 @@ function AdminDashboard() {
       setMessage(`📧 Resending ${type} confirmation to ${registration.firstName} ${registration.lastName}...`);
 
       if (type === 'email' || type === 'both') {
+        console.log('📧 Attempting to resend email for registration:', registration.id);
+        
         const response = await fetch('/api/resend-confirmation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             registrationId: registration.id,
-            type: 'email'
+            type: 'email',
+            email: registration.email,
+            firstName: registration.firstName
           }),
         });
         
+        console.log('📧 Email resend response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Failed to resend email');
+          const errorText = await response.text();
+          console.error('❌ Email resend failed:', response.status, errorText);
+          throw new Error(`Failed to resend email: ${response.status} - ${errorText}`);
         }
+        
+        const result = await response.json();
+        console.log('✅ Email resend result:', result);
       }
 
       if (type === 'sms' || type === 'both') {
+        console.log('📱 Attempting to resend SMS for registration:', registration.id);
+        
         const response = await fetch('/api/resend-confirmation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             registrationId: registration.id,
-            type: 'sms'
+            type: 'sms',
+            phone: registration.phone,
+            firstName: registration.firstName,
+            timeSlot: registration.timeSlot
           }),
         });
         
+        console.log('📱 SMS resend response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Failed to resend SMS');
+          const errorText = await response.text();
+          console.error('❌ SMS resend failed:', response.status, errorText);
+          throw new Error(`Failed to resend SMS: ${response.status} - ${errorText}`);
         }
+        
+        const result = await response.json();
+        console.log('✅ SMS resend result:', result);
       }
 
       setMessage(`✅ ${type === 'both' ? 'Email and SMS' : type.toUpperCase()} confirmation resent successfully!`);
@@ -860,18 +1245,104 @@ function AdminDashboard() {
   };
 
   const cancelRegistration = async (registrationId: string) => {
-    if (!confirm('Are you sure you want to cancel this registration?')) return;
+    if (!confirm('Are you sure you want to cancel this registration? This will send a cancellation email to the registrant.')) return;
+    
+    console.log('🚀 Starting cancellation process for:', registrationId);
     
     try {
       setLoading(true);
-      await (await getClient()).models.Registration.update({
+      
+      // First, get the registration details
+      const registrationResult = await (await getClient()).models.Registration.get({ id: registrationId });
+      const registration = registrationResult.data;
+      
+      if (!registration) {
+        setMessage('❌ Registration not found.');
+        return;
+      }
+      
+      // Get children data for the email
+      const childrenResult = await (await getClient()).models.Child.list({
+        filter: { registrationId: { eq: registrationId } }
+      });
+      const children = childrenResult.data || [];
+      
+      // Update registration status
+      console.log('📝 Updating registration status to cancelled:', registrationId);
+      const updateResult = await (await getAdminClient()).models.Registration.update({
         id: registrationId,
         isCancelled: true,
         cancelledAt: new Date().toISOString()
       });
+      console.log('📝 Update result:', updateResult);
       
-      await loadData();
-      setMessage('✅ Registration cancelled successfully!');
+      // Check if the database update was successful
+      if (updateResult.errors) {
+        console.error('❌ Database update failed:', updateResult.errors);
+        console.error('❌ Full error details:', JSON.stringify(updateResult.errors, null, 2));
+        throw new Error(`Failed to update registration status: ${updateResult.errors.map(e => e.message).join(', ')}`);
+      }
+      
+      if (!updateResult.data) {
+        console.error('❌ Database update returned no data:', updateResult);
+        throw new Error('Database update returned no data');
+      }
+      
+      // Send cancellation email
+      console.log('📧 Sending cancellation email...');
+      const client = await getClient();
+      
+      const emailResult = await client.mutations.sendCancellationEmail({
+        registration: {
+          firstName: registration.firstName,
+          lastName: registration.lastName,
+          email: registration.email,
+          phone: registration.phone,
+          streetAddress: registration.streetAddress,
+          zipCode: registration.zipCode,
+          city: registration.city,
+          state: registration.state,
+          timeSlot: registration.timeSlot,
+          numberOfKids: registration.numberOfKids,
+          referredBy: registration.referredBy || '',
+          children: JSON.stringify(children.map(child => ({ age: child.age, gender: child.gender })))
+        },
+        registrationId: registrationId
+      });
+      console.log('📧 Email result:', emailResult);
+      
+      // Wait a moment for database consistency, then update local state
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Set flag to prevent automatic data reloading from overriding our state
+      setSkipNextReload(true);
+      
+      // Update the local state to reflect the cancellation
+      setRegistrations(prevRegs => {
+        const updated = prevRegs.map(r => 
+          r.id === registrationId 
+            ? { ...r, isCancelled: true, cancelledAt: new Date().toISOString() }
+            : r
+        );
+        console.log('🔄 Updated registration state for ID:', registrationId);
+        
+        // Also update time slot counts immediately
+        const cancelledReg = prevRegs.find(r => r.id === registrationId);
+        if (cancelledReg) {
+          setTimeSlots(prevSlots => 
+            prevSlots.map(slot => 
+              slot.timeSlot === cancelledReg.timeSlot 
+                ? { ...slot, currentRegistrations: Math.max(0, slot.currentRegistrations - 1) }
+                : slot
+            )
+          );
+        }
+        
+        return updated;
+      });
+      
+      console.log('✅ Data reloaded, setting success message');
+      setMessage('✅ Registration cancelled successfully and cancellation email sent!');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       console.error('Error cancelling registration:', error);
@@ -911,7 +1382,7 @@ function AdminDashboard() {
           <div className="text-6xl mr-4">{BRANDING.locationEmoji}</div>
           <div>
             <h1 className="text-4xl font-bold mb-2">Christmas Store Admin</h1>
-            <p className="text-lg opacity-90">{LOCATION_NAME}</p>
+            <p className="text-lg text-black">{LOCATION_NAME}</p>
           </div>
         </div>
         <p className="text-center opacity-80">Manage registrations and time slots</p>
@@ -959,103 +1430,109 @@ function AdminDashboard() {
         {activeTab === 'registrations' && (
           <div>
             {/* Registration Status Configuration at top of Registrations tab */}
-            {registrationConfig && (
-              <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-8">
+            <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 mb-8">
                 <h2 className="text-2xl font-bold text-black flex items-center mb-6">
                   ⚙️ Registration Status Configuration
                 </h2>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Registration Status */}
-                  <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-                    <h3 className="font-bold text-black mb-3 flex items-center">
-                      🎯 Registration Status
-                    </h3>
-                    <div className="space-y-3">
-                      <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
-                        registrationConfig.isRegistrationOpen 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {registrationConfig.isRegistrationOpen ? '✅ OPEN' : '🔴 CLOSED'}
+                {registrationConfig ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Registration Status */}
+                    <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
+                      <h3 className="font-bold text-black mb-3 flex items-center">
+                        🎯 Registration Status
+                      </h3>
+                      <div className="space-y-3">
+                        <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
+                          registrationConfig.isRegistrationOpen 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {registrationConfig.isRegistrationOpen ? '✅ OPEN' : '🔴 CLOSED'}
+                        </div>
+                        
+                        <button
+                          onClick={toggleRegistrationOpen}
+                          disabled={loading}
+                          className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
+                            registrationConfig.isRegistrationOpen
+                              ? 'bg-red-600 hover:bg-red-700 text-white'
+                              : 'bg-green-600 hover:bg-green-700 text-white'
+                          } disabled:opacity-50`}
+                        >
+                          {registrationConfig.isRegistrationOpen ? '🔒 Close Registration' : '🔓 Open Registration'}
+                        </button>
                       </div>
-                      
-                      <button
-                        onClick={toggleRegistrationOpen}
-                        disabled={loading}
-                        className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
-                          registrationConfig.isRegistrationOpen
-                            ? 'bg-red-600 hover:bg-red-700 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
-                        } disabled:opacity-50`}
-                      >
-                        {registrationConfig.isRegistrationOpen ? '🔒 Close Registration' : '🔓 Open Registration'}
-                      </button>
                     </div>
-                  </div>
 
-                  {/* Invite Only Mode */}
-                  <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-                    <h3 className="font-bold text-black mb-3 flex items-center">
-                      📧 Access Mode
-                    </h3>
-                    <div className="space-y-3">
-                      <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
-                        registrationConfig.inviteOnlyMode
-                          ? 'bg-orange-100 text-orange-800'
-                          : 'bg-blue-100 text-black'
-                      }`}>
-                        {registrationConfig.inviteOnlyMode ? '🔐 INVITE ONLY' : '🌐 PUBLIC'}
-                      </div>
-                      
-                      <button
-                        onClick={toggleInviteOnlyMode}
-                        disabled={loading}
-                        className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
+                    {/* Invite Only Mode */}
+                    <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
+                      <h3 className="font-bold text-black mb-3 flex items-center">
+                        📧 Access Mode
+                      </h3>
+                      <div className="space-y-3">
+                        <div className={`px-3 py-2 rounded-lg font-semibold text-center ${
                           registrationConfig.inviteOnlyMode
-                            ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                            : 'bg-orange-600 hover:bg-orange-700 text-white'
-                        } disabled:opacity-50`}
-                      >
-                        {registrationConfig.inviteOnlyMode ? '🌐 Enable Public Access' : '🔐 Enable Invite Only'}
-                      </button>
+                            ? 'bg-orange-100 text-orange-800'
+                            : 'bg-blue-100 text-black'
+                        }`}>
+                          {registrationConfig.inviteOnlyMode ? '🔐 INVITE ONLY' : '🌐 PUBLIC'}
+                        </div>
+                        
+                        <button
+                          onClick={toggleInviteOnlyMode}
+                          disabled={loading}
+                          className={`w-full px-4 py-2 rounded-lg font-semibold transition-all ${
+                            registrationConfig.inviteOnlyMode
+                              ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                              : 'bg-orange-600 hover:bg-orange-700 text-white'
+                          } disabled:opacity-50`}
+                        >
+                          {registrationConfig.inviteOnlyMode ? '🌐 Enable Public Access' : '🔐 Enable Invite Only'}
+                        </button>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Closure Message */}
-                  <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
-                    <h3 className="font-bold text-black mb-3 flex items-center">
-                      💬 Closure Message
-                    </h3>
-                    <div className="space-y-3">
-                      <textarea
-                        value={customClosureMessage}
-                        onChange={(e) => setCustomClosureMessage(e.target.value)}
-                        className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm h-20"
-                        placeholder="Message shown when registration is closed"
-                      />
-                      <button
-                        onClick={() => updateRegistrationStatus('closureMessage', customClosureMessage)}
-                        disabled={loading}
-                        className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
-                      >
-                        💾 Save Message
-                      </button>
+                    {/* Closure Message */}
+                    <div className="bg-white border-2 border-purple-300 rounded-lg p-4">
+                      <h3 className="font-bold text-black mb-3 flex items-center">
+                        💬 Closure Message
+                      </h3>
+                      <div className="space-y-3">
+                        <textarea
+                          value={customClosureMessage}
+                          onChange={(e) => setCustomClosureMessage(e.target.value)}
+                          className="w-full px-3 py-2 border-2 border-gray-300 rounded text-sm h-20 text-black"
+                          placeholder="Message shown when registration is closed"
+                        />
+                        <button
+                          onClick={() => updateRegistrationStatus('closureMessage', customClosureMessage)}
+                          disabled={loading}
+                          className="w-full bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-50"
+                        >
+                          💾 Save Message
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="text-center py-8 bg-gray-50 border-2 border-gray-200 rounded-lg">
+                    <div className="text-4xl mb-4">⏳</div>
+                    <p className="text-xl font-bold text-black">Loading Registration Configuration...</p>
+                    <p className="text-black">Please wait while we load the registration settings.</p>
+                  </div>
+                )}
               </div>
-            )}
 
             {/* Registration Management */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 space-y-4 sm:space-y-0">
               <h2 className="text-2xl font-bold text-black flex items-center">
-                👥 Registration Management ({filteredRegistrations.length} of {registrations.length})
+                👥 Registration Management ({filteredRegistrations.length} of {activeRegistrations.length} active)
               </h2>
               <div className="flex space-x-3">
                 <button
                   onClick={sendConfirmationEmails}
-                  disabled={loading || registrations.length === 0}
+                  disabled={loading || activeRegistrations.length === 0}
                   className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 font-bold flex items-center disabled:opacity-50"
                 >
                   {loading ? '📧 Sending...' : '📧 Send Confirmation Emails'}
@@ -1086,20 +1563,16 @@ function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-blue-200 border-2 border-blue-400 p-4 rounded-lg text-center">
                 <div className="text-4xl mb-2">👥</div>
-                <h3 className="font-bold text-black text-lg">TOTAL REGISTRATIONS</h3>
-                <p className="text-3xl font-bold text-black">{registrations.length}</p>
+                <h3 className="font-bold text-black text-lg">ACTIVE REGISTRATIONS</h3>
+                <p className="text-3xl font-bold text-black">{activeRegistrations.length}</p>
+                {registrations.length > activeRegistrations.length && (
+                  <p className="text-sm text-gray-600">({registrations.length - activeRegistrations.length} cancelled)</p>
+                )}
               </div>
               <div className="bg-green-200 border-2 border-green-400 p-4 rounded-lg text-center">
                 <div className="text-4xl mb-2">👶</div>
                 <h3 className="font-bold text-black text-lg">TOTAL CHILDREN</h3>
-                <p className="text-3xl font-bold text-black">
-                  {registrations.reduce((sum, reg) => sum + reg.numberOfKids, 0)}
-                </p>
-              </div>
-              <div className="bg-yellow-200 border-2 border-yellow-400 p-4 rounded-lg text-center">
-                <div className="text-4xl mb-2">🍼</div>
-                <h3 className="font-bold text-black text-lg">NEED CHILDCARE</h3>
-                <p className="text-3xl font-bold text-black">0</p>
+                <p className="text-3xl font-bold text-black">{totalChildren}</p>
               </div>
             </div>
 
@@ -1120,34 +1593,34 @@ function AdminDashboard() {
                             type="text"
                             value={editFormData?.firstName || ''}
                             onChange={(e) => setEditFormData(prev => prev ? {...prev, firstName: e.target.value} : null)}
-                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="First Name"
                           />
                           <input
                             type="text"
                             value={editFormData?.lastName || ''}
                             onChange={(e) => setEditFormData(prev => prev ? {...prev, lastName: e.target.value} : null)}
-                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Last Name"
                           />
                           <input
                             type="email"
                             value={editFormData?.email || ''}
                             onChange={(e) => setEditFormData(prev => prev ? {...prev, email: e.target.value} : null)}
-                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Email"
                           />
                           <input
                             type="tel"
                             value={editFormData?.phone || ''}
                             onChange={(e) => setEditFormData(prev => prev ? {...prev, phone: e.target.value} : null)}
-                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Phone"
                           />
                           <select
                             value={editFormData?.timeSlot || ''}
                             onChange={(e) => setEditFormData(prev => prev ? {...prev, timeSlot: e.target.value} : null)}
-                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                           >
                             {timeSlots.map(slot => (
                               <option key={slot.timeSlot} value={slot.timeSlot}>{slot.timeSlot}</option>
@@ -1157,11 +1630,69 @@ function AdminDashboard() {
                             type="number"
                             value={editFormData?.numberOfKids || 0}
                             onChange={(e) => setEditFormData(prev => prev ? {...prev, numberOfKids: parseInt(e.target.value) || 0} : null)}
-                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold"
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Number of Kids"
                             min="0"
                           />
                         </div>
+                        
+                        {/* Children Information Section */}
+                        {editFormData && editFormData.numberOfKids > 0 && (
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-semibold text-black">Children Information</h4>
+                            {Array.from({ length: editFormData.numberOfKids }, (_, index) => (
+                              <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-100 rounded-lg">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Child {index + 1} Age
+                                  </label>
+                                  <select
+                                    value={editFormData.children?.[index]?.age || ''}
+                                    onChange={(e) => {
+                                      const newChildren = [...(editFormData.children || [])];
+                                      while (newChildren.length <= index) {
+                                        newChildren.push({ age: '', gender: 'boy' });
+                                      }
+                                      const value = e.target.value;
+                                      newChildren[index].age = value === '<1' ? '<1' : (value ? parseInt(value).toString() : '');
+                                      setEditFormData(prev => prev ? {...prev, children: newChildren} : null);
+                                    }}
+                                    className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                                    required
+                                  >
+                                    <option value="">Select age</option>
+                                    <option value="<1">&lt;1</option>
+                                    {Array.from({ length: 18 }, (_, i) => i + 1).map(age => (
+                                      <option key={age} value={age}>{age}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Child {index + 1} Gender
+                                  </label>
+                                  <select
+                                    value={editFormData.children?.[index]?.gender || 'boy'}
+                                    onChange={(e) => {
+                                      const newChildren = [...(editFormData.children || [])];
+                                      while (newChildren.length <= index) {
+                                        newChildren.push({ age: '', gender: 'boy' });
+                                      }
+                                      newChildren[index].gender = e.target.value as 'boy' | 'girl';
+                                      setEditFormData(prev => prev ? {...prev, children: newChildren} : null);
+                                    }}
+                                    className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                                    required
+                                  >
+                                    <option value="boy">Boy</option>
+                                    <option value="girl">Girl</option>
+                                  </select>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
                         <div className="flex space-x-3">
                           <button onClick={saveEdit} className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-600">
                             💾 Save
@@ -1196,22 +1727,49 @@ function AdminDashboard() {
                                   <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
                                 )}
                               </p>
+                              {/* Delivery status temporarily disabled for deployment
+                              <p className="text-black">
+                                <span className="font-bold">📧 Email:</span>
+                                {(reg as any).emailDeliveryStatus === 'sent' ? (
+                                  <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ SENT</span>
+                                ) : (reg as any).emailDeliveryStatus === 'failed' ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ FAILED</span>
+                                ) : (reg as any).emailDeliveryStatus === 'bounced' ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">🔄 BOUNCED</span>
+                                ) : (
+                                  <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
+                                )}
+                              </p>
+                              <p className="text-black">
+                                <span className="font-bold">📱 SMS:</span>
+                                {(reg as any).smsDeliveryStatus === 'sent' ? (
+                                  <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ SENT</span>
+                                ) : (reg as any).smsDeliveryStatus === 'failed' ? (
+                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ FAILED</span>
+                                ) : (
+                                  <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
+                                )}
+                              </p>
+                              */}
                             </div>
                           </div>
                           <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
                             <button onClick={() => startEdit(reg)} className="bg-blue-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-blue-600">
                               ✏️ Edit
                             </button>
-                            <button 
-                              onClick={() => cancelRegistration(reg.id)} 
-                              className="bg-orange-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-orange-600"
-                              disabled={reg.isCancelled}
-                            >
-                              🚫 Cancel
-                            </button>
-                            <button onClick={() => deleteRegistration(reg.id)} className="bg-red-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-red-600">
-                              🗑️ Delete
-                            </button>
+                            {!reg.isCancelled && (
+                              <button 
+                                onClick={() => cancelRegistration(reg.id)} 
+                                className="bg-orange-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-orange-600"
+                              >
+                                🚫 Cancel
+                              </button>
+                            )}
+                            {reg.isCancelled && (
+                              <button onClick={() => deleteRegistration(reg.id)} className="bg-red-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-red-600">
+                                🗑️ Delete
+                              </button>
+                            )}
                             <div className="flex gap-1">
                               <button 
                                 onClick={() => resendConfirmation(reg, 'email')} 
@@ -1308,9 +1866,24 @@ function AdminDashboard() {
                                 📧 {invite.email}
                               </span>
                             )}
+                            {/* Email status temporarily disabled for deployment
+                            {invite.email && (
+                              <span className={`px-2 py-1 rounded text-xs font-bold ml-2 ${
+                                (invite as any).emailDeliveryStatus === 'sent' ? 'bg-green-100 text-green-800' :
+                                (invite as any).emailDeliveryStatus === 'failed' ? 'bg-red-100 text-red-800' :
+                                (invite as any).emailDeliveryStatus === 'bounced' ? 'bg-red-100 text-red-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {(invite as any).emailDeliveryStatus === 'sent' ? '✅ EMAIL SENT' :
+                                 (invite as any).emailDeliveryStatus === 'failed' ? '❌ EMAIL FAILED' :
+                                 (invite as any).emailDeliveryStatus === 'bounced' ? '🔄 EMAIL BOUNCED' :
+                                 '⏳ EMAIL PENDING'}
+                              </span>
+                            )}
+                            */}
                           </div>
                           <div className="text-sm text-black">
-                            Created: {new Date(invite.createdAt).toLocaleString()}
+                            Created: {invite.createdAt ? new Date(invite.createdAt).toLocaleString() : 'Unknown'}
                             {invite.usedAt && (
                               <span className="ml-4">
                                 Used: {new Date(invite.usedAt).toLocaleString()}
@@ -1340,6 +1913,16 @@ function AdminDashboard() {
                               ❌ Invalidate
                             </button>
                           )}
+                          {invite.isUsed && (
+                            <button
+                              onClick={() => deleteInviteLink(invite.id, invite.email)}
+                              disabled={loading}
+                              className="px-3 py-1 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 disabled:opacity-50"
+                              title="Delete Permanently"
+                            >
+                              🗑️ Delete
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -1352,7 +1935,6 @@ function AdminDashboard() {
 
         {activeTab === 'timeslots' && (
           <div>
-            {console.log('🚀 Time Slots tab rendering, timeSlots.length:', timeSlots.length, 'timeSlots:', timeSlots)}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-black flex items-center">
                 ⏰ Time Slot Management
@@ -1367,6 +1949,38 @@ function AdminDashboard() {
                 </button>
               )}
             </div>
+            
+            {/* Time Slots Summary */}
+            {timeSlots.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {timeSlots.length}
+                  </div>
+                  <div className="text-sm font-semibold text-blue-800">
+                    Total Time Slots
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {timeSlots.reduce((sum, slot) => sum + slot.currentRegistrations, 0)}
+                  </div>
+                  <div className="text-sm font-semibold text-green-800">
+                    Total Registrations
+                  </div>
+                </div>
+                
+                <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-orange-600">
+                    {timeSlots.reduce((sum, slot) => sum + (slot.maxCapacity - slot.currentRegistrations), 0)}
+                  </div>
+                  <div className="text-sm font-semibold text-orange-800">
+                    Remaining Capacity
+                  </div>
+                </div>
+              </div>
+            )}
             
             <div className="space-y-4">
               {timeSlots.length === 0 ? (
@@ -1391,7 +2005,7 @@ function AdminDashboard() {
                         🚀 Create Time Slots
                       </button>
                       <button
-                        onClick={loadData}
+                        onClick={() => loadData()}
                         disabled={loading}
                         className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold"
                       >
@@ -1548,9 +2162,9 @@ function AdminDashboard() {
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Email Settings */}
+              {/* Contact Information */}
               <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-black mb-4">📧 Email Configuration</h3>
+                <h3 className="text-lg font-semibold text-black mb-4">📧 Contact Information</h3>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-black font-bold mb-2">Reply-To Email Address</label>
@@ -1558,10 +2172,32 @@ function AdminDashboard() {
                       type="email"
                       value={settings.replyToEmail}
                       onChange={(e) => setSettings({...settings, replyToEmail: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg"
+                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg text-black"
                       placeholder="office@pathwayvineyard.com"
                     />
                     <p className="text-sm text-black mt-1">Email address shown as reply-to in confirmation emails</p>
+                  </div>
+                  <div>
+                    <label className="block text-black font-bold mb-2">Contact Phone Number</label>
+                    <input
+                      type="tel"
+                      value={settings.contactPhone}
+                      onChange={(e) => setSettings({...settings, contactPhone: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg text-black"
+                      placeholder="(208) 746-9089"
+                    />
+                    <p className="text-sm text-black mt-1">Phone number displayed on registration page for questions</p>
+                  </div>
+                  <div>
+                    <label className="block text-black font-bold mb-2">Texting Number</label>
+                    <input
+                      type="tel"
+                      value={settings.textingNumber}
+                      onChange={(e) => setSettings({...settings, textingNumber: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg text-black"
+                      placeholder="(208) 746-9089"
+                    />
+                    <p className="text-sm text-black mt-1">Phone number used for sending text confirmations - will be displayed on registration page</p>
                   </div>
                 </div>
               </div>
@@ -1576,7 +2212,7 @@ function AdminDashboard() {
                       type="text"
                       value={settings.locationName}
                       onChange={(e) => setSettings({...settings, locationName: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg"
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg text-black"
                       placeholder="Christmas Store Location"
                     />
                   </div>
@@ -1585,42 +2221,27 @@ function AdminDashboard() {
                     <textarea
                       value={settings.eventAddress}
                       onChange={(e) => setSettings({...settings, eventAddress: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20"
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20 text-black"
                       placeholder="123 Main St, City, State 12345"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Contact Settings */}
-              <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-black mb-4">📞 Contact Information</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-black font-bold mb-2">Event Phone Number</label>
-                    <input
-                      type="tel"
-                      value={settings.eventPhone}
-                      onChange={(e) => setSettings({...settings, eventPhone: e.target.value})}
-                      className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg"
-                      placeholder="(555) 123-4567"
-                    />
-                    <p className="text-sm text-black mt-1">Phone number for event inquiries</p>
-                  </div>
-                </div>
-              </div>
 
-              {/* Save Settings */}
-              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-black mb-4">💾 Save Changes</h3>
-                <button
-                  onClick={() => updateSettings(settings)}
-                  disabled={loading}
-                  className="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg font-bold disabled:opacity-50"
-                >
-                  {loading ? '⏳ Saving...' : '💾 Save All Settings'}
-                </button>
-                <p className="text-sm text-black mt-2">Changes will be applied to future registrations and emails</p>
+              {/* Save All Settings */}
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-black mb-4">💾 Save All Changes</h3>
+                <div className="space-y-4">
+                  <button
+                    onClick={() => saveAllSettings()}
+                    disabled={loading}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold disabled:opacity-50 text-lg"
+                  >
+                    {loading ? '⏳ Saving All Settings...' : '💾 Save All Settings'}
+                  </button>
+                </div>
+                <p className="text-sm text-black mt-2">Saves both contact and location settings</p>
               </div>
             </div>
           </div>

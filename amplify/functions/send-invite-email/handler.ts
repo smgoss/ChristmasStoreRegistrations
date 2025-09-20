@@ -1,47 +1,44 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
 
-interface InviteEmailData {
+interface InviteData {
   email: string;
-  inviteLink: string;
   token: string;
+  inviteUrl: string;
 }
 
-export const handler = async (event: any) => {
+export const handler: Handler = async (event: any) => {
   try {
     console.log('📧 Sending invite email:', event);
     
-    const { email, inviteLink, token }: InviteEmailData = event;
+    const { invite, inviteId }: { invite: InviteData; inviteId?: string } = event.arguments || event;
     
-    if (!email) {
+    if (!invite.email) {
       console.log('ℹ️ No email provided, skipping email send');
       return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'No email provided, invite link created without sending email' })
+        success: true,
+        message: 'No email provided, invite email skipped'
       };
     }
 
-    const emailContent = generateInviteEmailContent(email, inviteLink, token);
+    const emailContent = generateInviteEmailContent(invite);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
+      Source: process.env.FROM_EMAIL || 'Pathway Christmas Store <christmas-store@pathwayvineyard.com>',
       ReplyToAddresses: ['office@pathwayvineyard.com'],
       Destination: {
-        ToAddresses: [email],
+        ToAddresses: [invite.email],
       },
       Message: {
         Subject: {
-          Data: '🎄 You\'re Invited to Register for the Christmas Store!',
+          Data: '🎄 You\'re Invited to Register for Christmas Store!',
           Charset: 'UTF-8',
         },
         Body: {
           Html: {
-            Data: emailContent.html,
-            Charset: 'UTF-8',
-          },
-          Text: {
-            Data: emailContent.text,
+            Data: emailContent,
             Charset: 'UTF-8',
           },
         },
@@ -49,37 +46,45 @@ export const handler = async (event: any) => {
     });
 
     const result = await ses.send(command);
-    console.log('✅ Invite email sent successfully:', result.MessageId);
+    
+    // Update invite link with successful email delivery status
+    if (inviteId) {
+      console.log('✅ Invite email sent successfully, MessageId:', result.MessageId);
+      // TODO: Update invite link record with emailDeliveryStatus: 'sent', emailDeliveryAttemptedAt: now
+    }
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ 
-        message: 'Invite email sent successfully',
-        messageId: result.MessageId 
-      })
+      success: true,
+      message: 'Invite email sent successfully',
+      messageId: result.MessageId,
     };
   } catch (error) {
-    console.error('❌ Error sending invite email:', error);
+    console.error('Error sending invite email:', error);
+    
+    // Update invite link with failed email delivery status
+    if (event.arguments?.inviteId || event.inviteId) {
+      console.log('❌ Invite email delivery failed, updating status');
+      // TODO: Update invite link record with emailDeliveryStatus: 'failed', emailFailureReason: error.message
+    }
+    
     return {
-      statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Failed to send invite email',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      })
+      success: false,
+      message: 'Failed to send invite email',
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 };
 
-function generateInviteEmailContent(email: string, inviteLink: string, token: string) {
+function generateInviteEmailContent(invite: InviteData): string {
   const text = `
 🎄 You're Invited to the Christmas Store! 🎄
 
 Hello!
 
-You have been personally invited to register for our Christmas Store event. This is a special opportunity to provide Christmas gifts for children in need in our community.
+You have been personally invited to register for our Christmas Store event on Friday, December 6th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
 
 Your personal invitation link:
-${inviteLink}
+${invite.inviteUrl}
 
 Important Information:
 - This invitation link is unique to you and can only be used once
@@ -98,11 +103,11 @@ Questions? Please contact us or simply reply to this email.
 Thank you for being part of our Christmas Store community!
 
 With warm wishes,
-The Christmas Store Team
+The Pathway Christmas Store Team
 
 ---
-This invitation was sent to: ${email}
-Invitation ID: ${token.slice(0, 8)}...
+This invitation was sent to: ${invite.email}
+Invitation ID: ${invite.token.slice(0, 8)}...
 `;
 
   const html = `
@@ -114,9 +119,31 @@ Invitation ID: ${token.slice(0, 8)}...
     <title>Christmas Store Invitation</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #c41e3a, #228b22); color: white; padding: 30px; text-align: center; border-radius: 10px; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 28px; }
-        .header p { margin: 10px 0 0 0; font-size: 18px; }
+        .header { 
+          background: linear-gradient(rgba(185, 28, 28, 0.7), rgba(5, 150, 105, 0.7)), url('https://images.unsplash.com/photo-1545048702-79362596cdc9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          color: white; 
+          padding: 48px 30px; 
+          text-align: center; 
+          border-radius: 16px; 
+          margin-bottom: 30px; 
+          position: relative;
+          overflow: hidden;
+        }
+        .header h1 { 
+          margin: 0; 
+          font-size: 2rem; 
+          font-weight: 700; 
+          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5); 
+        }
+        .header p { 
+          margin: 10px 0 0 0; 
+          font-size: 18px; 
+          opacity: 0.9; 
+          text-shadow: 0 2px 6px rgb(0 0 0 / 0.7); 
+        }
         .content { background: #f9f9f9; padding: 30px; border-radius: 10px; margin-bottom: 20px; }
         .invite-link { background: #228b22; color: white; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; }
         .invite-link a { color: white; text-decoration: none; font-weight: bold; font-size: 18px; }
@@ -131,16 +158,17 @@ Invitation ID: ${token.slice(0, 8)}...
     <div class="header">
         <h1>🎄 You're Invited! 🎄</h1>
         <p>Christmas Store Registration</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Friday, December 6th, 2025</p>
     </div>
     
     <div class="content">
         <p><strong>Hello!</strong></p>
         
-        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
+        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Friday, December 6th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
         
         <div class="invite-link">
             <p style="margin: 0 0 10px 0;">Your Personal Invitation Link:</p>
-            <a href="${inviteLink}" target="_blank">${inviteLink}</a>
+            <a href="${invite.inviteUrl}" target="_blank">${invite.inviteUrl}</a>
         </div>
         
         <div class="info-box">
@@ -167,16 +195,16 @@ Invitation ID: ${token.slice(0, 8)}...
         
         <p>Thank you for being part of our Christmas Store community!</p>
         
-        <p><strong>With warm wishes,<br>The Christmas Store Team</strong></p>
+        <p><strong>With warm wishes,<br>The Pathway Christmas Store Team</strong></p>
     </div>
     
     <div class="footer">
-        <p>This invitation was sent to: ${email}</p>
-        <p>Invitation ID: ${token.slice(0, 8)}...</p>
+        <p>This invitation was sent to: ${invite.email}</p>
+        <p>Invitation ID: ${invite.token.slice(0, 8)}...</p>
     </div>
 </body>
 </html>
 `;
 
-  return { text, html };
+  return html;
 }

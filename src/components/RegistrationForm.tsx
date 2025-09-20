@@ -36,6 +36,11 @@ interface RegistrationConfig {
   scheduledCloseDate?: string;
   autoCloseEnabled: boolean;
   closureMessage: string;
+  replyToEmail?: string;
+  contactPhone?: string;
+  textingNumber?: string;
+  locationName?: string;
+  eventAddress?: string;
 }
 
 interface RegistrationData {
@@ -99,6 +104,8 @@ export default function RegistrationForm({
   const [cityOptions, setCityOptions] = useState<Array<{city: string, state: string}>>([]);
   const [submitted, setSubmitted] = useState(false);
   const [registrationConfig, setRegistrationConfig] = useState<RegistrationConfig | null>(null);
+  const [contactEmail, setContactEmail] = useState(CONTACT_EMAIL); // Default to location config, will be updated
+  const [contactPhone, setContactPhone] = useState(CHURCH_INFO.phone); // Default to location config, will be updated
   const [configLoading, setConfigLoading] = useState(true);
   
 
@@ -115,6 +122,16 @@ export default function RegistrationForm({
       const { data: configData } = await client.models.RegistrationConfig.list();
       const config = configData?.[0] as RegistrationConfig;
       setRegistrationConfig(config);
+      
+      // Update contact email if available in config
+      if (config?.replyToEmail) {
+        setContactEmail(config.replyToEmail);
+      }
+      
+      // Update contact phone if available in config
+      if (config?.contactPhone) {
+        setContactPhone(config.contactPhone);
+      }
       
       // Check if we need to auto-close based on scheduled date
       if (config?.autoCloseEnabled && config.scheduledCloseDate) {
@@ -135,6 +152,48 @@ export default function RegistrationForm({
     } finally {
       setConfigLoading(false);
     }
+  };
+
+  const downloadVCard = () => {
+    if (!registrationConfig) return;
+    
+    // Format phone numbers for vCard (remove non-digits, add +1 if needed)
+    const formatPhoneForVCard = (phone: string) => {
+      const digits = phone.replace(/\D/g, '');
+      if (digits.length === 10) {
+        return `+1${digits}`;
+      }
+      if (digits.length === 11 && digits.startsWith('1')) {
+        return `+${digits}`;
+      }
+      return phone;
+    };
+
+    const textingPhone = formatPhoneForVCard(registrationConfig.textingNumber || '');
+    const landlinePhone = formatPhoneForVCard(registrationConfig.contactPhone || '');
+    
+    // Generate vCard content
+    const vCardContent = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${registrationConfig.locationName || 'Christmas Store'}`,
+      `ORG:${registrationConfig.locationName || 'Christmas Store'}`,
+      `EMAIL:${registrationConfig.replyToEmail || contactEmail}`,
+      `TEL;TYPE=CELL:${textingPhone}`,
+      `TEL;TYPE=VOICE:${landlinePhone}`,
+      'END:VCARD'
+    ].join('\n');
+
+    // Create and download the vCard file
+    const blob = new Blob([vCardContent], { type: 'text/vcard;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${(registrationConfig.locationName || 'Christmas Store').replace(/\s+/g, '_')}.vcf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   };
 
   useEffect(() => {
@@ -164,8 +223,8 @@ export default function RegistrationForm({
       const activeTimeSlots: string[] = [];
       
       timeSlotData.forEach(config => {
-        // Only include active time slots
-        if (config.isActive) {
+        // Only include active time slots and avoid duplicates
+        if (config.isActive && !activeTimeSlots.includes(config.timeSlot)) {
           activeTimeSlots.push(config.timeSlot);
           
           // Calculate actual registration count for this time slot
@@ -176,6 +235,16 @@ export default function RegistrationForm({
             max: config.maxCapacity || 0,
             current: actualCount
           };
+        } else if (config.isActive && activeTimeSlots.includes(config.timeSlot)) {
+          // If time slot already exists, aggregate the capacity
+          const actualCount = registrationData ? 
+            registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
+          
+          if (capacities[config.timeSlot]) {
+            capacities[config.timeSlot].max += config.maxCapacity || 0;
+            // Don't double-count registrations, keep the actual count
+            capacities[config.timeSlot].current = actualCount;
+          }
         }
       });
       
@@ -210,21 +279,34 @@ export default function RegistrationForm({
       const response = await fetch(`/api/lookup-zip?zip=${zipCode}`);
       if (response.ok) {
         const data = await response.json();
-        const options = data.results.map((result: any) => ({
-          city: result.city,
-          state: result.stateAbbreviation
-        }));
-        setCityOptions(options);
         
-        // Auto-fill if there's only one option
-        if (options.length === 1) {
-          setFormData(prev => ({
-            ...prev,
-            city: options[0].city,
-            state: options[0].state
+        // Validate that data.results exists and is an array
+        if (data && data.results && Array.isArray(data.results)) {
+          const options = data.results.map((result: { city: string; stateAbbreviation: string }) => ({
+            city: result.city,
+            state: result.stateAbbreviation
           }));
+          setCityOptions(options);
+          
+          // Auto-fill if there's only one option
+          if (options.length === 1) {
+            setFormData(prev => ({
+              ...prev,
+              city: options[0].city,
+              state: options[0].state
+            }));
+          } else {
+            // Clear city/state if multiple options, let user choose
+            setFormData(prev => ({
+              ...prev,
+              city: '',
+              state: ''
+            }));
+          }
         } else {
-          // Clear city/state if multiple options, let user choose
+          console.error('Invalid zip code response format:', data);
+          setCityOptions([]);
+          // Clear city/state if no valid results
           setFormData(prev => ({
             ...prev,
             city: '',
@@ -397,10 +479,59 @@ export default function RegistrationForm({
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-green-600 mb-4">Registration Successful!</h2>
+          <h2 className="text-2xl font-bold text-green-600 mb-4">Registration Submitted!</h2>
           <p className="text-gray-600 mb-4">
-            Thank you for registering for the Christmas Store. You will receive a confirmation email shortly.
+            Thank you for registering for the Christmas Store! 
           </p>
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <span className="text-2xl">📧</span>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-lg font-medium text-blue-800">Watch for Your Confirmation Email</h3>
+                <div className="mt-2 text-sm text-blue-700">
+                  <p className="mb-2">You will receive a confirmation email shortly from:</p>
+                  <p className="font-mono bg-white px-2 py-1 rounded border text-blue-900 font-semibold">
+                    christmas-store@pathwayvineyard.com
+                  </p>
+                  <p className="mt-2">
+                    <strong>📨 Don&apos;t see it?</strong> Please check your spam/junk folder as it may have been filtered there.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {registrationConfig?.textingNumber && (
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <span className="text-2xl">📱</span>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-lg font-medium text-green-800">Add Our Texting Number to Your Contacts</h3>
+                  <div className="mt-2 text-sm text-green-700">
+                    <p className="mb-2 text-center">Please save this number to your contacts so you&apos;ll recognize our text confirmations:</p>
+                    <div className="flex flex-col items-center gap-2">
+                      <p className="font-mono bg-white px-2 py-1 rounded border text-green-900 font-semibold">
+                        {registrationConfig.textingNumber}
+                      </p>
+                      <button
+                        onClick={downloadVCard}
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-semibold transition-colors"
+                        title="Download contact card"
+                      >
+                        📱 Add to Contacts
+                      </button>
+                    </div>
+                    <p className="mt-2 text-center">
+                      <strong>💬 You&apos;ll receive a text confirmation</strong> with your appointment details shortly.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="bg-green-50 p-4 rounded-lg">
             <p className="text-gray-900"><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
             <p className="text-gray-900"><strong>Email:</strong> {formData.email}</p>
@@ -432,12 +563,28 @@ export default function RegistrationForm({
           <div className="text-6xl mb-4">🔒</div>
           <h2 className="text-2xl font-bold text-red-600 mb-4">Registration Closed</h2>
           <div className="bg-red-50 p-6 rounded-lg">
-            <p className="text-red-800">
+            <p className="text-red-900 font-medium">
               {registrationConfig?.closureMessage || 'Registration is currently closed. Please check back later.'}
             </p>
           </div>
           <div className="text-center mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">🎅 Questions? Contact us and we\u2019ll be happy to help! 🤶</p>
+            <div className="mb-4">
+              <h3 className="font-semibold text-gray-800 mb-2">Questions?</h3>
+              <p className="text-sm text-gray-600 mb-1">
+                📧 <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:underline">
+                  {contactEmail}
+                </a>
+              </p>
+              <p className="text-sm text-gray-600 mb-1">
+                📞 {contactPhone}
+              </p>
+              <p className="text-sm text-gray-600">
+                🌐 <a href={CHURCH_INFO.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                  pathwayvineyard.com
+                </a>
+              </p>
+            </div>
+            <p className="text-sm text-gray-500">🎅 We&apos;ll be happy to help! 🤶</p>
           </div>
         </div>
       </div>
@@ -460,7 +607,23 @@ export default function RegistrationForm({
             </p>
           </div>
           <div className="text-center mt-6 pt-6 border-t border-gray-200">
-            <p className="text-sm text-gray-500">🎅 Questions about invitations? Contact us and we\u2019ll be happy to help! 🤶</p>
+            <div className="mb-4">
+              <h3 className="font-semibold text-gray-800 mb-2">Questions about invitations?</h3>
+              <p className="text-sm text-gray-600 mb-1">
+                📧 <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:underline">
+                  {contactEmail}
+                </a>
+              </p>
+              <p className="text-sm text-gray-600 mb-1">
+                📞 {contactPhone}
+              </p>
+              <p className="text-sm text-gray-600">
+                🌐 <a href={CHURCH_INFO.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                  pathwayvineyard.com
+                </a>
+              </p>
+            </div>
+            <p className="text-sm text-gray-500">🎅 We&apos;ll be happy to help! 🤶</p>
           </div>
         </div>
       </div>
@@ -479,6 +642,9 @@ export default function RegistrationForm({
             {LOCATION_NAME}
           </h2>
           <p className="christmas-location">{LOCATION_ADDRESS}</p>
+          <p className="christmas-date" style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'white', marginTop: '0.5rem', textShadow: '0 2px 6px rgb(0 0 0 / 0.7)'}}>
+            📅 Friday, December 6th, 2024
+          </p>
         </div>
         
         <div className="christmas-content">
@@ -740,13 +906,13 @@ export default function RegistrationForm({
             required
           >
             <option value="">Select a time slot</option>
-            {timeSlots.map(slot => {
+            {timeSlots.map((slot, index) => {
               const capacity = timeSlotCapacities[slot];
               const isFull = capacity && capacity.current >= capacity.max;
               const availableText = capacity ? ` (${capacity.current}/${capacity.max} registered)` : '';
               
               return (
-                <option key={slot} value={slot} disabled={isFull}>
+                <option key={`${slot}-${index}`} value={slot} disabled={isFull}>
                   {slot}{availableText}{isFull ? ' - FULL' : ''}
                 </option>
               );
@@ -782,12 +948,12 @@ export default function RegistrationForm({
           <div className="mb-4">
             <h3 className="font-semibold text-gray-800 mb-2">Questions?</h3>
             <p className="text-sm text-gray-600 mb-1">
-              📧 <a href={`mailto:${CONTACT_EMAIL}`} className="text-blue-600 hover:underline">
-                {CONTACT_EMAIL}
+              📧 <a href={`mailto:${contactEmail}`} className="text-blue-600 hover:underline">
+                {contactEmail}
               </a>
             </p>
             <p className="text-sm text-gray-600 mb-1">
-              📞 {CHURCH_INFO.phone}
+              📞 {contactPhone}
             </p>
             <p className="text-sm text-gray-600">
               🌐 <a href={CHURCH_INFO.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
