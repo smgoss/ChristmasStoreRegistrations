@@ -3,6 +3,8 @@
 
 # Dependencies
 /node_modules
+**/node_modules
+amplify/functions/**/package-lock.json
 /.pnp
 .pnp.*
 .yarn/*

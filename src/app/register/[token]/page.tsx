@@ -5,14 +5,21 @@ import { useParams, useRouter } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import RegistrationForm from '@/components/RegistrationForm';
-import '@/lib/amplify';
+import { ensureAmplifyConfigured } from '@/lib/amplify';
 
-const client = generateClient<Schema>();
+let client: ReturnType<typeof generateClient<Schema>> | null = null;
+const getClient = async () => {
+  if (!client) {
+    await ensureAmplifyConfigured();
+    client = generateClient<Schema>();
+  }
+  return client;
+};
 
 export default function InviteRegistrationPage() {
   const params = useParams();
   const router = useRouter();
-  const token = params.token as string;
+  const token = params?.token as string;
   const [isValidToken, setIsValidToken] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState<string>('');
@@ -25,7 +32,7 @@ export default function InviteRegistrationPage() {
 
   const validateToken = async () => {
     try {
-      const { data: inviteLinks } = await client.models.InviteLink.list({
+      const { data: inviteLinks } = await (await getClient()).models.InviteLink.list({
         filter: { token: { eq: token } }
       });
 
@@ -50,13 +57,13 @@ export default function InviteRegistrationPage() {
 
   const markTokenAsUsed = async () => {
     try {
-      const { data: inviteLinks } = await client.models.InviteLink.list({
+      const { data: inviteLinks } = await (await getClient()).models.InviteLink.list({
         filter: { token: { eq: token } }
       });
 
       if (inviteLinks.length > 0) {
         const invite = inviteLinks[0];
-        await client.models.InviteLink.update({
+        await (await getClient()).models.InviteLink.update({
           id: invite.id,
           isUsed: true,
           usedAt: new Date().toISOString()
