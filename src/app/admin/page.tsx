@@ -113,6 +113,7 @@ interface Registration {
   phone: string;
   timeSlot: string;
   numberOfKids: number;
+  children?: Array<{ age: string; gender: 'boy' | 'girl' }>;
   referredBy?: string;
   registrationDate: string;
   attendanceConfirmed?: boolean;
@@ -131,6 +132,9 @@ interface RegistrationConfig {
   closureMessage: string;
   replyToEmail?: string;
   contactPhone?: string;
+  textingNumber?: string;
+  locationName?: string;
+  eventAddress?: string;
   updatedBy?: string;
   updatedAt?: string;
 }
@@ -1642,7 +1646,7 @@ function AdminDashboard() {
                                         newChildren.push({ age: '', gender: 'boy' });
                                       }
                                       const value = e.target.value;
-                                      newChildren[index].age = value === '<1' ? '<1' : (value ? parseInt(value) : '');
+                                      newChildren[index].age = value === '<1' ? '<1' : (value ? parseInt(value).toString() : '');
                                       setEditFormData(prev => prev ? {...prev, children: newChildren} : null);
                                     }}
                                     className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
@@ -1993,7 +1997,7 @@ function AdminDashboard() {
                         🚀 Create Time Slots
                       </button>
                       <button
-                        onClick={loadData}
+                        onClick={() => loadData()}
                         disabled={loading}
                         className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold"
                       >

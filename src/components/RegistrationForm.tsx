@@ -38,6 +38,9 @@ interface RegistrationConfig {
   closureMessage: string;
   replyToEmail?: string;
   contactPhone?: string;
+  textingNumber?: string;
+  locationName?: string;
+  eventAddress?: string;
 }
 
 interface RegistrationData {

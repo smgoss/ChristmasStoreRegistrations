@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
       
       console.log('📱 SMS mutation result:', smsResult);
       
-      if (smsResult.errors) {
+      if ('errors' in smsResult && smsResult.errors) {
         console.error('❌ SMS mutation errors:', smsResult.errors);
         return NextResponse.json(
           { error: 'Failed to send SMS', details: smsResult.errors },
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      const smsData = smsResult.data?.sendSmsConfirmation;
+      const smsData = ('data' in smsResult) ? smsResult.data?.sendSmsConfirmation : undefined;
       if (!smsData?.success) {
         console.error('❌ SMS sending failed:', smsData?.message);
         return NextResponse.json(
@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
       
       console.log('📧 Email mutation result:', emailResult);
       
-      if (emailResult.errors) {
+      if ('errors' in emailResult && emailResult.errors) {
         console.error('❌ Email mutation errors:', emailResult.errors);
         return NextResponse.json(
           { error: 'Failed to send email', details: emailResult.errors },
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
         );
       }
       
-      const emailData = emailResult.data?.sendConfirmationEmail;
+      const emailData = ('data' in emailResult) ? emailResult.data?.sendConfirmationEmail : undefined;
       if (!emailData?.success) {
         console.error('❌ Email sending failed:', emailData?.message);
         return NextResponse.json(
