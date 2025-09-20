@@ -2,10 +2,20 @@ version: 1
 applications:
   - appRoot: .
     frontend:
+      environmentVariables:
+        AMPLIFY_NODEJS_VERSION: '20'
       phases:
         preBuild:
           commands:
             - npm ci
+            # Install function dependencies
+            - cd amplify/functions/create-admin-user && npm install && cd ../../..
+            - cd amplify/functions/send-confirmation-email && npm install && cd ../../..
+            - cd amplify/functions/send-sms-confirmation && npm install && cd ../../..
+            - cd amplify/functions/send-invite-email && npm install && cd ../../..
+            - cd amplify/functions/send-attendance-confirmation && npm install && cd ../../..
+            - cd amplify/functions/reserve-registration && npm install && cd ../../..
+            - cd amplify/functions/auto-close-registration && npm install && cd ../../..
             # Set location based on branch
             - |
               if [ "$AWS_BRANCH" = "lewiston" ]; then
@@ -15,24 +25,21 @@ applications:
               elif [ "$AWS_BRANCH" = "gray" ]; then
                 export NEXT_PUBLIC_LOCATION=location3
               fi
-            # Let Amplify Gen 2 generate backend configuration automatically
-            - echo "[Backend] Using Amplify Gen 2 auto-generated configuration"
-            - cp amplify_outputs.json public/amplify_outputs.json
+            - cd amplify/functions/send-cancellation-email && npm install && cd ../../..
+            - npx ampx pipeline-deploy --debug true --branch $AWS_BRANCH --app-id $AWS_APP_ID
         build:
           commands:
-            - echo "Building Next.js for $NEXT_PUBLIC_LOCATION"
+            - echo "Checking if amplify_outputs.json was generated..."
+            - ls -la amplify_outputs.json || echo "No amplify_outputs.json found in root"
+            - echo "Copying amplify_outputs.json to public directory if it exists..."
+            - cp amplify_outputs.json public/amplify_outputs.json || echo "Could not copy amplify_outputs.json - this is expected if backend hasn't deployed yet"
             - npm run build
-            - echo "Build completed. Checking output structure:"
-            - ls -la .next/
         postBuild:
           commands:
             - chmod +x scripts/setup-waf-captcha.sh || true
             - ./scripts/setup-waf-captcha.sh || echo "[WAF] Skipped or failed; check permissions/environment"
-            # Copy public assets and static files needed for standalone mode
-            - cp -r public .next/standalone/ || echo "[Build] No public directory to copy"
-            - cp -r .next/static .next/standalone/.next/ || echo "[Build] No static directory to copy"
       artifacts:
-        baseDirectory: .next/standalone
+        baseDirectory: .next
         files:
           - "**/*"
       cache:

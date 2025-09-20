@@ -1,10 +1,14 @@
 import { defineBackend } from '@aws-amplify/backend';
+import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { sendConfirmationEmail } from './functions/send-confirmation-email/resource';
 import { sendAttendanceConfirmation } from './functions/send-attendance-confirmation/resource';
 import { reserveRegistration } from './functions/reserve-registration/resource';
 import { autoCloseRegistration } from './functions/auto-close-registration/resource';
+import { createAdminUser } from './functions/create-admin-user/resource';
+import { sendInviteEmail } from './functions/send-invite-email/resource';
+import { sendSmsConfirmation } from './functions/send-sms-confirmation/resource';
 
 export const backend = defineBackend({
   auth,
@@ -13,4 +17,35 @@ export const backend = defineBackend({
   sendAttendanceConfirmation,
   reserveRegistration,
   autoCloseRegistration,
+  createAdminUser,
+  sendInviteEmail,
+  sendSmsConfirmation,
+});
+
+// Grant the createAdminUser function access to Cognito User Pool
+backend.createAdminUser.addEnvironment('AMPLIFY_AUTH_USERPOOL_ID', backend.auth.resources.userPool.userPoolId);
+backend.createAdminUser.resources.lambda.addToRolePolicy(
+  new PolicyStatement({
+    effect: Effect.ALLOW,
+    actions: [
+      'cognito-idp:AdminCreateUser',
+      'cognito-idp:AdminAddUserToGroup', 
+      'cognito-idp:CreateGroup'
+    ],
+    resources: [backend.auth.resources.userPool.userPoolArn]
+  })
+);
+
+// Grant email functions access to SES
+[backend.sendConfirmationEmail, backend.sendAttendanceConfirmation, backend.sendInviteEmail].forEach(emailFunction => {
+  emailFunction.resources.lambda.addToRolePolicy(
+    new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: [
+        'ses:SendEmail',
+        'ses:SendRawEmail'
+      ],
+      resources: ['*']
+    })
+  );
 });

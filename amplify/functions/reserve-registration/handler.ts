@@ -10,7 +10,6 @@ interface RegistrationInput {
   phone: string;
   numberOfKids: number;
   timeSlot: string;
-  needsChildcare: boolean;
   referredBy?: string;
   inviteToken?: string;
   children?: Array<{ age: string | number; gender: 'boy' | 'girl' }>;
@@ -67,7 +66,7 @@ export const handler = async (event: AppSyncResolverEvent<{ input: RegistrationI
               phone: { S: input.phone },
               numberOfKids: { N: String(input.numberOfKids) },
               timeSlot: { S: input.timeSlot },
-              needsChildcare: { BOOL: !!input.needsChildcare },
+              needsChildcare: { BOOL: false }, // Temporary: until schema migration completes
               referredBy: input.referredBy ? { S: input.referredBy } : { NULL: true },
               inviteToken: input.inviteToken ? { S: input.inviteToken } : { NULL: true },
               registrationDate: { S: now },

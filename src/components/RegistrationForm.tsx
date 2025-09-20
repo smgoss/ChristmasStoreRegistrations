@@ -5,6 +5,7 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { useLocationConfig } from '../hooks/useLocationConfig';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
+import '../styles/christmas-theme.css';
 
 // Lazy client initialization with retry mechanism
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
@@ -42,9 +43,12 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
+  streetAddress: string;
+  zipCode: string;
+  city: string;
+  state: string;
   numberOfKids: number;
   timeSlot: string;
-  needsChildcare: boolean;
   referredBy: string;
   children: Child[];
 }
@@ -64,22 +68,26 @@ export default function RegistrationForm({
 }: RegistrationFormProps = {}) {
   const locationConfig = useLocationConfig();
   const { 
-    timeSlots: TIME_SLOTS, 
     locationName: LOCATION_NAME,
     locationAddress: LOCATION_ADDRESS,
     branding: BRANDING,
     churchInfo: CHURCH_INFO,
     contactEmail: CONTACT_EMAIL 
   } = locationConfig;
+  
+  const [timeSlots, setTimeSlots] = useState<string[]>([]);
 
   const [formData, setFormData] = useState<RegistrationData>({
     firstName: '',
     lastName: '',
     email: prefillEmail || '',
     phone: '',
+    streetAddress: '',
+    zipCode: '',
+    city: '',
+    state: '',
     numberOfKids: 0,
     timeSlot: '',
-    needsChildcare: false,
     referredBy: '',
     children: []
   });
@@ -87,6 +95,8 @@ export default function RegistrationForm({
   const [timeSlotCapacities, setTimeSlotCapacities] = useState<Record<string, { max: number; current: number }>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [zipLookupLoading, setZipLookupLoading] = useState(false);
+  const [cityOptions, setCityOptions] = useState<Array<{city: string, state: string}>>([]);
   const [submitted, setSubmitted] = useState(false);
   const [registrationConfig, setRegistrationConfig] = useState<RegistrationConfig | null>(null);
   const [configLoading, setConfigLoading] = useState(true);
@@ -136,6 +146,11 @@ export default function RegistrationForm({
     setFormData(prev => ({ ...prev, children: newChildren }));
   }, [formData.numberOfKids]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    // Load time slots from database on component mount
+    loadTimeSlotCapacities();
+  }, []);
+
   const loadTimeSlotCapacities = async () => {
     try {
       // Load time slot configurations
@@ -146,21 +161,87 @@ export default function RegistrationForm({
       const { data: registrationData } = await client.models.Registration.list();
       
       const capacities: Record<string, { max: number; current: number }> = {};
+      const activeTimeSlots: string[] = [];
       
       timeSlotData.forEach(config => {
-        // Calculate actual registration count for this time slot
-        const actualCount = registrationData ? 
-          registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
-        
-        capacities[config.timeSlot] = {
-          max: config.maxCapacity || 0,
-          current: actualCount
-        };
+        // Only include active time slots
+        if (config.isActive) {
+          activeTimeSlots.push(config.timeSlot);
+          
+          // Calculate actual registration count for this time slot
+          const actualCount = registrationData ? 
+            registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
+          
+          capacities[config.timeSlot] = {
+            max: config.maxCapacity || 0,
+            current: actualCount
+          };
+        }
       });
       
+      // Sort time slots chronologically (earliest to latest)
+      activeTimeSlots.sort((a, b) => {
+        // Convert time strings like "09:00" to comparable numbers
+        const timeA = a.split(':').map(Number);
+        const timeB = b.split(':').map(Number);
+        
+        // Compare hours first, then minutes
+        if (timeA[0] !== timeB[0]) {
+          return timeA[0] - timeB[0];
+        }
+        return timeA[1] - timeB[1];
+      });
+      
+      setTimeSlots(activeTimeSlots);
       setTimeSlotCapacities(capacities);
     } catch (error) {
       console.error('Error loading time slot capacities:', error);
+    }
+  };
+
+  const lookupZipCode = async (zipCode: string) => {
+    if (!zipCode || zipCode.length < 5) {
+      setCityOptions([]);
+      return;
+    }
+
+    setZipLookupLoading(true);
+    try {
+      const response = await fetch(`/api/lookup-zip?zip=${zipCode}`);
+      if (response.ok) {
+        const data = await response.json();
+        const options = data.results.map((result: any) => ({
+          city: result.city,
+          state: result.stateAbbreviation
+        }));
+        setCityOptions(options);
+        
+        // Auto-fill if there's only one option
+        if (options.length === 1) {
+          setFormData(prev => ({
+            ...prev,
+            city: options[0].city,
+            state: options[0].state
+          }));
+        } else {
+          // Clear city/state if multiple options, let user choose
+          setFormData(prev => ({
+            ...prev,
+            city: '',
+            state: ''
+          }));
+        }
+      } else {
+        setCityOptions([]);
+        if (response.status === 404) {
+          setErrors(prev => ({ ...prev, zipCode: 'Zip code not found' }));
+        }
+      }
+    } catch (error) {
+      console.error('Zip code lookup failed:', error);
+      setCityOptions([]);
+    } finally {
+      setZipLookupLoading(false);
     }
   };
 
@@ -214,7 +295,16 @@ export default function RegistrationForm({
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
     if (!formData.email.trim()) newErrors.email = 'Email is required';
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!formData.streetAddress.trim()) newErrors.streetAddress = 'Street address is required';
+    if (!formData.zipCode.trim()) newErrors.zipCode = 'Zip code is required';
+    if (!formData.city.trim()) newErrors.city = 'City is required';
+    if (!formData.state.trim()) newErrors.state = 'State is required';
     if (!formData.timeSlot) newErrors.timeSlot = 'Please select a time slot';
+    
+    // Validate zip code format
+    if (formData.zipCode && !/^\d{5}(-\d{4})?$/.test(formData.zipCode)) {
+      newErrors.zipCode = 'Please enter a valid zip code (e.g., 12345 or 12345-6789)';
+    }
     
     if (formData.numberOfKids < 0) {
       newErrors.numberOfKids = 'Number of kids cannot be negative';
@@ -316,7 +406,6 @@ export default function RegistrationForm({
             <p className="text-gray-900"><strong>Email:</strong> {formData.email}</p>
             <p className="text-gray-900"><strong>Time Slot:</strong> {formData.timeSlot}</p>
             <p className="text-gray-900"><strong>Number of Children:</strong> {formData.numberOfKids}</p>
-            {formData.needsChildcare && <p className="text-gray-900"><strong>Childcare:</strong> Yes</p>}
           </div>
         </div>
       </div>
@@ -379,17 +468,20 @@ export default function RegistrationForm({
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <div className="text-center mb-8">
-        <div className="text-6xl mb-4">{BRANDING.locationEmoji}</div>
-        <h1 className="text-3xl font-bold mb-2" style={{ color: BRANDING.primaryColor }}>
-          Christmas Store Registration
-        </h1>
-        <h2 className="text-xl font-semibold mb-2" style={{ color: BRANDING.secondaryColor }}>
-          {LOCATION_NAME}
-        </h2>
-        <p className="text-gray-600">{LOCATION_ADDRESS}</p>
-      </div>
+    <div className="christmas-container">
+      <div className="christmas-card fade-in">
+        <div className="christmas-header">
+          <span className="christmas-emoji">{BRANDING.locationEmoji}</span>
+          <h1 className="christmas-title">
+            🎄 Christmas Store Registration 🎁
+          </h1>
+          <h2 className="christmas-subtitle">
+            {LOCATION_NAME}
+          </h2>
+          <p className="christmas-location">{LOCATION_ADDRESS}</p>
+        </div>
+        
+        <div className="christmas-content">
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {errors.submit && (
@@ -456,6 +548,114 @@ export default function RegistrationForm({
             required
           />
           {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">
+            Address Information
+          </h3>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Street Address *
+            </label>
+            <input
+              type="text"
+              value={formData.streetAddress}
+              onChange={(e) => setFormData(prev => ({ ...prev, streetAddress: e.target.value }))}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+              placeholder="123 Main Street"
+              required
+            />
+            {errors.streetAddress && <p className="text-red-500 text-sm mt-1">{errors.streetAddress}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Zip Code *
+              </label>
+              <input
+                type="text"
+                value={formData.zipCode}
+                onChange={(e) => {
+                  const zipCode = e.target.value;
+                  setFormData(prev => ({ ...prev, zipCode }));
+                  // Clear previous zip code error
+                  if (errors.zipCode) {
+                    setErrors(prev => ({ ...prev, zipCode: '' }));
+                  }
+                  // Trigger lookup when zip code is 5 digits
+                  if (zipCode.length === 5) {
+                    lookupZipCode(zipCode);
+                  }
+                }}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                placeholder="12345"
+                maxLength={10}
+                required
+              />
+              {zipLookupLoading && (
+                <p className="text-blue-500 text-sm mt-1">Looking up zip code...</p>
+              )}
+              {errors.zipCode && <p className="text-red-500 text-sm mt-1">{errors.zipCode}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                City *
+              </label>
+              {cityOptions.length > 1 ? (
+                <select
+                  value={formData.city}
+                  onChange={(e) => {
+                    const selectedOption = cityOptions.find(opt => opt.city === e.target.value);
+                    setFormData(prev => ({
+                      ...prev,
+                      city: e.target.value,
+                      state: selectedOption?.state || prev.state
+                    }));
+                  }}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  required
+                >
+                  <option value="">Select city...</option>
+                  {cityOptions.map((option, index) => (
+                    <option key={index} value={option.city}>
+                      {option.city}, {option.state}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  placeholder="City"
+                  required
+                />
+              )}
+              {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                State *
+              </label>
+              <input
+                type="text"
+                value={formData.state}
+                onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                placeholder="State"
+                maxLength={2}
+                required
+                readOnly={cityOptions.length > 0}
+              />
+              {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+            </div>
+          </div>
         </div>
 
         <div>
@@ -540,7 +740,7 @@ export default function RegistrationForm({
             required
           >
             <option value="">Select a time slot</option>
-            {TIME_SLOTS.map(slot => {
+            {timeSlots.map(slot => {
               const capacity = timeSlotCapacities[slot];
               const isFull = capacity && capacity.current >= capacity.max;
               const availableText = capacity ? ` (${capacity.current}/${capacity.max} registered)` : '';
@@ -555,19 +755,6 @@ export default function RegistrationForm({
           {errors.timeSlot && <p className="text-red-500 text-sm mt-1">{errors.timeSlot}</p>}
         </div>
 
-        <div>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              checked={formData.needsChildcare}
-              onChange={(e) => setFormData(prev => ({ ...prev, needsChildcare: e.target.checked }))}
-              className="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50"
-            />
-            <span className="text-sm font-medium text-gray-700">
-              I need childcare during my shopping time
-            </span>
-          </label>
-        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -613,6 +800,8 @@ export default function RegistrationForm({
           </p>
         </div>
       </form>
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,403 @@
+/* Modern Christmas Theme Design System */
+
+:root {
+  /* Christmas Colors - Matte Style */
+  --christmas-red: #b91c1c;
+  --christmas-green: #059669;
+  --christmas-dark-green: #047857;
+  --christmas-light-red: #dc2626;
+  --christmas-white: #ffffff;
+  --christmas-cream: #faf9f7;
+  --christmas-silver: #6b7280;
+  
+  /* Modern Gradients */
+  --gradient-festive: linear-gradient(135deg, var(--christmas-red), var(--christmas-green));
+  --gradient-winter: linear-gradient(135deg, var(--christmas-green), var(--christmas-dark-green));
+  --gradient-cozy: linear-gradient(135deg, var(--christmas-dark-green), var(--christmas-red));
+  
+  /* Shadows */
+  --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-medium: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-large: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+}
+
+/* Base Styles */
+.christmas-container {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: var(--space-md);
+}
+
+.christmas-card {
+  background: var(--christmas-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-large);
+  overflow: hidden;
+  position: relative;
+}
+
+.christmas-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-festive);
+}
+
+/* Headers */
+.christmas-header {
+  background: var(--gradient-festive);
+  color: var(--christmas-white);
+  text-align: center;
+  padding: var(--space-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Removed scrolling sparkle animation per user request */
+
+.christmas-emoji {
+  font-size: 3rem;
+  margin-bottom: var(--space-sm);
+  display: block;
+  filter: drop-shadow(0 2px 4px rgb(0 0 0 / 0.1));
+}
+
+.christmas-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-sm) 0;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+}
+
+.christmas-subtitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-xs) 0;
+  opacity: 0.95;
+}
+
+.christmas-location {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Content Areas */
+.christmas-content {
+  padding: var(--space-xl);
+}
+
+.christmas-section {
+  margin-bottom: var(--space-lg);
+}
+
+.christmas-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--christmas-green);
+  margin: 0 0 var(--space-md) 0;
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid #ecfdf5;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* Form Elements */
+.christmas-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.christmas-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .christmas-form-grid.two-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .christmas-form-grid.three-columns {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.christmas-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.christmas-label {
+  font-weight: 500;
+  color: var(--christmas-green);
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+}
+
+.christmas-input, .christmas-select {
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: var(--christmas-white);
+}
+
+.christmas-input:focus, .christmas-select:focus {
+  outline: none;
+  border-color: var(--christmas-red);
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 0.1);
+  transform: translateY(-1px);
+}
+
+.christmas-input::placeholder {
+  color: var(--christmas-silver);
+}
+
+/* Buttons */
+.christmas-button {
+  background: var(--gradient-festive);
+  color: var(--christmas-white);
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  overflow: hidden;
+}
+
+.christmas-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-large);
+}
+
+.christmas-button:active {
+  transform: translateY(0);
+}
+
+.christmas-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.christmas-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
+}
+
+.christmas-button:hover::before {
+  left: 100%;
+}
+
+/* Status Messages */
+.christmas-alert {
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  margin-bottom: var(--space-md);
+}
+
+.christmas-alert.error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.christmas-alert.success {
+  background: #f0fdf4;
+  color: var(--christmas-green);
+  border: 1px solid #bbf7d0;
+}
+
+.christmas-alert.info {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.christmas-alert.warning {
+  background: #fffbeb;
+  color: var(--christmas-gold);
+  border: 1px solid #fed7aa;
+}
+
+/* Loading States */
+.christmas-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--christmas-green);
+  font-size: 0.875rem;
+}
+
+.christmas-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid var(--christmas-green);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Highlight Boxes */
+.christmas-highlight {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  border: 1px solid #f59e0b;
+  margin: var(--space-md) 0;
+  position: relative;
+}
+
+.christmas-highlight::before {
+  content: '🎁';
+  position: absolute;
+  top: -0.5rem;
+  left: var(--space-md);
+  background: var(--christmas-white);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 1.25rem;
+}
+
+/* Lists */
+.christmas-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.christmas-list li {
+  padding: var(--space-xs) 0;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.christmas-list li:last-child {
+  border-bottom: none;
+}
+
+/* Footer */
+.christmas-footer {
+  background: #f9fafb;
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--christmas-silver);
+  font-size: 0.875rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.christmas-footer-emoji {
+  font-size: 1.5rem;
+  margin: 0 var(--space-xs);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .christmas-container {
+    padding: var(--space-sm);
+  }
+  
+  .christmas-header {
+    padding: var(--space-lg);
+  }
+  
+  .christmas-content {
+    padding: var(--space-lg);
+  }
+  
+  .christmas-title {
+    font-size: 1.75rem;
+  }
+  
+  .christmas-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(1rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-1rem); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Success Celebration */
+.christmas-success {
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.christmas-success-emoji {
+  font-size: 4rem;
+  margin-bottom: var(--space-md);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+.christmas-success-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--christmas-green);
+  margin-bottom: var(--space-sm);
+}
+
+.christmas-success-message {
+  color: var(--christmas-silver);
+  line-height: 1.6;
+}
