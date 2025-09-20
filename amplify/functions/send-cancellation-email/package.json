@@ -1,5 +1,5 @@
 {
-  "name": "send-confirmation-email",
+  "name": "send-cancellation-email",
   "version": "1.0.0",
   "type": "module",
   "dependencies": {

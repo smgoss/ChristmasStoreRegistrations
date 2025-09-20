@@ -38,7 +38,6 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     console.log('📋 AWS_AMPLIFY_IDENTIFIER:', process.env.AWS_AMPLIFY_IDENTIFIER);
     console.log('📋 AMPLIFY_IDENTIFIER:', process.env.AMPLIFY_IDENTIFIER);
     console.log('📋 AWS_AMPLIFY_APPID:', process.env.AWS_AMPLIFY_APPID);
-    console.log('📋 All env vars:', Object.keys(process.env).filter(k => k.includes('AMPLIFY')));
     
     const command = new ScanCommand({
       TableName: tableName,
@@ -88,8 +87,6 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
             };
             
             console.log('📋 Retrieved config from correct table:', JSON.stringify(config, null, 2));
-            console.log('📋 Final locationName:', config.locationName);
-            console.log('📋 Final eventAddress:', config.eventAddress);
             return config;
           }
         }
@@ -108,8 +105,6 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     };
     
     console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
-    console.log('📋 Final locationName:', config.locationName);
-    console.log('📋 Final eventAddress:', config.eventAddress);
     return config;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
@@ -119,26 +114,25 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
 
 export const handler: Handler = async (event: any) => {
   try {
-    console.log('📱 Sending Email confirmation:', event);
+    console.log('📧 Sending cancellation email:', event);
     
     const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
 
     // Fetch location config from database
     const config = await getRegistrationConfig();
     console.log('🎯 Config retrieved in handler:', JSON.stringify(config, null, 2));
-    console.log('🎯 Config locationName:', config.locationName);
-    console.log('🎯 Config eventAddress:', config.eventAddress);
-    const emailContent = generateEmailContent(registration, config);
+    
+    const emailContent = generateCancellationEmailContent(registration, config);
 
     const command = new SendEmailCommand({
       Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
-      ReplyToAddresses: ['office@pathwayvineyard.com'],
+      ReplyToAddresses: [config.replyToEmail || 'office@pathwayvineyard.com'],
       Destination: {
         ToAddresses: [registration.email],
       },
       Message: {
         Subject: {
-          Data: '🎄 Christmas Store Registration Confirmed - ' + registration.timeSlot,
+          Data: '🚫 Christmas Store Registration Cancelled - ' + registration.timeSlot,
           Charset: 'UTF-8',
         },
         Body: {
@@ -150,35 +144,22 @@ export const handler: Handler = async (event: any) => {
       },
     });
 
-    console.log('📤 About to send email via SES...');
+    console.log('📤 About to send cancellation email via SES...');
     const result = await ses.send(command);
     console.log('✅ SES send result:', result);
-    
-    // Update registration with successful email delivery status
-    if (registrationId) {
-      // Note: Would need to import and configure DynamoDB client to update the registration
-      console.log('✅ Email sent successfully, MessageId:', result.MessageId);
-      // TODO: Update registration record with emailDeliveryStatus: 'sent', emailDeliveryAttemptedAt: now
-    }
 
-    console.log('🎉 Email confirmation completed successfully');
+    console.log('🎉 Cancellation email completed successfully');
     return {
       success: true,
-      message: 'Confirmation email sent successfully',
+      message: 'Cancellation email sent successfully',
       messageId: result.MessageId,
     };
   } catch (error) {
-    console.error('Error sending confirmation email:', error);
-    
-    // Update registration with failed email delivery status
-    if (event.arguments?.registrationId || event.registrationId) {
-      console.log('❌ Email delivery failed, updating status');
-      // TODO: Update registration record with emailDeliveryStatus: 'failed', emailFailureReason: error.message
-    }
+    console.error('Error sending cancellation email:', error);
     
     return {
       success: false,
-      message: 'Failed to send confirmation email',
+      message: 'Failed to send cancellation email',
       error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
@@ -229,8 +210,8 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-function generateEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
-  console.log('📧 generateEmailContent called with config:', JSON.stringify(config, null, 2));
+function generateCancellationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
+  console.log('📧 generateCancellationEmailContent called with config:', JSON.stringify(config, null, 2));
   
   // Get location config from database with fallbacks to environment variables and defaults
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
@@ -244,8 +225,6 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
   console.log('📧 Using locationName:', locationName);
   console.log('📧 Using locationAddress:', locationAddress);
   console.log('📧 Using contactEmail:', contactEmail);
-  console.log('📧 config.locationName was:', config.locationName);
-  console.log('📧 config.eventAddress was:', config.eventAddress);
   
   // Format phone number for display (remove +1 if present)
   const displayPhone = formatPhoneForDisplay(registration.phone);
@@ -286,7 +265,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Christmas Store Registration Confirmation - ${locationName}</title>
+      <title>Christmas Store Registration Cancelled - ${locationName}</title>
       <style>
         body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { 
@@ -325,18 +304,19 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
           display: block; 
           filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.8)); 
         }
-        .content { background-color: #f9fafb; padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .content { background-color: #fef2f2; padding: 20px; margin: 20px 0; border-radius: 5px; border: 1px solid #fecaca; }
         .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 20px; }
-        .highlight { background-color: #fef3c7; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .highlight { background-color: #fee2e2; padding: 15px; border-radius: 5px; margin: 15px 0; border: 1px solid #fca5a5; }
         ul { list-style-type: none; padding-left: 0; }
         li { margin: 5px 0; }
         .church-info { background-color: #e8f4fd; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .important-notice { background-color: #fef3c7; padding: 15px; border-radius: 5px; margin: 15px 0; border: 1px solid #fbbf24; }
       </style>
     </head>
     <body>
       <div class="header">
         ${locationEmoji ? `<span class="emoji">${locationEmoji}</span>` : ''}
-        <h1>🎄 Christmas Store Registration Confirmed! 🎁</h1>
+        <h1>🚫 Christmas Store Registration Cancelled</h1>
         <h2>${locationName}</h2>
         <p>${locationAddress}</p>
         <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Friday, December 6th, 2025</p>
@@ -345,10 +325,10 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
       <div class="content">
         <h2>Dear ${registration.firstName} ${registration.lastName},</h2>
         
-        <p>Thank you for registering for the Christmas Store event! Your registration has been confirmed.</p>
+        <p>We're writing to confirm that your Christmas Store registration has been <strong>cancelled</strong> as requested.</p>
         
         <div class="highlight">
-          <h3>📋 Registration Details:</h3>
+          <h3>📋 Cancelled Registration Details:</h3>
           <ul>
             <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
             <li><strong>Email:</strong> ${registration.email}</li>
@@ -367,17 +347,9 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
           ` : ''}
         </div>
         
-        <h3>📍 Important Information:</h3>
-        <ul>
-          <li><strong>Event Date:</strong> Friday, December 6th, 2025</li>
-          <li><strong>Your Time Slot:</strong> ${displayTimeSlot}</li>
-          <li><strong>Location:</strong> ${locationAddress}</li>
-          <li>Please contact the office if you need to change or cancel your registration.</li>
-        </ul>
+        <p>If you cancelled by mistake or need to register again, please contact us as soon as possible. We may be able to help you secure another time slot if available.</p>
         
-        <p>If you need to make any changes to your registration or have questions, please contact us as soon as possible.</p>
-        
-        <p>We look forward to seeing you at the Christmas Store!</p>
+        <p>We're sorry we won't be seeing you at this year's Christmas Store. We hope you'll consider joining us next year!</p>
         
         <p>Warm regards,<br>The Pathway Christmas Store Team<br>${locationName}</p>
       </div>
@@ -390,7 +362,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
       </div>
       
       <div class="footer">
-        <p>This is an automated confirmation email. Please do not reply to this message.</p>
+        <p>This is an automated cancellation confirmation email. If you have questions, please contact us using the information above.</p>
       </div>
     </body>
     </html>

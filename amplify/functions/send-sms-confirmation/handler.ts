@@ -1,4 +1,5 @@
 import type { Handler } from 'aws-lambda';
+import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
 interface RegistrationData {
   firstName: string;
   lastName: string;
@@ -19,7 +20,7 @@ export const handler: Handler = async (event: any) => {
   try {
     console.log('📱 Sending SMS confirmation:', event);
     
-    const { registration }: { registration: RegistrationData } = event.arguments || event;
+    const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
     
     if (!registration.phone) {
       console.log('ℹ️ No phone number provided, skipping SMS');
@@ -38,22 +39,45 @@ export const handler: Handler = async (event: any) => {
     
     if (response.success) {
       console.log('✅ SMS confirmation sent successfully');
+      
+      // Update registration with successful SMS delivery status
+      if (registrationId) {
+        console.log('✅ SMS sent successfully for registration:', registrationId);
+        // TODO: Update registration record with smsDeliveryStatus: 'sent', smsDeliveryAttemptedAt: now
+      }
+      
       return {
         success: true,
         message: 'SMS confirmation sent successfully'
       };
     } else {
       console.error('❌ Failed to send SMS:', response.error);
+      
+      // Update registration with failed SMS delivery status
+      if (registrationId) {
+        console.log('❌ SMS delivery failed for registration:', registrationId);
+        // TODO: Update registration record with smsDeliveryStatus: 'failed', smsFailureReason: response.error
+      }
+      
       return {
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: response.error
       };
     }
   } catch (error) {
     console.error('❌ Error in SMS confirmation handler:', error);
+    
+    // Update registration with failed SMS delivery status
+    if (event.arguments?.registrationId || event.registrationId) {
+      console.log('❌ SMS delivery failed with exception');
+      // TODO: Update registration record with smsDeliveryStatus: 'failed', smsFailureReason: error.message
+    }
+    
     return {
       success: false,
-      message: 'Error sending SMS confirmation'
+      message: 'Error sending SMS confirmation',
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 };
@@ -62,7 +86,7 @@ function cleanPhoneNumber(phone: string): string {
   // Remove all non-numeric characters
   const digits = phone.replace(/\D/g, '');
   
-  // Add +1 if it's a 10-digit US number
+  // Add +1 if it's a 10-digit US number (this is the standard case now)
   if (digits.length === 10) {
     return `+1${digits}`;
   }
@@ -72,38 +96,116 @@ function cleanPhoneNumber(phone: string): string {
     return `+${digits}`;
   }
   
-  return phone; // Return as-is if already formatted
+  // If it already has +1, return as-is
+  if (phone.startsWith('+1') && phone.replace(/\D/g, '').length === 11) {
+    return phone;
+  }
+  
+  // For any 10-digit number, add +1
+  if (digits.length === 10) {
+    return `+1${digits}`;
+  }
+  
+  return `+1${digits}`; // Default to adding +1 for US numbers
+}
+
+function formatTimeSlot(timeSlot: string): string {
+  // Handle formats like "09:30" -> "9:30 AM" or "13:30" -> "1:30 PM"
+  const timeParts = timeSlot.split(':');
+  if (timeParts.length === 2) {
+    let hour = parseInt(timeParts[0], 10);
+    const minute = timeParts[1];
+    
+    if (hour === 0) {
+      return `12:${minute} AM`;
+    } else if (hour < 12) {
+      return `${hour}:${minute} AM`;
+    } else if (hour === 12) {
+      return `12:${minute} PM`;
+    } else {
+      return `${hour - 12}:${minute} PM`;
+    }
+  }
+  
+  // If not in expected format, return as-is
+  return timeSlot;
 }
 
 function generateSmsContent(registration: RegistrationData): string {
+  const displayTimeSlot = formatTimeSlot(registration.timeSlot);
+  
   return `🎄 Christmas Store Registration Confirmed!
 
 Hello ${registration.firstName}!
 
 Your registration is confirmed for:
-Time: ${registration.timeSlot} AM
-Children: ${registration.numberOfKids}
+📅 Friday, December 6th, 2025
+🕘 Time: ${displayTimeSlot}
+📍 Location: 12 Foss Road, Lewiston, ME 04256
+👶 Children: ${registration.numberOfKids}
 
 We look forward to seeing you!
 
-Questions? Reply to this message or call the office.
+Questions? Call (208) 746-9089 or reply to this message.
 
-- Pathway Christmas Store Team`;
+- Pathway Vineyard Christmas Store`;
 }
 
 async function sendClearstreamSms(phone: string, message: string) {
   try {
-    // Get API key from environment variable (populated by Amplify secret)
-    const apiKey = process.env.CLEAR_STREAM_API_KEY;
     const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
+    
+    // Try environment variable first
+    let apiKey = process.env.CLEAR_STREAM_API_KEY;
+    console.log('Environment variable API key:', JSON.stringify(apiKey?.substring(0, 10)));
+    
+    // If environment variable doesn't work, try getting from Secrets Manager directly
+    if (!apiKey || apiKey.includes('<value')) {
+      console.log('Environment variable failed, trying Secrets Manager...');
+      const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
+      
+      try {
+        const secretName = `amplify-${process.env.AWS_AMPLIFY_IDENTIFIER || 'christmasstoreregistration'}-CLEAR_STREAM_API_KEY`;
+        console.log('Trying secret name:', secretName);
+        
+        const command = new GetSecretValueCommand({ SecretId: secretName });
+        const result = await secretsClient.send(command);
+        apiKey = result.SecretString;
+        console.log('Secrets Manager API key:', JSON.stringify(apiKey?.substring(0, 10)));
+      } catch (secretError) {
+        console.error('Secrets Manager error:', secretError);
+        // Try alternative secret name format
+        try {
+          const alternativeSecretName = `CLEAR_STREAM_API_KEY`;
+          console.log('Trying alternative secret name:', alternativeSecretName);
+          const altCommand = new GetSecretValueCommand({ SecretId: alternativeSecretName });
+          const altResult = await secretsClient.send(altCommand);
+          apiKey = altResult.SecretString;
+          console.log('Alternative Secrets Manager API key:', JSON.stringify(apiKey?.substring(0, 10)));
+        } catch (altError) {
+          console.error('Alternative Secrets Manager error:', altError);
+        }
+      }
+    }
     
     console.log('Environment variables check:');
     console.log('CLEARSTREAM_TEXT_HEADER:', textHeader);
     console.log('CLEAR_STREAM_API_KEY exists:', !!apiKey);
+    console.log('API Key length:', apiKey?.length);
+    console.log('API Key type:', typeof apiKey);
+    console.log('Final API Key first 10 chars:', JSON.stringify(apiKey?.substring(0, 10)));
     
-    if (!apiKey) {
+    // Log the exact body being sent to Clearstream
+    const requestBody = new URLSearchParams({
+      to: phone,
+      text_header: textHeader,
+      text_body: message,
+    });
+    console.log('Clearstream request body:', requestBody.toString());
+    
+    if (!apiKey || apiKey.includes('<value')) {
       console.error('Available environment variables:', Object.keys(process.env));
-      throw new Error('CLEAR_STREAM_API_KEY environment variable not found');
+      throw new Error('CLEAR_STREAM_API_KEY not found in environment or Secrets Manager');
     }
     
     const response = await fetch('https://api.getclearstream.com/v1/texts', {

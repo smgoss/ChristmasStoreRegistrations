@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { createErrorResponse, createSuccessResponse, applyRateLimit } from '@/lib/api-utils';
 
 interface ZipCodeResult {
   zipCode: string;
@@ -10,19 +12,29 @@ interface ZipCodeResult {
   longitude: number;
 }
 
+const ZipCodeSchema = z.object({
+  zip: z.string().regex(/^\d{5}(-\d{4})?$/, 'Invalid zip code format')
+});
+
 export async function GET(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResponse = applyRateLimit(request, 30, 60000); // More generous for lookups
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
     const { searchParams } = new URL(request.url);
     const zipCode = searchParams.get('zip');
 
     if (!zipCode) {
-      return NextResponse.json({ error: 'Zip code is required' }, { status: 400 });
+      return createErrorResponse('Zip code is required', 'MISSING_ZIP', 400);
     }
 
-    // Validate zip code format (5 digits or 5+4 format)
-    const zipRegex = /^\d{5}(-\d{4})?$/;
-    if (!zipRegex.test(zipCode)) {
-      return NextResponse.json({ error: 'Invalid zip code format' }, { status: 400 });
+    // Validate zip code format
+    const validation = ZipCodeSchema.safeParse({ zip: zipCode });
+    if (!validation.success) {
+      return createErrorResponse('Invalid zip code format', 'INVALID_ZIP_FORMAT', 400, validation.error.flatten());
     }
 
     // Use the free Zippopotam.us API for zip code lookup
@@ -30,7 +42,7 @@ export async function GET(request: NextRequest) {
     
     if (!response.ok) {
       if (response.status === 404) {
-        return NextResponse.json({ error: 'Zip code not found' }, { status: 404 });
+        return createErrorResponse('Zip code not found', 'ZIP_NOT_FOUND', 404);
       }
       throw new Error(`Zip code lookup failed: ${response.status}`);
     }
@@ -48,7 +60,7 @@ export async function GET(request: NextRequest) {
       longitude: parseFloat(place['longitude'])
     }));
 
-    return NextResponse.json({
+    return createSuccessResponse({
       zipCode: data['post code'],
       country: data.country,
       results
@@ -56,9 +68,6 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Zip code lookup error:', error);
-    return NextResponse.json(
-      { error: 'Failed to lookup zip code' }, 
-      { status: 500 }
-    );
+    return createErrorResponse('Failed to lookup zip code', 'LOOKUP_FAILED', 500, error instanceof Error ? error.message : 'Unknown error');
   }
 }
