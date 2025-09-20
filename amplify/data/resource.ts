@@ -1,6 +1,8 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 import { sendSmsConfirmation } from '../functions/send-sms-confirmation/resource';
 import { sendConfirmationEmail } from '../functions/send-confirmation-email/resource';
+import { sendInviteEmail } from '../functions/send-invite-email/resource';
+import { sendCancellationEmail } from '../functions/send-cancellation-email/resource';
 
 const schema = a.schema({
   Registration: a
@@ -42,6 +44,14 @@ const schema = a.schema({
       isCancelled: a.boolean().default(false),
       cancelledAt: a.datetime(),
       confirmationToken: a.string(), // Unique token for confirmation links
+      
+      // Email/SMS delivery status tracking - temporarily disabled for deployment
+      // emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
+      // emailDeliveryAttemptedAt: a.datetime(),
+      // emailFailureReason: a.string(),
+      // smsDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed']),
+      // smsDeliveryAttemptedAt: a.datetime(),
+      // smsFailureReason: a.string(),
     })
     .authorization((allow) => [
       // Public can read and create registrations (server route handles validation)
@@ -70,7 +80,7 @@ const schema = a.schema({
       isActive: a.boolean().default(true),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
+      allow.publicApiKey().to(['read', 'create', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   
@@ -81,9 +91,14 @@ const schema = a.schema({
       isUsed: a.boolean().default(false),
       createdAt: a.datetime(),
       usedAt: a.datetime(),
+      
+      // Email delivery status tracking for invite emails - temporarily disabled for deployment
+      // emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
+      // emailDeliveryAttemptedAt: a.datetime(),
+      // emailFailureReason: a.string(),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read', 'update']),
+      allow.publicApiKey().to(['read', 'create', 'update', 'delete']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
 
@@ -95,6 +110,11 @@ const schema = a.schema({
       scheduledCloseDate: a.datetime(),
       autoCloseEnabled: a.boolean().default(false),
       closureMessage: a.string().default('Registration is currently closed. Please check back later.'),
+      replyToEmail: a.string().default('office@pathwayvineyard.com'),
+      contactPhone: a.string().default('(208) 746-9089'),
+      textingNumber: a.string().default('(208) 746-9089'),
+      locationName: a.string().default('Christmas Store'),
+      eventAddress: a.string().default(''),
       updatedBy: a.string(),
       updatedAt: a.datetime(),
     })
@@ -153,6 +173,51 @@ const schema = a.schema({
     }))
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendConfirmationEmail)),
+
+  sendInviteEmail: a
+    .mutation()
+    .arguments({
+      invite: a.customType({
+        email: a.string().required(),
+        token: a.string().required(),
+        inviteUrl: a.string().required(),
+      }),
+      inviteId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+      messageId: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendInviteEmail)),
+
+  sendCancellationEmail: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        streetAddress: a.string().required(),
+        zipCode: a.string().required(),
+        city: a.string().required(),
+        state: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        referredBy: a.string(),
+        children: a.json(),
+      }),
+      registrationId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+      messageId: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendCancellationEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

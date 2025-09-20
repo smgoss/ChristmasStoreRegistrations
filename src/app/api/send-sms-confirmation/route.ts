@@ -1,18 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { z } from 'zod';
+import { createErrorResponse, createSuccessResponse, validateRequestBody, applyRateLimit } from '@/lib/api-utils';
 
 const lambda = new LambdaClient({ region: process.env.AWS_REGION || 'us-east-1' });
 
+const RegistrationDataSchema = z.object({
+  registration: z.object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().min(7),
+    streetAddress: z.string().min(1),
+    zipCode: z.string().regex(/^\d{5}(-\d{4})?$/),
+    city: z.string().min(1),
+    state: z.string().min(1),
+    timeSlot: z.string().min(1),
+    numberOfKids: z.number().int().min(0),
+    referredBy: z.string().optional(),
+    registrationDate: z.string()
+  })
+});
+
 export async function POST(request: NextRequest) {
   try {
-    const { registration } = await request.json();
-
-    if (!registration) {
-      return NextResponse.json(
-        { error: 'Missing registration data' },
-        { status: 400 }
-      );
+    // Apply rate limiting
+    const rateLimitResponse = applyRateLimit(request, 20, 60000);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
     }
+
+    // Validate request body
+    const validation = await validateRequestBody(request, RegistrationDataSchema);
+    if (!validation.success) {
+      return validation.response;
+    }
+    
+    const { registration } = validation.data;
 
     console.log('📱 Invoking send-sms-confirmation Lambda function');
 
@@ -31,26 +55,17 @@ export async function POST(request: NextRequest) {
       
       if (result.success) {
         console.log('✅ SMS confirmation sent successfully');
-        return NextResponse.json({ success: true, message: 'SMS confirmation sent successfully' });
+        return createSuccessResponse({ message: 'SMS confirmation sent successfully' });
       } else {
         console.error('❌ Lambda function failed:', result);
-        return NextResponse.json(
-          { error: 'Failed to send SMS confirmation', details: result },
-          { status: 500 }
-        );
+        return createErrorResponse('Failed to send SMS confirmation', 'SMS_SEND_FAILED', 500, result);
       }
     }
 
-    return NextResponse.json(
-      { error: 'No response from Lambda function' },
-      { status: 500 }
-    );
+    return createErrorResponse('No response from Lambda function', 'NO_LAMBDA_RESPONSE', 500);
 
   } catch (error) {
     console.error('❌ Error in send-sms-confirmation API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    return createErrorResponse('Internal server error', 'INTERNAL_ERROR', 500, error instanceof Error ? error.message : 'Unknown error');
   }
 }
