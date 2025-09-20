@@ -1,81 +1,58 @@
 import { Amplify } from 'aws-amplify';
 
+// Amplify Gen 2 configuration - use generated amplify_outputs.json
 let configured = false;
-let configPromise: Promise<void> | null = null;
+let configurationPromise: Promise<void> | null = null;
 
 async function configureAmplify(): Promise<void> {
   if (configured) return;
-  
-  try {
-    // If already configured, skip
-    const cfg: any = Amplify.getConfig();
-    if (cfg && (cfg.Auth || cfg.API)) {
+  if (configurationPromise) return configurationPromise;
+
+  configurationPromise = (async () => {
+    try {
+      // Method 1: Root directory (server-side)
+      const outputs = require('../../amplify_outputs.json');
+      Amplify.configure(outputs);
       configured = true;
+      console.log('✅ Amplify configured from root amplify_outputs.json');
       return;
+    } catch (rootError) {
+      try {
+        // Method 2: Public directory (server-side)
+        const outputs = require('../../public/amplify_outputs.json');
+        Amplify.configure(outputs);
+        configured = true;
+        console.log('✅ Amplify configured from public/amplify_outputs.json');
+        return;
+      } catch (publicError) {
+        // Method 3: Client-side fetch
+        if (typeof window !== 'undefined') {
+          try {
+            const response = await fetch('/amplify_outputs.json');
+            if (!response.ok) throw new Error('Failed to fetch');
+            const outputs = await response.json();
+            Amplify.configure(outputs);
+            configured = true;
+            console.log('✅ Amplify configured from fetch /amplify_outputs.json');
+          } catch (fetchError) {
+            console.error('❌ Failed to configure Amplify:', fetchError);
+            throw new Error('Amplify configuration failed - amplify_outputs.json not found');
+          }
+        } else {
+          console.error('❌ Server-side Amplify configuration failed - amplify_outputs.json not found');
+          throw new Error('Amplify configuration failed - amplify_outputs.json not found');
+        }
+      }
     }
+  })();
 
-    // Try server-side load of amplify_outputs.json (when present in env)
-    if (typeof window === 'undefined') {
-      try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const path = require('node:path');
-        const fs = require('node:fs');
-        const p = path.join(process.cwd(), 'amplify_outputs.json');
-        if (fs.existsSync(p)) {
-          const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-          Amplify.configure(data);
-          configured = true;
-          return;
-        }
-      } catch {
-        // ignore
-      }
-    } else {
-      // Try client-side fetch
-      try {
-        const res = await fetch('/amplify_outputs.json');
-        if (res.ok) {
-          const data = await res.json();
-          Amplify.configure(data);
-          configured = true;
-          return;
-        }
-      } catch {
-        // ignore
-      }
-    }
-  } catch {
-    // ignore
-  }
+  return configurationPromise;
 }
 
-// Export a function to ensure Amplify is configured before use
+// Configure immediately (but don't await in module scope)
+configureAmplify().catch(console.error);
+
+// Export for explicit configuration awaiting
 export async function ensureAmplifyConfigured(): Promise<void> {
-  if (configured) return;
-  
-  if (!configPromise) {
-    configPromise = configureAmplify();
-  }
-  
-  await configPromise;
+  await configureAmplify();
 }
-
-// Immediately configure on server side if possible
-if (typeof window === 'undefined') {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const path = require('node:path');
-    const fs = require('node:fs');
-    const p = path.join(process.cwd(), 'amplify_outputs.json');
-    if (fs.existsSync(p)) {
-      const data = JSON.parse(fs.readFileSync(p, 'utf8'));
-      Amplify.configure(data);
-      configured = true;
-    }
-  } catch {
-    // ignore
-  }
-}
-
-// Fire and forget; consumers can import this module for side-effect
-void configureAmplify();

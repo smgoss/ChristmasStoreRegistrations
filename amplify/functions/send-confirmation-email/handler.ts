@@ -1,5 +1,6 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import type { AppSyncResolverEvent } from 'aws-lambda';
+import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
 
@@ -8,21 +9,27 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
+  streetAddress: string;
+  zipCode: string;
+  city: string;
+  state: string;
   timeSlot: string;
   numberOfKids: number;
-  needsChildcare: boolean;
   referredBy?: string;
-  children: Array<{ age: number; gender: string }>;
+  children?: Array<{ age: number | string; gender: string }> | string;
 }
 
-export const handler = async (event: AppSyncResolverEvent<{ registration: RegistrationData }>) => {
+export const handler: Handler = async (event: any) => {
   try {
-    const { registration } = event.arguments;
+    console.log('📱 Sending Email confirmation:', event);
+    
+    const { registration }: { registration: RegistrationData } = event.arguments || event;
 
     const emailContent = generateEmailContent(registration);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'noreply@YOURDOMAIN.com', // Replace YOURDOMAIN with your actual domain
+      Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
+      ReplyToAddresses: ['office@pathwayvineyard.com'],
       Destination: {
         ToAddresses: [registration.email],
       },
@@ -64,7 +71,26 @@ function generateEmailContent(registration: RegistrationData): string {
   const secondaryColor = process.env.SECONDARY_COLOR || '#059669';
   const locationEmoji = process.env.LOCATION_EMOJI || '⛪';
   
-  const childrenInfo = registration.children.map(
+  // Handle children data safely - it might be JSON string or array
+  let childrenArray: Array<{ age: number | string; gender: string }> = [];
+  
+  if (registration.children) {
+    try {
+      // If children is a string (JSON), parse it
+      if (typeof registration.children === 'string') {
+        childrenArray = JSON.parse(registration.children);
+      } else if (Array.isArray(registration.children)) {
+        childrenArray = registration.children;
+      } else {
+        console.log('Unexpected children format:', typeof registration.children, registration.children);
+      }
+    } catch (error) {
+      console.error('Error parsing children data:', error);
+      childrenArray = [];
+    }
+  }
+
+  const childrenInfo = childrenArray.map(
     (child, index) => `<li>Child ${index + 1}: Age ${child.age}, ${child.gender}</li>`
   ).join('');
 
@@ -105,9 +131,9 @@ function generateEmailContent(registration: RegistrationData): string {
             <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
             <li><strong>Email:</strong> ${registration.email}</li>
             <li><strong>Phone:</strong> ${registration.phone}</li>
+            <li><strong>Address:</strong> ${registration.streetAddress}, ${registration.city}, ${registration.state} ${registration.zipCode}</li>
             <li><strong>Time Slot:</strong> ${registration.timeSlot}</li>
             <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
-            ${registration.needsChildcare ? '<li><strong>Childcare:</strong> Yes</li>' : ''}
             ${registration.referredBy ? `<li><strong>Referred by:</strong> ${registration.referredBy}</li>` : ''}
           </ul>
           
@@ -121,10 +147,7 @@ function generateEmailContent(registration: RegistrationData): string {
         
         <h3>📍 Important Information:</h3>
         <ul>
-          <li>Please arrive 15 minutes before your scheduled time slot</li>
-          <li>Bring a valid photo ID</li>
-          <li>Children must be accompanied by a parent or guardian</li>
-          ${registration.needsChildcare ? '<li>Childcare will be available during your shopping time</li>' : ''}
+          <li>Please contact the office if you need to change or cancel your registration.</li>
         </ul>
         
         <p>If you need to make any changes to your registration or have questions, please contact us as soon as possible.</p>

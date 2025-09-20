@@ -1,4 +1,6 @@
 import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { sendSmsConfirmation } from '../functions/send-sms-confirmation/resource';
+import { sendConfirmationEmail } from '../functions/send-confirmation-email/resource';
 
 const schema = a.schema({
   Registration: a
@@ -9,6 +11,12 @@ const schema = a.schema({
       email: a.email().required(),
       phone: a.phone().required(),
       
+      // Address info
+      streetAddress: a.string().required(),
+      zipCode: a.string().required(),
+      city: a.string().required(),
+      state: a.string().required(),
+      
       // Children info
       numberOfKids: a.integer().required(),
       children: a.hasMany('Child', 'registrationId'),
@@ -17,7 +25,7 @@ const schema = a.schema({
       timeSlot: a.string().required(), // "09:00", "09:30", etc.
       
       // Additional requirements
-      needsChildcare: a.boolean().required(),
+      needsChildcare: a.boolean().default(false), // Kept for backward compatibility, not used in UI
       referredBy: a.string(),
       
       // Invite link tracking
@@ -36,8 +44,8 @@ const schema = a.schema({
       confirmationToken: a.string(), // Unique token for confirmation links
     })
     .authorization((allow) => [
-      // Public can read available info, but must use server route to create
-      allow.publicApiKey().to(['read']),
+      // Public can read and create registrations (server route handles validation)
+      allow.publicApiKey().to(['read', 'create']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   
@@ -49,8 +57,8 @@ const schema = a.schema({
       registration: a.belongsTo('Registration', 'registrationId'),
     })
     .authorization((allow) => [
-      // Child records are created only via server route / admin
-      allow.publicApiKey().to(['read']),
+      // Child records can be created via server route
+      allow.publicApiKey().to(['read', 'create']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   
@@ -75,7 +83,7 @@ const schema = a.schema({
       usedAt: a.datetime(),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
+      allow.publicApiKey().to(['read', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
 
@@ -94,6 +102,57 @@ const schema = a.schema({
       allow.publicApiKey().to(['read']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
+
+  sendSmsConfirmation: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        streetAddress: a.string().required(),
+        zipCode: a.string().required(),
+        city: a.string().required(),
+        state: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        referredBy: a.string(),
+        registrationDate: a.string().required(),
+      })
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendSmsConfirmation)),
+
+  // Email confirmation mutation - force resolver refresh
+  sendConfirmationEmail: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        streetAddress: a.string().required(),
+        zipCode: a.string().required(),
+        city: a.string().required(),
+        state: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        referredBy: a.string(),
+        children: a.json(),
+      })
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendConfirmationEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

@@ -23,7 +23,8 @@ export const handler = async (event: AppSyncResolverEvent<{ registrations: Regis
         const emailContent = generateConfirmationEmail(registration);
 
         const command = new SendEmailCommand({
-          Source: process.env.FROM_EMAIL || 'noreply@YOURDOMAIN.com', // Replace YOURDOMAIN with your actual domain
+          Source: process.env.FROM_EMAIL || 'christmas-store@pathwayvineyard.com',
+          ReplyToAddresses: ['office@pathwayvineyard.com'],
           Destination: {
             ToAddresses: [registration.email],
           },
