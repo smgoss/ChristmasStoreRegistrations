@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
@@ -44,7 +44,7 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-export default function CancellationSuccessPage() {
+function CancellationSuccessContent() {
   const searchParams = useSearchParams();
   const [appSettings, setAppSettings] = useState<RegistrationConfig | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,11 +61,11 @@ export default function CancellationSuccessPage() {
         const config = configData?.[0];
         if (config) {
           setAppSettings({
-            locationName: config.locationName,
-            eventAddress: config.eventAddress,
-            replyToEmail: config.replyToEmail,
-            contactPhone: config.contactPhone,
-            textingNumber: config.textingNumber
+            locationName: config.locationName || undefined,
+            eventAddress: config.eventAddress || undefined,
+            replyToEmail: config.replyToEmail || undefined,
+            contactPhone: config.contactPhone || undefined,
+            textingNumber: config.textingNumber || undefined
           });
         }
       } catch (error) {
@@ -157,5 +157,23 @@ export default function CancellationSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CancellationSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-green-50 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full mx-4">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Loading</h2>
+            <p className="text-gray-600">Please wait...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <CancellationSuccessContent />
+    </Suspense>
   );
 }
