@@ -78,11 +78,11 @@ export default function ConfirmFinalPage() {
         const config = configData?.[0];
         if (config) {
           setAppSettings({
-            locationName: config.locationName,
-            eventAddress: config.eventAddress,
-            replyToEmail: config.replyToEmail,
-            contactPhone: config.contactPhone,
-            textingNumber: config.textingNumber
+            locationName: config.locationName || undefined,
+            eventAddress: config.eventAddress || undefined,
+            replyToEmail: config.replyToEmail || undefined,
+            contactPhone: config.contactPhone || undefined,
+            textingNumber: config.textingNumber || undefined
           });
           console.log('✅ Application settings loaded:', config);
         }

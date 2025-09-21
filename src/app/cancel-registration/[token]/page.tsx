@@ -71,11 +71,11 @@ export default function CancelRegistrationPage() {
         const config = configData?.[0];
         if (config) {
           setAppSettings({
-            locationName: config.locationName,
-            eventAddress: config.eventAddress,
-            replyToEmail: config.replyToEmail,
-            contactPhone: config.contactPhone,
-            textingNumber: config.textingNumber
+            locationName: config.locationName || undefined,
+            eventAddress: config.eventAddress || undefined,
+            replyToEmail: config.replyToEmail || undefined,
+            contactPhone: config.contactPhone || undefined,
+            textingNumber: config.textingNumber || undefined
           });
           console.log('✅ Application settings loaded:', config);
         }
@@ -92,11 +92,11 @@ export default function CancelRegistrationPage() {
         }
 
         setRegistration({
-          firstName: reg.firstName,
-          lastName: reg.lastName,
-          timeSlot: reg.timeSlot,
-          numberOfKids: reg.numberOfKids,
-          registrationStatus: reg.registrationStatus
+          firstName: reg.firstName || '',
+          lastName: reg.lastName || '',
+          timeSlot: reg.timeSlot || '',
+          numberOfKids: reg.numberOfKids || 0,
+          registrationStatus: reg.registrationStatus || ''
         });
 
       } catch (error) {
