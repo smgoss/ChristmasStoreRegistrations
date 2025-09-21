@@ -81,7 +81,7 @@ function generateInviteEmailContent(invite: InviteData): string {
 
 Hello!
 
-You have been personally invited to register for our Christmas Store event on Friday, December 6th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
+You have been personally invited to register for our Christmas Store event on Saturday, December 6th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
 
 Your personal invitation link:
 ${invite.inviteUrl}
@@ -158,13 +158,13 @@ Invitation ID: ${invite.token.slice(0, 8)}...
     <div class="header">
         <h1>🎄 You're Invited! 🎄</h1>
         <p>Christmas Store Registration</p>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Friday, December 6th, 2025</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Saturday, December 6th, 2025</p>
     </div>
     
     <div class="content">
         <p><strong>Hello!</strong></p>
         
-        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Friday, December 6th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
+        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Saturday, December 6th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
         
         <div class="invite-link">
             <p style="margin: 0 0 10px 0;">Your Personal Invitation Link:</p>

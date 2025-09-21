@@ -11,14 +11,15 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
-  streetAddress: string;
-  zipCode: string;
-  city: string;
-  state: string;
+  streetAddress?: string;
+  zipCode?: string;
+  city?: string;
+  state?: string;
   timeSlot: string;
   numberOfKids: number;
   referredBy?: string;
   children?: Array<{ age: number | string; gender: string }> | string;
+  confirmationUrl?: string; // For final confirmation emails
 }
 
 interface RegistrationConfig {
@@ -121,9 +122,50 @@ export const handler: Handler = async (event: any) => {
   try {
     console.log('📱 Sending Email confirmation:', event);
     
-    const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
+    const { registration, registrationId, subject, message, messageId }: { 
+      registration: RegistrationData; 
+      registrationId?: string;
+      subject?: string;
+      message?: string;
+      messageId?: string;
+    } = event.arguments || event;
 
-    // Fetch location config from database
+    // Check if this is a custom message
+    if (subject && message && messageId) {
+      console.log('📧 Sending custom message:', { subject, messageId });
+      const customEmailContent = generateCustomEmailContent(registration, subject, message);
+      
+      const command = new SendEmailCommand({
+        Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
+        ReplyToAddresses: ['office@pathwayvineyard.com'],
+        Destination: {
+          ToAddresses: [registration.email],
+        },
+        Message: {
+          Subject: {
+            Charset: 'UTF-8',
+            Data: subject,
+          },
+          Body: {
+            Html: {
+              Charset: 'UTF-8',
+              Data: customEmailContent,
+            },
+          },
+        },
+      });
+
+      const result = await ses.send(command);
+      console.log('✅ Custom email sent successfully:', result);
+
+      return {
+        success: true,
+        message: 'Custom email sent successfully',
+        messageId: messageId
+      };
+    }
+    
+    // Regular confirmation email logic
     const config = await getRegistrationConfig();
     console.log('🎯 Config retrieved in handler:', JSON.stringify(config, null, 2));
     console.log('🎯 Config locationName:', config.locationName);
@@ -229,8 +271,240 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
+function generateFinalConfirmationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
+  console.log('📧 generateFinalConfirmationEmailContent called');
+  
+  // Get location config
+  const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
+  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
+  const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
+  const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
+  const locationEmoji = process.env.LOCATION_EMOJI || '';
+  
+  // Format time slot for display
+  const displayTimeSlot = formatTimeSlot(registration.timeSlot);
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>URGENT: Confirm Your Christmas Store Registration - ${locationName}</title>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { 
+          background: linear-gradient(rgba(185, 28, 28, 0.9), rgba(220, 38, 38, 0.9));
+          color: white; 
+          text-align: center; 
+          padding: 48px 30px; 
+          border-radius: 16px; 
+          position: relative;
+          overflow: hidden;
+        }
+        .header h1 { 
+          font-size: 2rem; 
+          font-weight: 700; 
+          margin: 0 0 1rem 0; 
+          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5); 
+        }
+        .header .emoji { 
+          font-size: 3rem; 
+          margin-bottom: 1rem; 
+          display: block; 
+          filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.8)); 
+        }
+        .urgent { background-color: #fef2f2; border: 3px solid #dc2626; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .urgent h2 { color: #dc2626; margin-top: 0; }
+        .confirm-button { 
+          background: #dc2626; 
+          color: white; 
+          padding: 20px 40px; 
+          text-decoration: none; 
+          border-radius: 8px; 
+          font-size: 18px; 
+          font-weight: bold; 
+          display: inline-block;
+          margin: 20px 0;
+        }
+        .confirm-button:hover { background: #b91c1c; }
+        .registration-details { background-color: #f9fafb; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 20px; }
+        .warning { background-color: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 8px; margin: 20px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        ${locationEmoji ? `<span class="emoji">${locationEmoji}</span>` : ''}
+        <h1>🚨 URGENT: Confirm Your Registration 🚨</h1>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 6th, 2025</p>
+      </div>
+      
+      <div class="urgent">
+        <h2>⏰ ACTION REQUIRED: Confirm Your Time Slot</h2>
+        <p><strong>Dear ${registration.firstName} ${registration.lastName},</strong></p>
+        
+        <p>You must <strong>confirm your Christmas Store registration</strong> to keep your time slot. <strong>Failure to confirm may result in your time slot being given to someone else.</strong></p>
+        
+        <div style="text-align: left; margin: 30px 0;">
+          <a href="${registration.confirmationUrl}" class="confirm-button">
+            ✅ CONFIRM MY REGISTRATION NOW
+          </a>
+        </div>
+        
+        <div style="text-align: left; margin: 20px 0;">
+          <p style="font-size: 16px; color: #333; margin-bottom: 10px;">
+            <strong>Can't attend your time slot?</strong>
+          </p>
+          <a href="${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : '#'}" 
+             style="background: #6b7280; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; display: inline-block;">
+            ❌ Cancel My Registration
+          </a>
+        </div>
+        
+        <p style="font-size: 14px; color: #666;">
+          Can't click the buttons? Copy and paste these links into your browser:<br>
+          <strong>Confirm:</strong> <a href="${registration.confirmationUrl}">${registration.confirmationUrl}</a><br>
+          <strong>Cancel:</strong> <a href="${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : '#'}">${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : 'Not available'}</a>
+        </p>
+      </div>
+      
+      <div class="registration-details">
+        <h3>📋 Your Registration Details</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
+          <li><strong>Time Slot:</strong> ${displayTimeSlot}</li>
+          <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
+          <li><strong>Location:</strong> ${locationAddress}</li>
+          <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
+        </ul>
+      </div>
+      
+      <div class="warning">
+        <h3 style="color: #856404; margin-top: 0;">⚠️ Important Deadline Information</h3>
+        <p style="color: #856404; margin-bottom: 0;">
+          Please confirm your registration as soon as possible. Unconfirmed registrations may be released to other families who are waiting.
+        </p>
+      </div>
+      
+      <div style="background-color: #e8f4fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h3>❓ Questions or Need Help?</h3>
+        <p>📧 Email: ${contactEmail}</p>
+        <p>📞 Phone: ${contactPhone}</p>
+        <p>🌐 Website: pathwayvineyard.com</p>
+      </div>
+      
+      <div class="footer">
+        <p>Thank you for participating in our Christmas Store ministry!</p>
+        <p>This is an automated message. Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+function generateCustomEmailContent(registration: RegistrationData, subject: string, message: string): string {
+  // Convert line breaks to HTML
+  const htmlMessage = message.replace(/\n/g, '<br>');
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${subject}</title>
+      <style>
+        body { 
+          font-family: Arial, sans-serif; 
+          background-color: #f5f5f5; 
+          margin: 0; 
+          padding: 20px; 
+        }
+        .container { 
+          max-width: 600px; 
+          margin: 0 auto; 
+          background: white; 
+          border-radius: 10px; 
+          overflow: hidden; 
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+        }
+        .header { 
+          background: linear-gradient(135deg, #059669, #047857); 
+          color: white; 
+          text-align: center; 
+          padding: 30px 20px; 
+        }
+        .header h1 { 
+          margin: 0; 
+          font-size: 24px; 
+          font-weight: bold; 
+        }
+        .content { 
+          padding: 30px 20px; 
+          line-height: 1.6; 
+        }
+        .message-content {
+          background: #f8f9fa;
+          border-left: 4px solid #059669;
+          padding: 20px;
+          margin: 20px 0;
+          border-radius: 0 8px 8px 0;
+        }
+        .footer { 
+          background: #f8f9fa; 
+          padding: 20px; 
+          text-align: center; 
+          color: #666; 
+          font-size: 14px; 
+        }
+        .emoji { font-size: 1.2em; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <span class="emoji">🎄</span>
+          <h1>${subject}</h1>
+          <p>Pathway Vineyard Christmas Store</p>
+        </div>
+        
+        <div class="content">
+          <h2>Hello ${registration.firstName}!</h2>
+          
+          <div class="message-content">
+            ${htmlMessage}
+          </div>
+          
+          <div style="margin-top: 30px; padding: 15px; background: #e6f3ff; border-radius: 8px;">
+            <h3>📍 Your Registration Details:</h3>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+              <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
+              <li><strong>Time Slot:</strong> ${registration.timeSlot}</li>
+              <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
+              <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="footer">
+          <p>Questions? Contact us at office@pathwayvineyard.com or call (207) 746-9089</p>
+          <p><strong>Pathway Vineyard Christmas Store</strong><br>
+          Lewiston, Maine</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 function generateEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
   console.log('📧 generateEmailContent called with config:', JSON.stringify(config, null, 2));
+  
+  // Check if this is a final confirmation email
+  if (registration.confirmationUrl) {
+    return generateFinalConfirmationEmailContent(registration, config);
+  }
   
   // Get location config from database with fallbacks to environment variables and defaults
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
@@ -339,7 +613,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
         <h1>🎄 Christmas Store Registration Confirmed! 🎁</h1>
         <h2>${locationName}</h2>
         <p>${locationAddress}</p>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Friday, December 6th, 2025</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 6th, 2025</p>
       </div>
       
       <div class="content">
@@ -369,7 +643,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
         
         <h3>📍 Important Information:</h3>
         <ul>
-          <li><strong>Event Date:</strong> Friday, December 6th, 2025</li>
+          <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
           <li><strong>Your Time Slot:</strong> ${displayTimeSlot}</li>
           <li><strong>Location:</strong> ${locationAddress}</li>
           <li>Please contact the office if you need to change or cancel your registration.</li>

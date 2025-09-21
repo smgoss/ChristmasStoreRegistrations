@@ -118,7 +118,7 @@ Each gets its own AWS resources and database.
 
 ### **Verify Campus Configuration**
 Each campus should show:
-- ✅ Different church emoji (⛪) and colors
+- ✅ Different Christmas tree emoji (🎄) and colors
 - ✅ Campus-specific name and address  
 - ✅ Different time slot options
 - ✅ Correct capacity settings

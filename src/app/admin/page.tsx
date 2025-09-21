@@ -129,6 +129,10 @@ interface Registration {
   isCancelled?: boolean;
   cancelledAt?: string;
   confirmationToken?: string;
+  registrationStatus?: 'registered' | 'unconfirmed' | 'confirmed' | 'cancelled';
+  finalConfirmationSentAt?: string;
+  finalConfirmationToken?: string;
+  finalConfirmedAt?: string;
 }
 
 interface RegistrationConfig {
@@ -143,6 +147,8 @@ interface RegistrationConfig {
   textingNumber?: string;
   locationName?: string;
   eventAddress?: string;
+  finalConfirmationDeadline?: string;
+  finalConfirmationEnabled?: boolean;
   updatedBy?: string;
   updatedAt?: string;
 }
@@ -163,6 +169,7 @@ function AdminDashboard() {
   const { 
     timeSlots: TIME_SLOTS, 
     locationName: LOCATION_NAME,
+    locationAddress: LOCATION_ADDRESS,
     branding: BRANDING,
     defaultCapacity: DEFAULT_CAPACITY 
   } = locationConfig;
@@ -178,6 +185,7 @@ function AdminDashboard() {
   const [message, setMessage] = useState('');
   const [skipNextReload, setSkipNextReload] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const [editingRegistration, setEditingRegistration] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Registration | null>(null);
   const [newTimeSlot, setNewTimeSlot] = useState('');
@@ -194,7 +202,9 @@ function AdminDashboard() {
     textingNumber: '(208) 746-9089',
     locationName: LOCATION_NAME,
     eventPhone: '',
-    eventAddress: ''
+    eventAddress: '',
+    finalConfirmationDeadline: '',
+    finalConfirmationEnabled: false
   });
 
   useEffect(() => {
@@ -336,6 +346,15 @@ function AdminDashboard() {
       if (config?.eventAddress) {
         setSettings(prev => ({ ...prev, eventAddress: config.eventAddress! }));
       }
+      if (config?.finalConfirmationDeadline) {
+        // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:MM)
+        const date = new Date(config.finalConfirmationDeadline);
+        const localDateTime = date.toISOString().slice(0, 16);
+        setSettings(prev => ({ ...prev, finalConfirmationDeadline: localDateTime }));
+      }
+      if (config?.finalConfirmationEnabled) {
+        setSettings(prev => ({ ...prev, finalConfirmationEnabled: config.finalConfirmationEnabled! }));
+      }
       
       // Load time slot configurations
       console.log('🔍 Fetching time slots...');
@@ -352,7 +371,7 @@ function AdminDashboard() {
       // Load registrations with error handling for partial data
       console.log('🔍 Fetching registrations...');
       const { data: registrationData, errors: registrationErrors } = await (await getClient()).models.Registration.list({
-        selectionSet: ['id', 'firstName', 'lastName', 'email', 'phone', 'streetAddress', 'zipCode', 'city', 'state', 'timeSlot', 'numberOfKids', 'referredBy', 'isConfirmed', 'registrationDate', 'attendanceConfirmed', 'isCancelled', 'children.*']
+        selectionSet: ['id', 'firstName', 'lastName', 'email', 'phone', 'streetAddress', 'zipCode', 'city', 'state', 'timeSlot', 'numberOfKids', 'referredBy', 'isConfirmed', 'registrationDate', 'attendanceConfirmed', 'isCancelled', 'registrationStatus', 'finalConfirmationSentAt', 'finalConfirmationToken', 'finalConfirmedAt', 'children.*']
       });
       
       // Handle registration data - even if there are errors, we might have partial valid data
@@ -977,21 +996,59 @@ function AdminDashboard() {
         location: settings
       });
       
+      // Validate required fields
+      if (!registrationConfig.id) {
+        setMessage('❌ Registration config ID is missing');
+        return;
+      }
+      
+      // Validate datetime format if provided
+      if (settings.finalConfirmationDeadline && settings.finalConfirmationDeadline.trim() !== '') {
+        try {
+          const testDate = new Date(settings.finalConfirmationDeadline);
+          if (isNaN(testDate.getTime())) {
+            setMessage('❌ Invalid final confirmation deadline format');
+            return;
+          }
+        } catch (dateError) {
+          setMessage('❌ Error parsing final confirmation deadline');
+          return;
+        }
+      }
+      
       // Save contact and location settings to database
-      const updateResult = await (await getAdminClient()).models.RegistrationConfig.update({
+      const updateResult = await (await getClient()).models.RegistrationConfig.update({
         id: registrationConfig.id,
         replyToEmail: settings.replyToEmail,
         contactPhone: settings.contactPhone,
         textingNumber: settings.textingNumber,
         locationName: settings.locationName,
         eventAddress: settings.eventAddress,
+        finalConfirmationDeadline: settings.finalConfirmationDeadline && settings.finalConfirmationDeadline.trim() !== '' ? new Date(settings.finalConfirmationDeadline).toISOString() : null,
+        finalConfirmationEnabled: settings.finalConfirmationEnabled,
         updatedAt: new Date().toISOString(),
         updatedBy: 'admin'
       });
 
       if (updateResult.errors) {
         console.error('❌ Update errors:', updateResult.errors);
-        setMessage('❌ Failed to save contact settings: ' + JSON.stringify(updateResult.errors));
+        console.error('❌ Full update result:', updateResult);
+        console.error('❌ Settings being saved:', {
+          id: registrationConfig.id,
+          replyToEmail: settings.replyToEmail,
+          contactPhone: settings.contactPhone,
+          textingNumber: settings.textingNumber,
+          locationName: settings.locationName,
+          eventAddress: settings.eventAddress,
+          finalConfirmationDeadline: settings.finalConfirmationDeadline,
+          finalConfirmationEnabled: settings.finalConfirmationEnabled
+        });
+        
+        const errorMessages = updateResult.errors.map((error: any) => 
+          `${error.errorType || 'Error'}: ${error.message || 'Unknown error'}`
+        ).join(', ');
+        
+        setMessage(`❌ Failed to save settings: ${errorMessages}`);
         return;
       }
 
@@ -1056,16 +1113,155 @@ function AdminDashboard() {
     }
   };
 
+  const requestFinalConfirmation = async () => {
+    const eligibleCount = registeredStatusRegistrations.length;
+    
+    if (eligibleCount === 0) {
+      alert('No registrations found in REGISTERED status. Only users with REGISTERED status will receive final confirmation messages.');
+      return;
+    }
+    
+    if (!window.confirm(
+      `Are you sure you want to start the final confirmation process? This will:\n\n` +
+      `• Send confirmation requests to ${eligibleCount} users with REGISTERED status\n` +
+      `• Change their status from REGISTERED to UNCONFIRMED\n` +
+      `• Users must confirm or risk losing their time slot\n` +
+      `• Users who already received confirmations will NOT get duplicates\n\n` +
+      `This action cannot be undone.`
+    )) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setMessage('🚀 Starting final confirmation process...');
+
+      const response = await fetch('/api/request-final-confirmation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          registrations: activeRegistrations
+            .filter(reg => (reg.registrationStatus || 'registered') === 'registered')
+            .map(reg => ({
+              id: reg.id,
+              firstName: reg.firstName,
+              lastName: reg.lastName,
+              email: reg.email,
+              phone: reg.phone,
+              timeSlot: reg.timeSlot,
+              numberOfKids: reg.numberOfKids
+            }))
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to start final confirmation process');
+      }
+
+      const result = await response.json();
+      setMessage(`✅ Final confirmation process started! ${result.sent || 0} requests sent.`);
+      
+      // Refresh data to show updated statuses (delayed to avoid overwriting individual confirmations)
+      setTimeout(async () => {
+        await loadData();
+      }, 3000);
+
+    } catch (error) {
+      console.error('Error starting final confirmation process:', error);
+      setMessage('❌ Error starting final confirmation process. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const activeRegistrations = registrations.filter(reg => !reg.isCancelled);
+  const registeredStatusRegistrations = activeRegistrations.filter(reg => (reg.registrationStatus || 'registered') === 'registered');
   const totalChildren = activeRegistrations.reduce((sum, reg) => sum + reg.numberOfKids, 0);
   
-  const filteredRegistrations = registrations.filter(reg => 
-    reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    reg.phone.includes(searchTerm) ||
-    reg.timeSlot.includes(searchTerm)
-  );
+  const canRequestFinalConfirmation = () => {
+    if (!registrationConfig?.finalConfirmationDeadline) return false;
+    const now = new Date();
+    const deadline = new Date(registrationConfig.finalConfirmationDeadline);
+    return now >= deadline;
+  };
+
+  const sendIndividualFinalConfirmation = async (registrationId: string) => {
+    if (!confirm('Are you sure you want to send a final confirmation request to this individual registration? This will send urgent email and SMS messages.')) return;
+    
+    console.log('🚀 Starting individual final confirmation for:', registrationId);
+    
+    try {
+      setLoading(true);
+      
+      const response = await fetch('/api/send-individual-final-confirmation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          registrationId
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        console.log('✅ Individual final confirmation sent successfully:', result);
+        
+        // Update the local state to reflect the status change
+        setRegistrations(prevRegs => 
+          prevRegs.map(r => 
+            r.id === registrationId 
+              ? { 
+                  ...r, 
+                  registrationStatus: 'unconfirmed',
+                  finalConfirmationSentAt: new Date().toISOString(),
+                  finalConfirmationToken: result.confirmationToken
+                }
+              : r
+          )
+        );
+        
+        setMessage(`✅ Final confirmation sent successfully! ${result.emailSent ? 'Email' : ''}${result.emailSent && result.smsSent ? ' and ' : ''}${result.smsSent ? 'SMS' : ''} sent.`);
+        setTimeout(() => setMessage(''), 5000);
+      } else {
+        console.error('❌ Failed to send individual final confirmation:', result);
+        setMessage(`❌ Failed to send final confirmation: ${result.message || 'Unknown error'}`);
+        setTimeout(() => setMessage(''), 5000);
+      }
+    } catch (error) {
+      console.error('Error sending individual final confirmation:', error);
+      setMessage('❌ Error sending individual final confirmation.');
+      setTimeout(() => setMessage(''), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const filteredRegistrations = registrations.filter(reg => {
+    // Search filter (name, email, phone, time slot)
+    const matchesSearch = searchTerm === '' || 
+      reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      reg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (reg.phone && reg.phone.includes(searchTerm)) ||
+      reg.timeSlot.includes(searchTerm);
+    
+    // Status filter
+    const matchesStatus = (() => {
+      if (statusFilter === 'all') return true;
+      if (statusFilter === 'active') return !reg.isCancelled;
+      if (statusFilter === 'cancelled') return reg.isCancelled;
+      if (statusFilter === 'registered') return !reg.isCancelled && (reg.registrationStatus || 'registered') === 'registered';
+      if (statusFilter === 'unconfirmed') return !reg.isCancelled && reg.registrationStatus === 'unconfirmed';
+      if (statusFilter === 'confirmed') return !reg.isCancelled && reg.registrationStatus === 'confirmed';
+      return true;
+    })();
+    
+    return matchesSearch && matchesStatus;
+  });
 
   const startEdit = (registration: Registration) => {
     setEditingRegistration(registration.id);
@@ -1376,16 +1572,16 @@ function AdminDashboard() {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <div className="p-8 rounded-lg mb-8 text-white" 
+      <div className="p-8 rounded-lg mb-8 text-white text-center" 
            style={{ background: `linear-gradient(135deg, ${BRANDING.primaryColor}, ${BRANDING.secondaryColor})` }}>
         <div className="flex items-center justify-center mb-4">
           <div className="text-6xl mr-4">{BRANDING.locationEmoji}</div>
           <div>
-            <h1 className="text-4xl font-bold mb-2">Christmas Store Admin</h1>
-            <p className="text-lg text-black">{LOCATION_NAME}</p>
+            <h1 className="text-4xl font-bold mb-2 text-white">{registrationConfig?.locationName || LOCATION_NAME} Admin</h1>
+            <p className="text-lg text-white">{registrationConfig?.eventAddress || LOCATION_ADDRESS}</p>
           </div>
         </div>
-        <p className="text-center opacity-80">Manage registrations and time slots</p>
+        <p className="text-center text-white opacity-80">Manage registrations and time slots</p>
       </div>
       
       {message && (
@@ -1531,11 +1727,12 @@ function AdminDashboard() {
               </h2>
               <div className="flex space-x-3">
                 <button
-                  onClick={sendConfirmationEmails}
-                  disabled={loading || activeRegistrations.length === 0}
+                  onClick={requestFinalConfirmation}
+                  disabled={loading || registeredStatusRegistrations.length === 0 || !canRequestFinalConfirmation()}
                   className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 font-bold flex items-center disabled:opacity-50"
+                  title={registeredStatusRegistrations.length === 0 ? 'No registrations in REGISTERED status' : `Send final confirmation to ${registeredStatusRegistrations.length} REGISTERED users`}
                 >
-                  {loading ? '📧 Sending...' : '📧 Send Confirmation Emails'}
+                  {loading ? '⏳ Sending...' : `📋 Request Final Confirmation (${registeredStatusRegistrations.length})`}
                 </button>
                 <button
                   onClick={exportRegistrations}
@@ -1546,17 +1743,53 @@ function AdminDashboard() {
               </div>
             </div>
             
-            {/* Search Bar */}
-            <div className="mb-6">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="🔍 Search by name, email, phone, or time slot..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full px-4 py-3 pl-12 border-2 border-purple-300 rounded-lg text-black font-medium focus:ring-2 focus:ring-purple-500"
-                />
-                <div className="absolute left-4 top-3.5 text-black text-xl">🔍</div>
+            {/* Search and Filter Bar */}
+            <div className="mb-6 space-y-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder="🔍 Search by name, email, phone, or time slot..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full px-4 py-3 pl-12 border-2 border-purple-300 rounded-lg text-black font-medium focus:ring-2 focus:ring-purple-500"
+                  />
+                  <div className="absolute left-4 top-3.5 text-black text-xl">🔍</div>
+                </div>
+                <div className="sm:w-64">
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-purple-300 rounded-lg text-black font-medium focus:ring-2 focus:ring-purple-500 bg-white"
+                  >
+                    <option value="all">📋 All Registrations</option>
+                    <option value="active">✅ Active Only</option>
+                    <option value="registered">📝 Registered</option>
+                    <option value="unconfirmed">⚠️ Unconfirmed</option>
+                    <option value="confirmed">✅ Confirmed</option>
+                    <option value="cancelled">❌ Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Filter Summary */}
+              <div className="flex items-center justify-between text-sm text-gray-600">
+                <div>
+                  Showing {filteredRegistrations.length} of {registrations.length} registrations
+                  {searchTerm && <span> matching "{searchTerm}"</span>}
+                  {statusFilter !== 'all' && <span> with status: {statusFilter}</span>}
+                </div>
+                {(searchTerm || statusFilter !== 'all') && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setStatusFilter('all');
+                    }}
+                    className="text-purple-600 hover:text-purple-800 font-medium"
+                  >
+                    Clear filters
+                  </button>
+                )}
               </div>
             </div>
             
@@ -1717,15 +1950,20 @@ function AdminDashboard() {
                               )}
                               <p className="text-black">
                                 <span className="font-bold">📋 Status:</span>
-                                {reg.isCancelled ? (
-                                  <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ CANCELLED</span>
-                                ) : reg.attendanceConfirmed ? (
-                                  <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ CONFIRMED</span>
-                                ) : reg.confirmationToken ? (
-                                  <span className="bg-yellow-200 text-black px-2 py-1 rounded font-bold ml-1">⏳ PENDING</span>
-                                ) : (
-                                  <span className="bg-gray-200 text-black px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>
-                                )}
+                                {(() => {
+                                  const status = reg.isCancelled ? 'cancelled' : (reg.registrationStatus || 'registered');
+                                  switch (status) {
+                                    case 'cancelled':
+                                      return <span className="bg-red-200 text-red-800 px-2 py-1 rounded font-bold ml-1">❌ CANCELLED</span>;
+                                    case 'unconfirmed':
+                                      return <span className="bg-orange-200 text-orange-800 px-2 py-1 rounded font-bold ml-1">⚠️ UNCONFIRMED</span>;
+                                    case 'confirmed':
+                                      return <span className="bg-green-200 text-green-800 px-2 py-1 rounded font-bold ml-1">✅ CONFIRMED</span>;
+                                    case 'registered':
+                                    default:
+                                      return <span className="bg-blue-200 text-blue-800 px-2 py-1 rounded font-bold ml-1">📝 REGISTERED</span>;
+                                  }
+                                })()}
                               </p>
                               {/* Delivery status temporarily disabled for deployment
                               <p className="text-black">
@@ -1757,6 +1995,15 @@ function AdminDashboard() {
                             <button onClick={() => startEdit(reg)} className="bg-blue-500 text-white px-3 py-2 rounded-lg font-bold hover:bg-blue-600">
                               ✏️ Edit
                             </button>
+                            {!reg.isCancelled && ((reg.registrationStatus || 'registered') === 'registered' || reg.registrationStatus === 'unconfirmed') && (
+                              <button 
+                                onClick={() => sendIndividualFinalConfirmation(reg.id)} 
+                                className="bg-purple-600 text-white px-3 py-2 rounded-lg font-bold hover:bg-purple-700"
+                                title="Send urgent final confirmation request"
+                              >
+                                🚨 Final Confirm
+                              </button>
+                            )}
                             {!reg.isCancelled && (
                               <button 
                                 onClick={() => cancelRegistration(reg.id)} 
@@ -2228,6 +2475,38 @@ function AdminDashboard() {
                 </div>
               </div>
 
+              {/* Final Confirmation Settings */}
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-black mb-4">📋 Final Confirmation Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-black font-bold mb-2">Final Confirmation Deadline Date & Time</label>
+                    <input
+                      type="datetime-local"
+                      value={settings.finalConfirmationDeadline}
+                      onChange={(e) => setSettings({...settings, finalConfirmationDeadline: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-yellow-300 rounded-lg text-black"
+                    />
+                    <p className="text-sm text-black mt-1">
+                      The "Request Final Confirmation" button becomes available after this date/time
+                    </p>
+                  </div>
+                  <div>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={settings.finalConfirmationEnabled}
+                        onChange={(e) => setSettings({...settings, finalConfirmationEnabled: e.target.checked})}
+                        className="w-4 h-4 text-yellow-600 border-2 border-yellow-300 rounded"
+                      />
+                      <span className="text-black font-bold">Enable Final Confirmation System</span>
+                    </label>
+                    <p className="text-sm text-black mt-1 ml-6">
+                      When enabled, the final confirmation process will be available once the deadline is reached
+                    </p>
+                  </div>
+                </div>
+              </div>
 
               {/* Save All Settings */}
               <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
@@ -2315,17 +2594,17 @@ export default function AdminPage() {
           {({ signOut, user }) => (
             <div className="min-h-screen bg-gradient-to-br from-green-100 to-red-100">
               <div className="bg-gradient-to-r from-red-600 to-green-600 text-white shadow-lg">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-                  <div className="flex items-center">
+                <div className="max-w-7xl mx-auto px-6 py-4 relative">
+                  <div className="flex items-center justify-center text-center">
                     <div className="text-3xl mr-4">🎄</div>
                     <div>
-                      <h1 className="text-2xl font-bold">Christmas Store Admin</h1>
-                      <p className="text-red-100">Welcome, {user?.signInDetails?.loginId}</p>
+                      <h1 className="text-2xl font-bold text-white">Christmas Store Admin</h1>
+                      <p className="text-white opacity-90">Welcome, {user?.signInDetails?.loginId}</p>
                     </div>
                   </div>
                   <button
                     onClick={signOut}
-                    className="bg-white text-red-600 px-6 py-3 rounded-lg hover:bg-gray-100 font-bold flex items-center"
+                    className="absolute right-6 top-1/2 transform -translate-y-1/2 bg-white text-red-600 px-6 py-3 rounded-lg hover:bg-gray-100 font-bold flex items-center"
                   >
                     🚪 Sign Out
                   </button>

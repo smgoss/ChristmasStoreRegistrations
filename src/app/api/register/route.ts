@@ -214,6 +214,7 @@ export async function POST(req: Request) {
           referredBy: referredBy || undefined,
           inviteToken,
           registrationDate: now,
+          registrationStatus: 'registered',
         });
       } catch (createError) {
         console.error('Error during registration creation:', createError);

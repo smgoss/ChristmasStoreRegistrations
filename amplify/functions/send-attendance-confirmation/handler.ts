@@ -88,7 +88,7 @@ function generateConfirmationEmail(registration: Registration): string {
   const contactEmail = process.env.CONTACT_EMAIL || 'info@pathwayvineyard.com';
   const primaryColor = process.env.PRIMARY_COLOR || '#7c3aed';
   const secondaryColor = process.env.SECONDARY_COLOR || '#059669';
-  const locationEmoji = process.env.LOCATION_EMOJI || '⛪';
+  const locationEmoji = process.env.LOCATION_EMOJI || '🎄';
 
   return `
     <!DOCTYPE html>
