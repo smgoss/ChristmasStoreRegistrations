@@ -7,6 +7,7 @@ const ses = new SESClient({ region: process.env.AWS_REGION });
 const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 interface RegistrationData {
+  id?: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -170,7 +171,10 @@ export const handler: Handler = async (event: any) => {
     console.log('🎯 Config retrieved in handler:', JSON.stringify(config, null, 2));
     console.log('🎯 Config locationName:', config.locationName);
     console.log('🎯 Config eventAddress:', config.eventAddress);
-    const emailContent = generateEmailContent(registration, config);
+    
+    // Use registrationId if available, otherwise fall back to registration.id
+    const regId = registrationId || registration.id;
+    const emailContent = generateEmailContent(registration, config, regId);
 
     const command = new SendEmailCommand({
       Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
@@ -271,7 +275,7 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-function generateFinalConfirmationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
+function generateFinalConfirmationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}, registrationId?: string): string {
   console.log('📧 generateFinalConfirmationEmailContent called');
   
   // Get location config
@@ -378,6 +382,17 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
           <li><strong>Location:</strong> ${locationAddress}</li>
           <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
         </ul>
+        
+        ${registrationId ? `
+        <div style="text-align: center; margin: 20px 0; padding: 15px; background: #f0f9ff; border-radius: 8px;">
+          <h4 style="color: #0369a1; margin-top: 0;">📅 Add to Your Calendar</h4>
+          <a href="${process.env.NEXT_PUBLIC_URL || 'https://christmas-store.pathwayvineyard.com'}/api/generate-ical?id=${registrationId}" 
+             style="background: #0369a1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+            📅 Download Calendar Event
+          </a>
+          <p style="font-size: 14px; color: #666; margin: 10px 0 0 0;">Click to download a calendar event for your Christmas Store appointment</p>
+        </div>
+        ` : ''}
       </div>
       
       <div class="warning">
@@ -498,12 +513,12 @@ function generateCustomEmailContent(registration: RegistrationData, subject: str
   `;
 }
 
-function generateEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
+function generateEmailContent(registration: RegistrationData, config: RegistrationConfig = {}, registrationId?: string): string {
   console.log('📧 generateEmailContent called with config:', JSON.stringify(config, null, 2));
   
   // Check if this is a final confirmation email
   if (registration.confirmationUrl) {
-    return generateFinalConfirmationEmailContent(registration, config);
+    return generateFinalConfirmationEmailContent(registration, config, registrationId);
   }
   
   // Get location config from database with fallbacks to environment variables and defaults
@@ -648,6 +663,18 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
           <li><strong>Location:</strong> ${locationAddress}</li>
           <li>Please contact the office if you need to change or cancel your registration.</li>
         </ul>
+        
+        ${registrationId ? `
+        <div style="text-align: center; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; border: 2px solid #0369a1;">
+          <h3 style="color: #0369a1; margin-top: 0; font-size: 20px;">📅 Add to Your Calendar</h3>
+          <p style="color: #334155; margin: 10px 0;">Never miss your appointment! Download a calendar event with all the details.</p>
+          <a href="${process.env.NEXT_PUBLIC_URL || 'https://christmas-store.pathwayvineyard.com'}/api/generate-ical?id=${registrationId}" 
+             style="background: linear-gradient(135deg, #0369a1, #0284c7); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin: 10px 0; box-shadow: 0 4px 6px rgba(3, 105, 161, 0.3); transition: all 0.3s ease;">
+            📅 Download Calendar Event (.ics)
+          </a>
+          <p style="font-size: 14px; color: #64748b; margin: 10px 0 0 0;">Compatible with Google Calendar, Outlook, Apple Calendar, and more</p>
+        </div>
+        ` : ''}
         
         <p>If you need to make any changes to your registration or have questions, please contact us as soon as possible.</p>
         
