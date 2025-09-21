@@ -217,6 +217,23 @@ function AdminDashboard() {
   const [bulkEmailSending, setBulkEmailSending] = useState(false);
   const [bulkEmailResults, setBulkEmailResults] = useState<any>(null);
 
+  // Admin registration form state
+  const [adminRegData, setAdminRegData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    streetAddress: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    timeSlot: '',
+    numberOfKids: 0,
+    children: [] as Array<{ age: string; gender: 'boy' | 'girl' }>,
+    referredBy: ''
+  });
+  const [addingRegistration, setAddingRegistration] = useState(false);
+
   useEffect(() => {
     const initializeAndLoadData = async () => {
       try {
@@ -1778,6 +1795,7 @@ function AdminDashboard() {
 
   const tabs = [
     { id: 'registrations', name: 'Registrations', icon: '👥' },
+    { id: 'add-registration', name: 'Add Registration', icon: '➕' },
     { id: 'waitlist', name: 'Waitlist', icon: '📋' },
     { id: 'invites', name: 'Invites', icon: '📧' },
     { id: 'bulk-email', name: 'Bulk Email', icon: '📨' },
@@ -2755,6 +2773,274 @@ function AdminDashboard() {
                   )}
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'add-registration' && (
+          <div>
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center">
+              ➕ Add New Registration
+            </h2>
+            
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
+              <p className="text-blue-800 font-semibold">
+                💡 Admin Registration: This form allows you to manually add registrations to the system. 
+                Email and phone numbers must be unique. If you select a full time slot, its capacity will be increased by 1.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.firstName}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, firstName: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter first name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.lastName}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, lastName: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter last name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                  <input
+                    type="email"
+                    value={adminRegData.email}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter email address"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                  <input
+                    type="tel"
+                    value={adminRegData.phone}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, phone: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter phone number"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Street Address *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.streetAddress}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, streetAddress: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter street address"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.city}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, city: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter city"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.state}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, state: e.target.value.toUpperCase() }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter state (2 letters)"
+                    maxLength={2}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Zip Code *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.zipCode}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, zipCode: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter zip code"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Time Slot *</label>
+                  <select
+                    value={adminRegData.timeSlot}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, timeSlot: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    required
+                  >
+                    <option value="">Select time slot</option>
+                    {timeSlots.map(slot => {
+                      const isFull = slot.currentRegistrations >= slot.maxCapacity;
+                      return (
+                        <option key={slot.timeSlot} value={slot.timeSlot}>
+                          {slot.timeSlot} ({slot.currentRegistrations}/{slot.maxCapacity}){isFull ? ' - FULL (will increase capacity)' : ''}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Number of Children *</label>
+                  <input
+                    type="number"
+                    value={adminRegData.numberOfKids}
+                    onChange={(e) => {
+                      const numKids = parseInt(e.target.value) || 0;
+                      setAdminRegData(prev => ({ 
+                        ...prev, 
+                        numberOfKids: numKids,
+                        children: numKids === 0 ? [] : prev.children.slice(0, numKids)
+                      }));
+                    }}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter number of children"
+                    min="0"
+                    max="20"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Referred By</label>
+                  <input
+                    type="text"
+                    value={adminRegData.referredBy}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, referredBy: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter who referred them (optional)"
+                  />
+                </div>
+              </div>
+
+              {/* Children Information */}
+              {adminRegData.numberOfKids > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-black">Children Information</h3>
+                  {Array.from({ length: adminRegData.numberOfKids }, (_, index) => {
+                    // Ensure we have a child object at this index (safe approach)
+                    const currentChild = adminRegData.children[index] || { age: '', gender: 'boy' };
+                    
+                    return (
+                      <div key={index} className="border-2 border-gray-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-black mb-2">Child {index + 1}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                            <select
+                              value={currentChild.age}
+                              onChange={(e) => {
+                                const newChildren = [...adminRegData.children];
+                                while (newChildren.length <= index) {
+                                  newChildren.push({ age: '', gender: 'boy' });
+                                }
+                                newChildren[index] = { ...currentChild, age: e.target.value };
+                                setAdminRegData(prev => ({ ...prev, children: newChildren }));
+                              }}
+                              className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                              required
+                            >
+                              <option value="">Select age</option>
+                              <option value="<1">&lt;1</option>
+                              {Array.from({ length: 18 }, (_, i) => i + 1).map(age => (
+                                <option key={age} value={age}>{age}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <select
+                              value={currentChild.gender}
+                              onChange={(e) => {
+                                const newChildren = [...adminRegData.children];
+                                while (newChildren.length <= index) {
+                                  newChildren.push({ age: '', gender: 'boy' });
+                                }
+                                newChildren[index] = { ...currentChild, gender: e.target.value as 'boy' | 'girl' };
+                                setAdminRegData(prev => ({ ...prev, children: newChildren }));
+                              }}
+                              className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                              required
+                            >
+                              <option value="boy">Boy</option>
+                              <option value="girl">Girl</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={async () => {
+                    setAddingRegistration(true);
+                    try {
+                      const response = await fetch('/api/admin-register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(adminRegData)
+                      });
+                      
+                      const result = await response.json();
+                      
+                      if (result.success) {
+                        setMessage('✅ Registration created successfully! Email and SMS sent.');
+                        // Reset form
+                        setAdminRegData({
+                          firstName: '',
+                          lastName: '',
+                          email: '',
+                          phone: '',
+                          streetAddress: '',
+                          city: '',
+                          state: '',
+                          zipCode: '',
+                          timeSlot: '',
+                          numberOfKids: 0,
+                          children: [],
+                          referredBy: ''
+                        });
+                        // Reload data to show the new registration
+                        loadData();
+                      } else {
+                        setMessage('❌ ' + (result.message || 'Failed to create registration'));
+                      }
+                    } catch (error) {
+                      console.error('Error creating registration:', error);
+                      setMessage('❌ Error creating registration');
+                    } finally {
+                      setAddingRegistration(false);
+                    }
+                  }}
+                  disabled={addingRegistration || !adminRegData.firstName || !adminRegData.lastName || !adminRegData.email || !adminRegData.phone || !adminRegData.timeSlot}
+                  className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
+                >
+                  {addingRegistration ? '⏳ Creating Registration...' : '➕ Create Registration'}
+                </button>
+              </div>
             </div>
           </div>
         )}
