@@ -180,6 +180,7 @@ function AdminDashboard() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [inviteLinks, setInviteLinks] = useState<InviteLink[]>([]);
   const [inviteEmail, setInviteEmail] = useState('');
+  const [waitlistEntries, setWaitlistEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [skipNextReload, setSkipNextReload] = useState(false);
@@ -187,6 +188,8 @@ function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [editingRegistration, setEditingRegistration] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<Registration | null>(null);
+  const [editingWaitlist, setEditingWaitlist] = useState<string | null>(null);
+  const [editWaitlistData, setEditWaitlistData] = useState<any | null>(null);
   const [newTimeSlot, setNewTimeSlot] = useState('');
   const [editingTimeSlot, setEditingTimeSlot] = useState<string | null>(null);
   const [registrationConfig, setRegistrationConfig] = useState<RegistrationConfig | null>(null);
@@ -213,6 +216,23 @@ function AdminDashboard() {
   const [targetStatus, setTargetStatus] = useState<'all' | 'registered' | 'unconfirmed' | 'confirmed'>('all');
   const [bulkEmailSending, setBulkEmailSending] = useState(false);
   const [bulkEmailResults, setBulkEmailResults] = useState<any>(null);
+
+  // Admin registration form state
+  const [adminRegData, setAdminRegData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    streetAddress: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    timeSlot: '',
+    numberOfKids: 0,
+    children: [] as Array<{ age: string; gender: 'boy' | 'girl' }>,
+    referredBy: ''
+  });
+  const [addingRegistration, setAddingRegistration] = useState(false);
 
   useEffect(() => {
     const initializeAndLoadData = async () => {
@@ -420,6 +440,36 @@ function AdminDashboard() {
         });
         console.log('🎯 Setting timeSlots state with:', sortedTimeSlots.length, 'slots:', sortedTimeSlots);
         setTimeSlots(sortedTimeSlots);
+      }
+
+      // Load waitlist entries (only if Waitlist model is available)
+      try {
+        console.log('🔍 Fetching waitlist entries...');
+        const client = await getClient();
+        if (client.models.Waitlist) {
+          const { data: waitlistData, errors: waitlistErrors } = await client.models.Waitlist.list({
+            filter: { isActive: { eq: true } }
+          });
+          
+          if (waitlistErrors) {
+            console.error('❌ Waitlist errors:', waitlistErrors);
+            setMessage('Error loading waitlist entries: ' + JSON.stringify(waitlistErrors));
+            setWaitlistEntries([]);
+          } else {
+            console.log('✅ Waitlist entries loaded:', waitlistData?.length || 0);
+            const waitlistEntries = waitlistData as any[];
+            // Sort by position (earliest position first)
+            setWaitlistEntries(waitlistEntries.sort((a, b) => {
+              return (a.position || 0) - (b.position || 0);
+            }));
+          }
+        } else {
+          console.log('ℹ️ Waitlist model not yet available');
+          setWaitlistEntries([]);
+        }
+      } catch (waitlistError) {
+        console.log('ℹ️ Waitlist model not yet deployed:', waitlistError);
+        setWaitlistEntries([]);
       }
 
       // Load invite links
@@ -913,6 +963,83 @@ function AdminDashboard() {
     updateRegistrationStatus('inviteOnlyMode', !registrationConfig?.inviteOnlyMode);
   };
 
+  const deleteWaitlistEntry = async (waitlistId: string, name: string) => {
+    if (!confirm(`Are you sure you want to remove ${name} from the waitlist? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('🗑️ Deleting waitlist entry:', waitlistId);
+
+      const response = await fetch('/api/delete-waitlist', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ waitlistId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete waitlist entry');
+      }
+
+      const result = await response.json();
+      setMessage(`✅ ${result.message}`);
+      loadData(); // Reload data to reflect changes
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error deleting waitlist entry:', error);
+      setMessage('❌ Failed to delete waitlist entry. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const moveWaitlistToRegistered = async (waitlistId: string, name: string) => {
+    const timeSlot = prompt(`Select time slot for ${name}:\n\nAvailable time slots:\n${timeSlots.map(slot => `• ${slot.timeSlot} (${slot.currentRegistrations}/${slot.maxCapacity})`).join('\n')}\n\nEnter the exact time slot name:`);
+    
+    if (!timeSlot) return;
+
+    const validTimeSlot = timeSlots.find(slot => slot.timeSlot === timeSlot);
+    if (!validTimeSlot) {
+      setMessage('❌ Invalid time slot selected. Please try again.');
+      return;
+    }
+
+    const increaseCapacity = validTimeSlot.currentRegistrations >= validTimeSlot.maxCapacity;
+    const confirmMessage = increaseCapacity 
+      ? `This will move ${name} to ${timeSlot} and increase the capacity by 1 (currently ${validTimeSlot.currentRegistrations}/${validTimeSlot.maxCapacity}). Continue?`
+      : `This will move ${name} to ${timeSlot} (${validTimeSlot.currentRegistrations + 1}/${validTimeSlot.maxCapacity}). Continue?`;
+
+    if (!confirm(confirmMessage)) return;
+
+    try {
+      setLoading(true);
+      console.log('🔄 Moving waitlist to registered:', { waitlistId, timeSlot, increaseCapacity });
+
+      const response = await fetch('/api/move-waitlist-to-registered', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ waitlistId, timeSlot, increaseCapacity }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to move waitlist entry');
+      }
+
+      const result = await response.json();
+      setMessage(`✅ ${result.message}`);
+      loadData(); // Reload data to reflect changes
+      setTimeout(() => setMessage(''), 3000);
+    } catch (error) {
+      console.error('Error moving waitlist to registered:', error);
+      setMessage('❌ Failed to move waitlist entry. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const scheduleRegistrationClosure = async () => {
     if (!registrationConfig || !scheduledCloseDate) return;
 
@@ -1331,6 +1458,45 @@ function AdminDashboard() {
     }
   };
 
+  // Waitlist edit functions
+  const startEditWaitlist = (entry: any) => {
+    setEditingWaitlist(entry.id);
+    setEditWaitlistData({ ...entry });
+  };
+
+  const cancelEditWaitlist = () => {
+    setEditingWaitlist(null);
+    setEditWaitlistData(null);
+  };
+
+  const saveEditWaitlist = async () => {
+    if (!editWaitlistData || !editingWaitlist) return;
+    try {
+      await (await getAdminClient()).models.Waitlist.update({
+        id: editingWaitlist,
+        firstName: editWaitlistData.firstName,
+        lastName: editWaitlistData.lastName,
+        email: editWaitlistData.email,
+        phone: editWaitlistData.phone,
+        streetAddress: editWaitlistData.streetAddress,
+        zipCode: editWaitlistData.zipCode,
+        city: editWaitlistData.city,
+        state: editWaitlistData.state,
+        numberOfKids: editWaitlistData.numberOfKids,
+        children: editWaitlistData.children,
+        preferredTimeSlots: editWaitlistData.preferredTimeSlots,
+        referredBy: editWaitlistData.referredBy
+      });
+      
+      await loadData();
+      setMessage('Waitlist entry updated successfully!');
+      cancelEditWaitlist();
+    } catch (error) {
+      console.error('Error updating waitlist entry:', error);
+      setMessage('Error updating waitlist entry.');
+    }
+  };
+
   const deleteRegistration = async (id: string) => {
     console.log('🗑️ Delete button clicked for registration:', id);
     if (!confirm('Are you sure you want to delete this registration?')) {
@@ -1629,6 +1795,8 @@ function AdminDashboard() {
 
   const tabs = [
     { id: 'registrations', name: 'Registrations', icon: '👥' },
+    { id: 'add-registration', name: 'Add Registration', icon: '➕' },
+    { id: 'waitlist', name: 'Waitlist', icon: '📋' },
     { id: 'invites', name: 'Invites', icon: '📧' },
     { id: 'bulk-email', name: 'Bulk Email', icon: '📨' },
     { id: 'timeslots', name: 'Time Slots', icon: '⏰' },
@@ -2606,6 +2774,566 @@ function AdminDashboard() {
                 </div>
               )}
             </div>
+          </div>
+        )}
+
+        {activeTab === 'add-registration' && (
+          <div>
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center">
+              ➕ Add New Registration
+            </h2>
+            
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
+              <p className="text-blue-800 font-semibold">
+                💡 Admin Registration: This form allows you to manually add registrations to the system. 
+                Email and phone numbers must be unique. If you select a full time slot, its capacity will be increased by 1.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.firstName}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, firstName: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter first name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.lastName}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, lastName: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter last name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                  <input
+                    type="email"
+                    value={adminRegData.email}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter email address"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                  <input
+                    type="tel"
+                    value={adminRegData.phone}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, phone: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter phone number"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Street Address *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.streetAddress}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, streetAddress: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter street address"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.city}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, city: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter city"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.state}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, state: e.target.value.toUpperCase() }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter state (2 letters)"
+                    maxLength={2}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Zip Code *</label>
+                  <input
+                    type="text"
+                    value={adminRegData.zipCode}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, zipCode: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter zip code"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Time Slot *</label>
+                  <select
+                    value={adminRegData.timeSlot}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, timeSlot: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    required
+                  >
+                    <option value="">Select time slot</option>
+                    {timeSlots.map(slot => {
+                      const isFull = slot.currentRegistrations >= slot.maxCapacity;
+                      return (
+                        <option key={slot.timeSlot} value={slot.timeSlot}>
+                          {slot.timeSlot} ({slot.currentRegistrations}/{slot.maxCapacity}){isFull ? ' - FULL (will increase capacity)' : ''}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Number of Children *</label>
+                  <input
+                    type="number"
+                    value={adminRegData.numberOfKids}
+                    onChange={(e) => {
+                      const numKids = parseInt(e.target.value) || 0;
+                      setAdminRegData(prev => ({ 
+                        ...prev, 
+                        numberOfKids: numKids,
+                        children: numKids === 0 ? [] : prev.children.slice(0, numKids)
+                      }));
+                    }}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter number of children"
+                    min="0"
+                    max="20"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Referred By</label>
+                  <input
+                    type="text"
+                    value={adminRegData.referredBy}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, referredBy: e.target.value }))}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter who referred them (optional)"
+                  />
+                </div>
+              </div>
+
+              {/* Children Information */}
+              {adminRegData.numberOfKids > 0 && (
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-black">Children Information</h3>
+                  {Array.from({ length: adminRegData.numberOfKids }, (_, index) => {
+                    // Ensure we have a child object at this index (safe approach)
+                    const currentChild = adminRegData.children[index] || { age: '', gender: 'boy' };
+                    
+                    return (
+                      <div key={index} className="border-2 border-gray-200 rounded-lg p-4">
+                        <h4 className="font-semibold text-black mb-2">Child {index + 1}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                            <select
+                              value={currentChild.age}
+                              onChange={(e) => {
+                                const newChildren = [...adminRegData.children];
+                                while (newChildren.length <= index) {
+                                  newChildren.push({ age: '', gender: 'boy' });
+                                }
+                                newChildren[index] = { ...currentChild, age: e.target.value };
+                                setAdminRegData(prev => ({ ...prev, children: newChildren }));
+                              }}
+                              className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                              required
+                            >
+                              <option value="">Select age</option>
+                              <option value="<1">&lt;1</option>
+                              {Array.from({ length: 18 }, (_, i) => i + 1).map(age => (
+                                <option key={age} value={age}>{age}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <select
+                              value={currentChild.gender}
+                              onChange={(e) => {
+                                const newChildren = [...adminRegData.children];
+                                while (newChildren.length <= index) {
+                                  newChildren.push({ age: '', gender: 'boy' });
+                                }
+                                newChildren[index] = { ...currentChild, gender: e.target.value as 'boy' | 'girl' };
+                                setAdminRegData(prev => ({ ...prev, children: newChildren }));
+                              }}
+                              className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                              required
+                            >
+                              <option value="boy">Boy</option>
+                              <option value="girl">Girl</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={async () => {
+                    setAddingRegistration(true);
+                    try {
+                      const response = await fetch('/api/admin-register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(adminRegData)
+                      });
+                      
+                      const result = await response.json();
+                      
+                      if (result.success) {
+                        setMessage('✅ Registration created successfully! Email and SMS sent.');
+                        // Reset form
+                        setAdminRegData({
+                          firstName: '',
+                          lastName: '',
+                          email: '',
+                          phone: '',
+                          streetAddress: '',
+                          city: '',
+                          state: '',
+                          zipCode: '',
+                          timeSlot: '',
+                          numberOfKids: 0,
+                          children: [],
+                          referredBy: ''
+                        });
+                        // Reload data to show the new registration
+                        loadData();
+                      } else {
+                        setMessage('❌ ' + (result.message || 'Failed to create registration'));
+                      }
+                    } catch (error) {
+                      console.error('Error creating registration:', error);
+                      setMessage('❌ Error creating registration');
+                    } finally {
+                      setAddingRegistration(false);
+                    }
+                  }}
+                  disabled={addingRegistration || !adminRegData.firstName || !adminRegData.lastName || !adminRegData.email || !adminRegData.phone || !adminRegData.timeSlot}
+                  className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
+                >
+                  {addingRegistration ? '⏳ Creating Registration...' : '➕ Create Registration'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'waitlist' && (
+          <div>
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center">
+              📋 Waitlist Management ({waitlistEntries.length} entries)
+            </h2>
+            
+            {waitlistEntries.length === 0 ? (
+              <div className="text-center py-12 bg-gray-50 border-2 border-gray-200 rounded-lg">
+                <div className="text-6xl mb-4">📋</div>
+                <p className="text-xl font-bold text-black">No waitlist entries</p>
+                <p className="text-black">Waitlist entries will appear here when registration is full</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {waitlistEntries.map((entry) => (
+                  <div key={entry.id} className="bg-gray-50 border-2 border-gray-200 rounded-lg p-6 hover:shadow-lg transition-all">
+                    {editingWaitlist === entry.id ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <h3 className="text-lg font-bold text-black">Editing Waitlist Entry</h3>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={saveEditWaitlist}
+                              disabled={loading}
+                              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold text-sm"
+                            >
+                              ✅ Save
+                            </button>
+                            <button
+                              onClick={cancelEditWaitlist}
+                              disabled={loading}
+                              className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 disabled:opacity-50 font-semibold text-sm"
+                            >
+                              ❌ Cancel
+                            </button>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <input
+                            type="text"
+                            value={editWaitlistData?.firstName || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, firstName: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="First Name"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.lastName || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, lastName: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Last Name"
+                          />
+                          <input
+                            type="email"
+                            value={editWaitlistData?.email || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, email: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Email"
+                          />
+                          <input
+                            type="tel"
+                            value={editWaitlistData?.phone || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, phone: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Phone"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.streetAddress || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, streetAddress: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Street Address"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.city || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, city: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="City"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.state || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, state: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="State"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.zipCode || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, zipCode: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Zip Code"
+                          />
+                          <input
+                            type="number"
+                            value={editWaitlistData?.numberOfKids || 0}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, numberOfKids: parseInt(e.target.value) || 0} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Number of Kids"
+                            min="0"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.preferredTimeSlots || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, preferredTimeSlots: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Preferred Time Slots"
+                          />
+                          <input
+                            type="text"
+                            value={editWaitlistData?.referredBy || ''}
+                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, referredBy: e.target.value} : null)}
+                            className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                            placeholder="Referred By"
+                          />
+                        </div>
+                        
+                        {/* Children Information Section for Waitlist */}
+                        {editWaitlistData && editWaitlistData.numberOfKids > 0 && (
+                          <div className="space-y-4">
+                            <h4 className="text-lg font-semibold text-black">Children Information</h4>
+                            {Array.from({ length: editWaitlistData.numberOfKids }, (_, index) => {
+                              const existingChildren = (() => {
+                                try {
+                                  return editWaitlistData.children ? JSON.parse(editWaitlistData.children) : [];
+                                } catch {
+                                  return [];
+                                }
+                              })();
+                              
+                              return (
+                                <div key={index} className="border-2 border-gray-200 rounded-lg p-4">
+                                  <h5 className="font-semibold text-black mb-2">Child {index + 1}</h5>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                      <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                                      <select
+                                        value={existingChildren[index]?.age || ''}
+                                        onChange={(e) => {
+                                          const newChildren = [...existingChildren];
+                                          while (newChildren.length <= index) {
+                                            newChildren.push({ age: '', gender: 'boy' });
+                                          }
+                                          newChildren[index].age = e.target.value;
+                                          setEditWaitlistData(prev => prev ? {...prev, children: JSON.stringify(newChildren)} : null);
+                                        }}
+                                        className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                                        required
+                                      >
+                                        <option value="">Select age</option>
+                                        <option value="<1">&lt;1</option>
+                                        {Array.from({ length: 18 }, (_, i) => i + 1).map(age => (
+                                          <option key={age} value={age}>{age}</option>
+                                        ))}
+                                      </select>
+                                    </div>
+                                    <div>
+                                      <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                                      <select
+                                        value={existingChildren[index]?.gender || 'boy'}
+                                        onChange={(e) => {
+                                          const newChildren = [...existingChildren];
+                                          while (newChildren.length <= index) {
+                                            newChildren.push({ age: '', gender: 'boy' });
+                                          }
+                                          newChildren[index].gender = e.target.value;
+                                          setEditWaitlistData(prev => prev ? {...prev, children: JSON.stringify(newChildren)} : null);
+                                        }}
+                                        className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
+                                        required
+                                      >
+                                        <option value="boy">Boy</option>
+                                        <option value="girl">Girl</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <div className="bg-purple-600 text-white px-3 py-1 rounded-full font-bold text-sm">
+                              #{entry.position}
+                            </div>
+                            <h3 className="text-xl font-bold text-black">
+                              {entry.firstName} {entry.lastName}
+                            </h3>
+                            <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                              entry.isActive 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-gray-100 text-gray-800'
+                            }`}>
+                              {entry.isActive ? '🟢 ACTIVE' : '⚪ INACTIVE'}
+                            </div>
+                          </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                          <div>
+                            <span className="text-sm font-semibold text-gray-600">Email:</span>
+                            <p className="text-black">{entry.email}</p>
+                          </div>
+                          <div>
+                            <span className="text-sm font-semibold text-gray-600">Phone:</span>
+                            <p className="text-black">{entry.phone}</p>
+                          </div>
+                          <div>
+                            <span className="text-sm font-semibold text-gray-600">Number of Kids:</span>
+                            <p className="text-black">{entry.numberOfKids}</p>
+                          </div>
+                          <div>
+                            <span className="text-sm font-semibold text-gray-600">Address:</span>
+                            <p className="text-black">{entry.streetAddress}, {entry.city}, {entry.state} {entry.zipCode}</p>
+                          </div>
+                          <div>
+                            <span className="text-sm font-semibold text-gray-600">Waitlist Date:</span>
+                            <p className="text-black">{entry.waitlistDate ? new Date(entry.waitlistDate).toLocaleDateString() : 'Unknown'}</p>
+                          </div>
+                          {entry.preferredTimeSlots && (
+                            <div>
+                              <span className="text-sm font-semibold text-gray-600">Preferred Time Slots:</span>
+                              <p className="text-black">{entry.preferredTimeSlots}</p>
+                            </div>
+                          )}
+                        </div>
+
+                        {entry.children && (() => {
+                          try {
+                            const children = JSON.parse(entry.children);
+                            return children.length > 0 ? (
+                              <div className="mb-4">
+                                <span className="text-sm font-semibold text-gray-600">Children:</span>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                  {children.map((child: any, index: number) => (
+                                    <div key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
+                                      Age {child.age}, {child.gender}
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : null;
+                          } catch {
+                            return null;
+                          }
+                        })()}
+
+                        {entry.referredBy && (
+                          <div className="mb-4">
+                            <span className="text-sm font-semibold text-gray-600">Referred By:</span>
+                            <p className="text-black">{entry.referredBy}</p>
+                          </div>
+                        )}
+                      </div>
+                      
+                        <div className="flex flex-col space-y-2 ml-4">
+                          <button
+                            onClick={() => startEditWaitlist(entry)}
+                            disabled={loading}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 font-semibold text-sm whitespace-nowrap"
+                          >
+                            ✏️ Edit
+                          </button>
+                          <button
+                            onClick={() => moveWaitlistToRegistered(entry.id, `${entry.firstName} ${entry.lastName}`)}
+                            disabled={loading}
+                            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold text-sm whitespace-nowrap"
+                          >
+                            ✅ Move to Registered
+                          </button>
+                          <button
+                            onClick={() => deleteWaitlistEntry(entry.id, `${entry.firstName} ${entry.lastName}`)}
+                            disabled={loading}
+                            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50 font-semibold text-sm whitespace-nowrap"
+                          >
+                            🗑️ Remove from Waitlist
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
