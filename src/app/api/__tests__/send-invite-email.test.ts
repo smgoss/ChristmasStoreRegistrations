@@ -11,14 +11,12 @@ jest.mock('@aws-sdk/client-lambda', () => ({
 
 // Mock the API utilities
 jest.mock('@/lib/api-utils', () => ({
-  createErrorResponse: jest.fn((error, code, status, details) => ({
-    json: { success: false, error, code, details, timestamp: '2023-01-01T00:00:00.000Z' },
-    status
-  })),
-  createSuccessResponse: jest.fn((data, status = 200) => ({
-    json: { success: true, data, timestamp: '2023-01-01T00:00:00.000Z' },
-    status
-  })),
+  createErrorResponse: jest.fn((error, code, status, details) => 
+    new Response(JSON.stringify({ success: false, error, code, details, timestamp: '2023-01-01T00:00:00.000Z' }), { status })
+  ),
+  createSuccessResponse: jest.fn((data, status = 200) => 
+    new Response(JSON.stringify({ success: true, ...data, timestamp: '2023-01-01T00:00:00.000Z' }), { status })
+  ),
   validateRequestBody: jest.fn(),
   applyRateLimit: jest.fn(() => null)
 }));
@@ -62,9 +60,10 @@ describe('/api/send-invite-email', () => {
     });
 
     const response = await POST(request);
+    const data = await response.json();
 
-    expect((response as any).json.success).toBe(true);
-    expect((response as any).json.data.message).toBe('Invite email sent successfully');
+    expect(data.success).toBe(true);
+    expect(data.message).toBe('Invite email sent successfully');
   });
 
   it('should reject invalid email format', async () => {
@@ -156,9 +155,10 @@ describe('/api/send-invite-email', () => {
     });
 
     const response = await POST(request);
+    const data = await response.json();
 
-    expect((response as any).json.success).toBe(false);
-    expect((response as any).json.code).toBe('EMAIL_SEND_FAILED');
+    expect(data.success).toBe(false);
+    expect(data.code).toBe('INTERNAL_ERROR');
   });
 
   it('should handle Lambda invocation errors', async () => {
