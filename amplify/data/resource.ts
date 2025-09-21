@@ -35,8 +35,14 @@ const schema = a.schema({
       inviteUsed: a.boolean().default(false),
       
       // Registration status
+      registrationStatus: a.enum(['registered', 'unconfirmed', 'confirmed', 'cancelled']),
       isConfirmed: a.boolean().default(false),
       registrationDate: a.datetime(),
+      
+      // Final confirmation tracking
+      finalConfirmationSentAt: a.datetime(),
+      finalConfirmationToken: a.string(), // Unique token for final confirmation links
+      finalConfirmedAt: a.datetime(),
       
       // Attendance confirmation tracking
       attendanceConfirmed: a.boolean().default(false),
@@ -54,8 +60,8 @@ const schema = a.schema({
       // smsFailureReason: a.string(),
     })
     .authorization((allow) => [
-      // Public can read and create registrations (server route handles validation)
-      allow.publicApiKey().to(['read', 'create']),
+      // Public can read, create, and update registrations (server route handles validation)
+      allow.publicApiKey().to(['read', 'create', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
   
@@ -110,6 +116,8 @@ const schema = a.schema({
       scheduledCloseDate: a.datetime(),
       autoCloseEnabled: a.boolean().default(false),
       closureMessage: a.string().default('Registration is currently closed. Please check back later.'),
+      finalConfirmationDeadline: a.datetime(),
+      finalConfirmationEnabled: a.boolean().default(false),
       replyToEmail: a.string().default('office@pathwayvineyard.com'),
       contactPhone: a.string().default('(208) 746-9089'),
       textingNumber: a.string().default('(208) 746-9089'),
@@ -119,7 +127,7 @@ const schema = a.schema({
       updatedAt: a.datetime(),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
+      allow.publicApiKey().to(['read', 'create', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
 
@@ -218,6 +226,92 @@ const schema = a.schema({
     }))
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendCancellationEmail)),
+
+  sendFinalConfirmationEmail: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        confirmationUrl: a.string().required(),
+      }),
+      registrationId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+      messageId: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendConfirmationEmail)),
+
+  sendFinalConfirmationSms: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+        confirmationUrl: a.string().required(),
+      }),
+      registrationId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendSmsConfirmation)),
+
+  sendCustomEmail: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+      }),
+      subject: a.string().required(),
+      message: a.string().required(),
+      messageId: a.string().required()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendConfirmationEmail)),
+
+  sendCustomSms: a
+    .mutation()
+    .arguments({
+      registration: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        timeSlot: a.string().required(),
+        numberOfKids: a.integer().required(),
+      }),
+      message: a.string().required(),
+      messageId: a.string().required()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendSmsConfirmation)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

@@ -319,7 +319,7 @@ function generateCancellationEmailContent(registration: RegistrationData, config
         <h1>🚫 Christmas Store Registration Cancelled</h1>
         <h2>${locationName}</h2>
         <p>${locationAddress}</p>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Friday, December 6th, 2025</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 6th, 2025</p>
       </div>
       
       <div class="content">

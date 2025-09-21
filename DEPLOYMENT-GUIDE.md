@@ -93,7 +93,7 @@ CONTACT_EMAIL="lewiston@pathwayvineyard.com"
 FROM_EMAIL="noreply@pathwayvineyard.com"
 PRIMARY_COLOR="#7c3aed"
 SECONDARY_COLOR="#059669"
-LOCATION_EMOJI="⛪"
+LOCATION_EMOJI="🎄"
 FRONTEND_URL="https://your-lewiston-app-id.amplifyapp.com"
 ```
 
@@ -105,7 +105,7 @@ CONTACT_EMAIL="brunswick@pathwayvineyard.com"
 FROM_EMAIL="noreply@pathwayvineyard.com"
 PRIMARY_COLOR="#059669"
 SECONDARY_COLOR="#dc2626"
-LOCATION_EMOJI="⛪"
+LOCATION_EMOJI="🎄"
 FRONTEND_URL="https://your-brunswick-app-id.amplifyapp.com"
 ```
 
@@ -117,7 +117,7 @@ CONTACT_EMAIL="gray@pathwayvineyard.com"
 FROM_EMAIL="noreply@pathwayvineyard.com" 
 PRIMARY_COLOR="#dc2626"
 SECONDARY_COLOR="#f59e0b"
-LOCATION_EMOJI="⛪"
+LOCATION_EMOJI="🎄"
 FRONTEND_URL="https://your-gray-app-id.amplifyapp.com"
 ```
 

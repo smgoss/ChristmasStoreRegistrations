@@ -101,7 +101,7 @@ CONTACT_EMAIL="lewiston@pathwayvineyard.com"
 FROM_EMAIL="noreply@pathwayvineyard.com"
 PRIMARY_COLOR="#7c3aed" 
 SECONDARY_COLOR="#059669"
-LOCATION_EMOJI="⛪"
+LOCATION_EMOJI="🎄"
 ```
 
 ## 🌐 **Using Amplify Console**
@@ -128,7 +128,7 @@ CONTACT_EMAIL = lewiston@pathwayvineyard.com
 FROM_EMAIL = noreply@pathwayvineyard.com
 PRIMARY_COLOR = #7c3aed
 SECONDARY_COLOR = #059669
-LOCATION_EMOJI = ⛪
+LOCATION_EMOJI = 🎄
 ```
 
 *(Repeat similar pattern for Brunswick and Gray with their respective values)*

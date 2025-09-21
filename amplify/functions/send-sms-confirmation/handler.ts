@@ -5,22 +5,28 @@ interface RegistrationData {
   lastName: string;
   email: string;
   phone: string;
-  streetAddress: string;
-  zipCode: string;
-  city: string;
-  state: string;
+  streetAddress?: string;
+  zipCode?: string;
+  city?: string;
+  state?: string;
   timeSlot: string;
   numberOfKids: number;
   referredBy?: string;
   confirmationToken?: string;
-  registrationDate: string;
+  confirmationUrl?: string; // For final confirmation SMS
+  registrationDate?: string;
 }
 
 export const handler: Handler = async (event: any) => {
   try {
     console.log('📱 Sending SMS confirmation:', event);
     
-    const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
+    const { registration, registrationId, message, messageId }: { 
+      registration: RegistrationData; 
+      registrationId?: string;
+      message?: string;
+      messageId?: string;
+    } = event.arguments || event;
     
     if (!registration.phone) {
       console.log('ℹ️ No phone number provided, skipping SMS');
@@ -33,7 +39,14 @@ export const handler: Handler = async (event: any) => {
     // Clean phone number (ensure it has country code)
     const cleanPhone = cleanPhoneNumber(registration.phone);
     
-    const smsContent = generateSmsContent(registration);
+    // Check if this is a custom message
+    let smsContent: string;
+    if (message && messageId) {
+      console.log('📱 Sending custom SMS message:', { messageId });
+      smsContent = generateCustomSmsContent(registration, message);
+    } else {
+      smsContent = generateSmsContent(registration);
+    }
     
     const response = await sendClearstreamSms(cleanPhone, smsContent);
     
@@ -131,15 +144,54 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
+function generateCustomSmsContent(registration: RegistrationData, message: string): string {
+  return `🎄 Pathway Christmas Store
+
+Hi ${registration.firstName}!
+
+${message}
+
+Your Time: ${formatTimeSlot(registration.timeSlot)}
+Event: Sat, Dec 6, 2025
+
+Questions? Call (207) 746-9089
+
+- Pathway Christmas Store`;
+}
+
 function generateSmsContent(registration: RegistrationData): string {
   const displayTimeSlot = formatTimeSlot(registration.timeSlot);
   
+  // Check if this is a final confirmation SMS
+  if (registration.confirmationUrl) {
+    const cancelUrl = registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/');
+    
+    return `🚨 URGENT: Confirm Your Christmas Store Registration
+
+Hi ${registration.firstName}! You MUST confirm your time slot or risk losing it to another family.
+
+📅 Saturday, Dec 6th, 2025
+🕘 Your Time: ${displayTimeSlot}  
+👶 Children: ${registration.numberOfKids}
+
+✅ CONFIRM NOW: ${registration.confirmationUrl}
+
+❌ CAN'T ATTEND? CANCEL: ${cancelUrl}
+
+Failure to confirm may result in your time slot being given to someone else.
+
+Questions? Call (208) 746-9089
+
+- Pathway Christmas Store`;
+  }
+  
+  // Regular confirmation SMS
   return `🎄 Christmas Store Registration Confirmed!
 
 Hello ${registration.firstName}!
 
 Your registration is confirmed for:
-📅 Friday, December 6th, 2025
+📅 Saturday, December 6th, 2025
 🕘 Time: ${displayTimeSlot}
 📍 Location: 12 Foss Road, Lewiston, ME 04256
 👶 Children: ${registration.numberOfKids}
