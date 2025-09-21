@@ -15,13 +15,20 @@ let adminClient: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = async () => {
   if (!client) {
     try {
-      // Use API Key mode for read operations
+      // First ensure Amplify is configured
       await ensureAmplifyConfigured();
-      client = generateClient<Schema>({ authMode: 'apiKey' });
-      console.log('✅ Client created with apiKey auth for read operations');
-    } catch (apiKeyError) {
-      console.error('❌ API Key client creation failed:', apiKeyError);
-      throw new Error('Failed to create Amplify client. Check Amplify configuration.');
+      client = generateClient<Schema>({ authMode: 'userPool' });
+      console.log('✅ Client created with userPool auth');
+    } catch (userPoolError) {
+      console.warn('⚠️ UserPool client failed, trying apiKey fallback:', userPoolError);
+      try {
+        await ensureAmplifyConfigured();
+        client = generateClient<Schema>({ authMode: 'apiKey' });
+        console.log('✅ Client created with apiKey auth (fallback)');
+      } catch (apiKeyError) {
+        console.error('❌ All client creation attempts failed:', { userPoolError, apiKeyError });
+        throw new Error('Failed to create Amplify client. Check Amplify configuration.');
+      }
     }
   }
   return client;
