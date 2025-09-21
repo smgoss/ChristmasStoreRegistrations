@@ -15,13 +15,20 @@ let adminClient: ReturnType<typeof generateClient<Schema>> | null = null;
 const getClient = async () => {
   if (!client) {
     try {
-      // Use API Key mode for read operations
+      // First ensure Amplify is configured
       await ensureAmplifyConfigured();
-      client = generateClient<Schema>({ authMode: 'apiKey' });
-      console.log('✅ Client created with apiKey auth for read operations');
-    } catch (apiKeyError) {
-      console.error('❌ API Key client creation failed:', apiKeyError);
-      throw new Error('Failed to create Amplify client. Check Amplify configuration.');
+      client = generateClient<Schema>({ authMode: 'userPool' });
+      console.log('✅ Client created with userPool auth');
+    } catch (userPoolError) {
+      console.warn('⚠️ UserPool client failed, trying apiKey fallback:', userPoolError);
+      try {
+        await ensureAmplifyConfigured();
+        client = generateClient<Schema>({ authMode: 'apiKey' });
+        console.log('✅ Client created with apiKey auth (fallback)');
+      } catch (apiKeyError) {
+        console.error('❌ All client creation attempts failed:', { userPoolError, apiKeyError });
+        throw new Error('Failed to create Amplify client. Check Amplify configuration.');
+      }
     }
   }
   return client;
@@ -198,6 +205,14 @@ function AdminDashboard() {
     finalConfirmationDeadline: '',
     finalConfirmationEnabled: false
   });
+
+  // Bulk email state
+  const [bulkEmailSubject, setBulkEmailSubject] = useState('');
+  const [bulkEmailMessage, setBulkEmailMessage] = useState('');
+  const [sendSmsNotification, setSendSmsNotification] = useState(true);
+  const [targetStatus, setTargetStatus] = useState<'all' | 'registered' | 'unconfirmed' | 'confirmed'>('all');
+  const [bulkEmailSending, setBulkEmailSending] = useState(false);
+  const [bulkEmailResults, setBulkEmailResults] = useState<any>(null);
 
   useEffect(() => {
     const initializeAndLoadData = async () => {
@@ -1555,9 +1570,67 @@ function AdminDashboard() {
     }
   };
 
+  const sendBulkEmail = async () => {
+    if (!bulkEmailSubject.trim() || !bulkEmailMessage.trim()) {
+      setMessage('❌ Please provide both subject and email message.');
+      return;
+    }
+
+    const confirmation = confirm(
+      `Are you sure you want to send a bulk email to all ${targetStatus} registrations?\n\n` +
+      `Subject: "${bulkEmailSubject}"\n\n` +
+      `This will send emails at a rate of 1 per second${sendSmsNotification ? ' followed by SMS notifications' : ''}.\n\n` +
+      `This action cannot be undone.`
+    );
+
+    if (!confirmation) return;
+
+    try {
+      setBulkEmailSending(true);
+      setBulkEmailResults(null);
+      setMessage('📧 Starting bulk email broadcast... This may take several minutes.');
+
+      const response = await fetch('/api/send-email-to-all', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          subject: bulkEmailSubject,
+          emailMessage: bulkEmailMessage,
+          sendSmsNotification,
+          targetStatus
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success !== false) {
+        setBulkEmailResults(result);
+        setMessage(`✅ Bulk email completed! ${result.emailsSent} emails sent${result.smsNotificationsSent > 0 ? `, ${result.smsNotificationsSent} SMS notifications sent` : ''}.`);
+        
+        // Clear form
+        setBulkEmailSubject('');
+        setBulkEmailMessage('');
+      } else {
+        throw new Error(result.error || 'Failed to send bulk email');
+      }
+    } catch (error) {
+      console.error('Error sending bulk email:', error);
+      setMessage(`❌ Error sending bulk email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setBulkEmailSending(false);
+    }
+  };
+
   const tabs = [
     { id: 'registrations', name: 'Registrations', icon: '👥' },
     { id: 'invites', name: 'Invites', icon: '📧' },
+    { id: 'bulk-email', name: 'Bulk Email', icon: '📨' },
     { id: 'timeslots', name: 'Time Slots', icon: '⏰' },
     { id: 'settings', name: 'Settings', icon: '⚙️' }
   ];
@@ -2390,6 +2463,148 @@ function AdminDashboard() {
                   💡 New time slots will start with {DEFAULT_CAPACITY} people capacity
                 </p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'bulk-email' && (
+          <div>
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center">
+              📨 Send Email to All Registered Guests
+            </h2>
+            
+            <div className="bg-orange-50 border-2 border-orange-200 rounded-lg p-6 mb-6">
+              <div className="flex items-center mb-4">
+                <span className="text-2xl mr-2">⚠️</span>
+                <h3 className="text-lg font-semibold text-orange-800">Important Information</h3>
+              </div>
+              <ul className="text-orange-800 space-y-2">
+                <li>• Emails will be sent at a rate of 1 per second to prevent spam filtering</li>
+                <li>• SMS notifications will be sent after emails to notify guests to check their email</li>
+                <li>• This process cannot be stopped once started</li>
+                <li>• Large batches may take several minutes to complete</li>
+              </ul>
+            </div>
+
+            <div className="space-y-6">
+              {/* Target Audience Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Target Audience
+                </label>
+                <select
+                  value={targetStatus}
+                  onChange={(e) => setTargetStatus(e.target.value as 'all' | 'registered' | 'unconfirmed' | 'confirmed')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={bulkEmailSending}
+                >
+                  <option value="all">All Non-Cancelled Registrations</option>
+                  <option value="registered">Registered Only</option>
+                  <option value="unconfirmed">Unconfirmed Only</option>
+                  <option value="confirmed">Confirmed Only</option>
+                </select>
+              </div>
+
+              {/* Email Subject */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Subject *
+                </label>
+                <input
+                  type="text"
+                  value={bulkEmailSubject}
+                  onChange={(e) => setBulkEmailSubject(e.target.value)}
+                  placeholder="e.g., Important Update from Christmas Store"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={bulkEmailSending}
+                  maxLength={100}
+                />
+                <p className="text-sm text-gray-500 mt-1">{bulkEmailSubject.length}/100 characters</p>
+              </div>
+
+              {/* Email Message */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Message *
+                </label>
+                <textarea
+                  value={bulkEmailMessage}
+                  onChange={(e) => setBulkEmailMessage(e.target.value)}
+                  placeholder="Enter your message here. You can include HTML formatting if needed."
+                  rows={10}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={bulkEmailSending}
+                  maxLength={5000}
+                />
+                <p className="text-sm text-gray-500 mt-1">{bulkEmailMessage.length}/5000 characters</p>
+              </div>
+
+              {/* SMS Notification Option */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="sendSmsNotification"
+                  checked={sendSmsNotification}
+                  onChange={(e) => setSendSmsNotification(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
+                  disabled={bulkEmailSending}
+                />
+                <label htmlFor="sendSmsNotification" className="text-sm font-medium text-gray-700">
+                  Send SMS notification after email to remind guests to check their email
+                </label>
+              </div>
+
+              {/* Send Button */}
+              <div className="flex justify-center">
+                <button
+                  onClick={sendBulkEmail}
+                  disabled={bulkEmailSending || !bulkEmailSubject.trim() || !bulkEmailMessage.trim()}
+                  className={`px-8 py-3 rounded-lg font-semibold text-lg ${
+                    bulkEmailSending || !bulkEmailSubject.trim() || !bulkEmailMessage.trim()
+                      ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                      : 'bg-blue-600 text-white hover:bg-blue-700 transform hover:scale-105 transition-all duration-200'
+                  }`}
+                >
+                  {bulkEmailSending ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Sending Emails...</span>
+                    </div>
+                  ) : (
+                    '📨 Send Bulk Email'
+                  )}
+                </button>
+              </div>
+
+              {/* Results Display */}
+              {bulkEmailResults && (
+                <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
+                  <h3 className="text-lg font-semibold text-green-800 mb-4">📊 Email Broadcast Results</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div className="bg-white rounded-lg p-3">
+                      <div className="text-2xl font-bold text-blue-600">{bulkEmailResults.totalRecipients}</div>
+                      <div className="text-sm text-gray-600">Total Recipients</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3">
+                      <div className="text-2xl font-bold text-green-600">{bulkEmailResults.emailsSent}</div>
+                      <div className="text-sm text-gray-600">Emails Sent</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3">
+                      <div className="text-2xl font-bold text-purple-600">{bulkEmailResults.smsNotificationsSent || 0}</div>
+                      <div className="text-sm text-gray-600">SMS Notifications</div>
+                    </div>
+                    <div className="bg-white rounded-lg p-3">
+                      <div className="text-2xl font-bold text-orange-600">{(bulkEmailResults.emailsFailed || 0) + (bulkEmailResults.smsNotificationsFailed || 0)}</div>
+                      <div className="text-sm text-gray-600">Total Failed</div>
+                    </div>
+                  </div>
+                  {bulkEmailResults.estimatedDurationSeconds && (
+                    <p className="text-sm text-gray-600 mt-4 text-center">
+                      Completed in approximately {Math.ceil(bulkEmailResults.estimatedDurationSeconds / 60)} minutes
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
