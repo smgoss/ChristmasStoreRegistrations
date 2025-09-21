@@ -29,7 +29,6 @@ const getClient = async () => {
         console.error('❌ All client creation attempts failed:', { userPoolError, apiKeyError });
         throw new Error('Failed to create Amplify client. Check Amplify configuration.');
       }
-      }
     }
   }
   return client;
