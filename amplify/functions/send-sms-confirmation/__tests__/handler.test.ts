@@ -169,9 +169,9 @@ describe('SMS Confirmation Handler', () => {
       
       expect(messageBody).toContain('🎄 Christmas Store Registration Confirmed!');
       expect(messageBody).toContain('Hello John!');
-      expect(messageBody).toContain('Time: 09:00 AM');
-      expect(messageBody).toContain('Children: 2');
-      expect(messageBody).toContain('Pathway Christmas Store Team');
+      expect(messageBody).toContain('🕘 Time: 9:00 AM');
+      expect(messageBody).toContain('👶 Children: 2');
+      expect(messageBody).toContain('Pathway Vineyard Christmas Store');
     });
 
     it('should use correct text header', async () => {
@@ -257,7 +257,8 @@ describe('SMS Confirmation Handler', () => {
 
       expect(result).toEqual({
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: 'API key invalid'
       });
     });
 
@@ -274,7 +275,8 @@ describe('SMS Confirmation Handler', () => {
 
       expect(result).toEqual({
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: 'Network error'
       });
     });
 
@@ -291,7 +293,8 @@ describe('SMS Confirmation Handler', () => {
 
       expect(result).toEqual({
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: 'CLEAR_STREAM_API_KEY not found in environment or Secrets Manager'
       });
       expect(mockFetch).not.toHaveBeenCalled();
     });
@@ -339,7 +342,8 @@ describe('SMS Confirmation Handler', () => {
 
       expect(result).toEqual({
         success: false,
-        message: 'Error sending SMS confirmation'
+        message: 'Error sending SMS confirmation',
+        error: "Cannot read properties of undefined (reading 'phone')"
       });
     });
   });

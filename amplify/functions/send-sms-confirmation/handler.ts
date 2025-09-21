@@ -96,10 +96,22 @@ export const handler: Handler = async (event: any) => {
 };
 
 function cleanPhoneNumber(phone: string): string {
+  // If it already has a + and looks like a valid international number, preserve it
+  if (phone.startsWith('+') && phone.replace(/\D/g, '').length >= 10) {
+    // For US numbers starting with +1, ensure they're formatted correctly
+    if (phone.startsWith('+1') && phone.replace(/\D/g, '').length === 11) {
+      return phone;
+    }
+    // For other international numbers, preserve as-is if they look valid
+    if (!phone.startsWith('+1')) {
+      return phone;
+    }
+  }
+  
   // Remove all non-numeric characters
   const digits = phone.replace(/\D/g, '');
   
-  // Add +1 if it's a 10-digit US number (this is the standard case now)
+  // Add +1 if it's a 10-digit US number
   if (digits.length === 10) {
     return `+1${digits}`;
   }
@@ -109,17 +121,8 @@ function cleanPhoneNumber(phone: string): string {
     return `+${digits}`;
   }
   
-  // If it already has +1, return as-is
-  if (phone.startsWith('+1') && phone.replace(/\D/g, '').length === 11) {
-    return phone;
-  }
-  
-  // For any 10-digit number, add +1
-  if (digits.length === 10) {
-    return `+1${digits}`;
-  }
-  
-  return `+1${digits}`; // Default to adding +1 for US numbers
+  // Default to adding +1 for US numbers
+  return `+1${digits}`;
 }
 
 function formatTimeSlot(timeSlot: string): string {
