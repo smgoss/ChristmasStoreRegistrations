@@ -82,8 +82,8 @@ describe('Clearstream API Integration', () => {
       expect(callBody.get('to')).toBe('+15551234567');
       expect(callBody.get('text_header')).toBe('Test Header');
       expect(callBody.get('text_body')).toContain('Hello John!');
-      expect(callBody.get('text_body')).toContain('Time: 09:00 AM');
-      expect(callBody.get('text_body')).toContain('Children: 2');
+      expect(callBody.get('text_body')).toContain('🕘 Time: 9:00 AM');
+      expect(callBody.get('text_body')).toContain('👶 Children: 2');
     });
   });
 
@@ -145,7 +145,8 @@ describe('Clearstream API Integration', () => {
 
       expect(result).toEqual({
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: 'Invalid phone number'
       });
     });
 
@@ -230,7 +231,8 @@ describe('Clearstream API Integration', () => {
 
       expect(result).toEqual({
         success: false,
-        message: 'Failed to send SMS confirmation'
+        message: 'Failed to send SMS confirmation',
+        error: 'Network timeout'
       });
     });
 
