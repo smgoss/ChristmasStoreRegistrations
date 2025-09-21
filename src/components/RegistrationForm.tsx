@@ -36,6 +36,8 @@ interface RegistrationConfig {
   scheduledCloseDate?: string;
   autoCloseEnabled: boolean;
   closureMessage: string;
+  finalConfirmationDeadline?: string;
+  finalConfirmationEnabled?: boolean;
   replyToEmail?: string;
   contactPhone?: string;
   textingNumber?: string;
@@ -639,11 +641,11 @@ export default function RegistrationForm({
             🎄 Christmas Store Registration 🎁
           </h1>
           <h2 className="christmas-subtitle">
-            {LOCATION_NAME}
+            {registrationConfig?.locationName || LOCATION_NAME}
           </h2>
-          <p className="christmas-location">{LOCATION_ADDRESS}</p>
+          <p className="christmas-location">{registrationConfig?.eventAddress || LOCATION_ADDRESS}</p>
           <p className="christmas-date" style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'white', marginTop: '0.5rem', textShadow: '0 2px 6px rgb(0 0 0 / 0.7)'}}>
-            📅 Friday, December 6th, 2024
+            📅 Saturday, December 6th, 2025
           </p>
         </div>
         
