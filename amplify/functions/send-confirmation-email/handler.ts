@@ -123,16 +123,18 @@ export const handler: Handler = async (event: any) => {
   try {
     console.log('📱 Sending Email confirmation:', event);
     
-    const { registration, registrationId, subject, message, messageId }: { 
-      registration: RegistrationData; 
+    const { registration, registrationId, subject, message, messageId, waitlistEntry, waitlistId }: { 
+      registration?: RegistrationData; 
       registrationId?: string;
       subject?: string;
       message?: string;
       messageId?: string;
+      waitlistEntry?: any;
+      waitlistId?: string;
     } = event.arguments || event;
 
     // Check if this is a custom message
-    if (subject && message && messageId) {
+    if (subject && message && messageId && registration) {
       console.log('📧 Sending custom message:', { subject, messageId });
       const customEmailContent = generateCustomEmailContent(registration, subject, message);
       
@@ -165,6 +167,42 @@ export const handler: Handler = async (event: any) => {
         messageId: messageId
       };
     }
+
+    // Check if this is a waitlist email
+    if (waitlistEntry && waitlistId) {
+      console.log('📧 Sending waitlist confirmation email:', { waitlistId });
+      const config = await getRegistrationConfig();
+      const emailContent = generateWaitlistEmailContent(waitlistEntry, config);
+      
+      const command = new SendEmailCommand({
+        Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
+        ReplyToAddresses: ['office@pathwayvineyard.com'],
+        Destination: {
+          ToAddresses: [waitlistEntry.email],
+        },
+        Message: {
+          Subject: {
+            Charset: 'UTF-8',
+            Data: '📋 You\'re on the Christmas Store Waitlist',
+          },
+          Body: {
+            Html: {
+              Charset: 'UTF-8',
+              Data: emailContent,
+            },
+          },
+        },
+      });
+
+      const result = await ses.send(command);
+      console.log('✅ Waitlist email sent successfully:', result);
+
+      return {
+        success: true,
+        message: 'Waitlist email sent successfully',
+        messageId: result.MessageId
+      };
+    }
     
     // Regular confirmation email logic
     const config = await getRegistrationConfig();
@@ -172,19 +210,31 @@ export const handler: Handler = async (event: any) => {
     console.log('🎯 Config locationName:', config.locationName);
     console.log('🎯 Config eventAddress:', config.eventAddress);
     
+    // Check if registration exists
+    if (!registration) {
+      console.error('❌ No registration data provided');
+      return {
+        success: false,
+        message: 'No registration data provided'
+      };
+    }
+
+    // Type guard to ensure registration is defined for the rest of the function
+    const validRegistration = registration;
+
     // Use registrationId if available, otherwise fall back to registration.id
-    const regId = registrationId || registration.id;
-    const emailContent = generateEmailContent(registration, config, regId);
+    const regId = registrationId || validRegistration.id;
+    const emailContent = generateEmailContent(validRegistration, config, regId);
 
     const command = new SendEmailCommand({
       Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
       ReplyToAddresses: ['office@pathwayvineyard.com'],
       Destination: {
-        ToAddresses: [registration.email],
+        ToAddresses: [validRegistration.email],
       },
       Message: {
         Subject: {
-          Data: '🎄 Christmas Store Registration Confirmed - ' + registration.timeSlot,
+          Data: '🎄 Christmas Store Registration Confirmed - ' + validRegistration.timeSlot,
           Charset: 'UTF-8',
         },
         Body: {
@@ -273,6 +323,128 @@ function formatTimeSlot(timeSlot: string): string {
   
   // If not in expected format, return as-is
   return timeSlot;
+}
+
+function generateWaitlistEmailContent(waitlistEntry: any, config: RegistrationConfig = {}): string {
+  console.log('📧 generateWaitlistEmailContent called');
+  
+  // Get location config
+  const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
+  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
+  const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
+  const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
+  const locationEmoji = process.env.LOCATION_EMOJI || '';
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>You're on the Christmas Store Waitlist - ${locationName}</title>
+      <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { 
+          background: linear-gradient(rgba(245, 158, 11, 0.9), rgba(251, 191, 36, 0.9));
+          color: white; 
+          text-align: center; 
+          padding: 48px 30px; 
+          border-radius: 16px; 
+          position: relative;
+          overflow: hidden;
+        }
+        .header h1 { 
+          font-size: 2rem; 
+          font-weight: 700; 
+          margin: 0 0 1rem 0; 
+          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5); 
+        }
+        .header .emoji { 
+          font-size: 3rem; 
+          margin-bottom: 1rem; 
+          display: block; 
+          filter: drop-shadow(0 4px 8px rgb(0 0 0 / 0.8)); 
+        }
+        .waitlist-info { background-color: #fef3c7; border: 3px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .waitlist-info h2 { color: #92400e; margin-top: 0; }
+        .position-badge {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          color: white;
+          padding: 15px 25px;
+          border-radius: 50px;
+          font-size: 24px;
+          font-weight: bold;
+          display: inline-block;
+          margin: 20px 0;
+          box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        .registration-details { background-color: #f9fafb; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .footer { text-align: center; color: #6b7280; font-size: 14px; margin-top: 20px; }
+        .info-box { background-color: #e0f2fe; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .contact-info { background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin: 20px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        ${locationEmoji ? `<span class="emoji">${locationEmoji}</span>` : ''}
+        <h1>📋 You're on the Waitlist!</h1>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">Christmas Store 2025</p>
+      </div>
+      
+      <div class="waitlist-info">
+        <h2>✅ Successfully Added to Waitlist</h2>
+        <p><strong>Dear ${waitlistEntry.firstName} ${waitlistEntry.lastName},</strong></p>
+        
+        <p>Thank you for your interest in the ${locationName}! While all time slots are currently full, we've added you to our waitlist.</p>
+        
+        
+        <p><strong>What happens next?</strong></p>
+        <ul>
+          <li>🔔 We'll contact you if a spot opens up</li>
+          <li>📧 You'll receive priority access to available time slots</li>
+          <li>⏰ Please respond quickly when we reach out to secure your spot</li>
+        </ul>
+      </div>
+      
+      <div class="registration-details">
+        <h3>📋 Your Waitlist Information</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li><strong>Name:</strong> ${waitlistEntry.firstName} ${waitlistEntry.lastName}</li>
+          <li><strong>Email:</strong> ${waitlistEntry.email}</li>
+          <li><strong>Phone:</strong> ${waitlistEntry.phone}</li>
+          <li><strong>Number of Children:</strong> ${waitlistEntry.numberOfKids}</li>
+          ${waitlistEntry.preferredTimeSlots ? `<li><strong>Preferred Times:</strong> ${waitlistEntry.preferredTimeSlots}</li>` : ''}
+        </ul>
+      </div>
+      
+      <div class="info-box">
+        <h3>📍 Event Information</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li><strong>Event:</strong> ${locationName}</li>
+          <li><strong>Date:</strong> Saturday, December 6th, 2025</li>
+          <li><strong>Location:</strong> ${locationAddress}</li>
+        </ul>
+      </div>
+      
+      <div class="contact-info">
+        <h3>❓ Questions or Need to Update Your Information?</h3>
+        <p>📧 Email: ${contactEmail}</p>
+        <p>📞 Phone: ${contactPhone}</p>
+        <p>🌐 Website: pathwayvineyard.com</p>
+        
+        <p style="font-size: 14px; margin-top: 15px;">
+          <strong>Important:</strong> Please keep this email as confirmation of your waitlist registration. 
+          We'll contact you at ${waitlistEntry.email} or ${waitlistEntry.phone} if a spot becomes available.
+        </p>
+      </div>
+      
+      <div class="footer">
+        <p>Thank you for your patience and for being part of our Christmas Store community!</p>
+        <p>This is an automated message. Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
 }
 
 function generateFinalConfirmationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}, registrationId?: string): string {

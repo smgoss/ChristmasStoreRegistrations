@@ -64,6 +64,45 @@ const schema = a.schema({
       allow.publicApiKey().to(['read', 'create', 'update']),
       allow.group('admin').to(['read', 'create', 'update', 'delete'])
     ]),
+
+  Waitlist: a
+    .model({
+      // Personal info
+      firstName: a.string().required(),
+      lastName: a.string().required(),
+      email: a.email().required(),
+      phone: a.phone().required(),
+      
+      // Address info
+      streetAddress: a.string().required(),
+      zipCode: a.string().required(),
+      city: a.string().required(),
+      state: a.string().required(),
+      
+      // Children info
+      numberOfKids: a.integer().required(),
+      children: a.json(), // Store children data as JSON
+      
+      // Preferred time slots (if any)
+      preferredTimeSlots: a.string(), // Comma-separated list like "09:00,10:00"
+      
+      // Additional info
+      referredBy: a.string(),
+      
+      // Waitlist tracking
+      waitlistDate: a.datetime().required(),
+      position: a.integer(), // Position in waitlist (1 = first, 2 = second, etc.)
+      isActive: a.boolean().default(true),
+      
+      // When moved to registration
+      movedToRegistration: a.boolean().default(false),
+      movedToRegistrationAt: a.datetime(),
+      registrationId: a.string(), // ID of the created registration
+    })
+    .authorization((allow) => [
+      allow.publicApiKey().to(['read', 'create', 'update']),
+      allow.group('admin').to(['read', 'create', 'update', 'delete'])
+    ]),
   
   Child: a
     .model({
@@ -312,6 +351,28 @@ const schema = a.schema({
     }))
     .authorization((allow) => [allow.publicApiKey()])
     .handler(a.handler.function(sendSmsConfirmation)),
+
+  sendWaitlistEmail: a
+    .mutation()
+    .arguments({
+      waitlistEntry: a.customType({
+        firstName: a.string().required(),
+        lastName: a.string().required(),
+        email: a.string().required(),
+        phone: a.string().required(),
+        numberOfKids: a.integer().required(),
+        preferredTimeSlots: a.string(),
+        position: a.integer().required(),
+      }),
+      waitlistId: a.string()
+    })
+    .returns(a.customType({
+      success: a.boolean().required(),
+      message: a.string(),
+      messageId: a.string(),
+    }))
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(a.handler.function(sendConfirmationEmail)),
 });
 
 export type Schema = ClientSchema<typeof schema>;

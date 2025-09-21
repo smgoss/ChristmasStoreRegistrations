@@ -109,6 +109,9 @@ export default function RegistrationForm({
   const [contactEmail, setContactEmail] = useState(CONTACT_EMAIL); // Default to location config, will be updated
   const [contactPhone, setContactPhone] = useState(CHURCH_INFO.phone); // Default to location config, will be updated
   const [configLoading, setConfigLoading] = useState(true);
+  const [showWaitlistOption, setShowWaitlistOption] = useState(false);
+  const [isWaitlistMode, setIsWaitlistMode] = useState(false);
+  const [submissionWasWaitlist, setSubmissionWasWaitlist] = useState(false);
   
 
   useEffect(() => {
@@ -265,6 +268,14 @@ export default function RegistrationForm({
       
       setTimeSlots(activeTimeSlots);
       setTimeSlotCapacities(capacities);
+      
+      // Check if all time slots are full to show waitlist option
+      const allSlotsFull = activeTimeSlots.length > 0 && activeTimeSlots.every(slot => {
+        const capacity = capacities[slot];
+        return capacity && capacity.current >= capacity.max;
+      });
+      
+      setShowWaitlistOption(allSlotsFull);
     } catch (error) {
       console.error('Error loading time slot capacities:', error);
     }
@@ -383,7 +394,7 @@ export default function RegistrationForm({
     if (!formData.zipCode.trim()) newErrors.zipCode = 'Zip code is required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.state.trim()) newErrors.state = 'State is required';
-    if (!formData.timeSlot) newErrors.timeSlot = 'Please select a time slot';
+    if (!formData.timeSlot && !isWaitlistMode) newErrors.timeSlot = 'Please select a time slot';
     
     // Validate zip code format
     if (formData.zipCode && !/^\d{5}(-\d{4})?$/.test(formData.zipCode)) {
@@ -407,11 +418,32 @@ export default function RegistrationForm({
     try {
       const client = await getClient();
       const { data: existingRegistrations } = await client.models.Registration.list({
-        filter: { email: { eq: formData.email } }
+        filter: { 
+          email: { eq: formData.email },
+          isCancelled: { ne: true }
+        }
       });
+      
+      // Also check waitlist for duplicates (only if Waitlist model is available)
+      let existingWaitlistEntries: any[] = [];
+      try {
+        if (client.models.Waitlist) {
+          const waitlistResult = await client.models.Waitlist.list({
+            filter: { 
+              email: { eq: formData.email },
+              isActive: { eq: true }
+            }
+          });
+          existingWaitlistEntries = waitlistResult.data || [];
+        }
+      } catch (waitlistError) {
+        console.log('Waitlist model not yet available:', waitlistError);
+      }
       
       if (existingRegistrations.length > 0) {
         newErrors.email = 'Someone is already registered with this email address';
+      } else if (existingWaitlistEntries.length > 0) {
+        newErrors.email = 'This email address is already on the waitlist';
       }
     } catch (error) {
       console.error('Error checking email:', error);
@@ -421,20 +453,43 @@ export default function RegistrationForm({
     try {
       const client = await getClient();
       const { data: existingRegistrations } = await client.models.Registration.list({
-        filter: { phone: { eq: formData.phone } }
+        filter: { 
+          phone: { eq: formData.phone },
+          isCancelled: { ne: true }
+        }
       });
+      
+      // Also check waitlist for duplicates (only if Waitlist model is available)
+      let existingWaitlistEntries: any[] = [];
+      try {
+        if (client.models.Waitlist) {
+          const waitlistResult = await client.models.Waitlist.list({
+            filter: { 
+              phone: { eq: formData.phone },
+              isActive: { eq: true }
+            }
+          });
+          existingWaitlistEntries = waitlistResult.data || [];
+        }
+      } catch (waitlistError) {
+        console.log('Waitlist model not yet available:', waitlistError);
+      }
       
       if (existingRegistrations.length > 0) {
         newErrors.phone = 'Someone is already registered with this phone number';
+      } else if (existingWaitlistEntries.length > 0) {
+        newErrors.phone = 'This phone number is already on the waitlist';
       }
     } catch (error) {
       console.error('Error checking phone:', error);
     }
 
-    // Check time slot availability
-    const slotCapacity = timeSlotCapacities[formData.timeSlot];
-    if (slotCapacity && slotCapacity.current >= slotCapacity.max) {
-      newErrors.timeSlot = 'This time slot is full';
+    // Check time slot availability (only when not in waitlist mode)
+    if (!isWaitlistMode) {
+      const slotCapacity = timeSlotCapacities[formData.timeSlot];
+      if (slotCapacity && slotCapacity.current >= slotCapacity.max) {
+        newErrors.timeSlot = 'This time slot is full';
+      }
     }
 
     setErrors(newErrors);
@@ -451,14 +506,27 @@ export default function RegistrationForm({
         setLoading(false);
         return;
       }
-      // Create registration via secure server route
-      const res = await fetch('/api/register', {
+      // Choose API endpoint based on mode
+      const apiEndpoint = isWaitlistMode ? '/api/register-waitlist' : '/api/register';
+      
+      // Prepare data for submission
+      const submissionData = isWaitlistMode ? {
+        ...formData,
+        preferredTimeSlots: formData.timeSlot ? [formData.timeSlot] : [], // Convert single time slot to array for waitlist
+        children: formData.children.map(child => ({
+          ...child,
+          age: child.age.toString() // Convert age to string for waitlist API
+        }))
+      } : {
+        ...formData,
+        inviteToken: inviteToken || undefined,
+      };
+      
+      // Create registration or waitlist entry via secure server route
+      const res = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          inviteToken: inviteToken || undefined,
-        }),
+        body: JSON.stringify(submissionData),
       });
 
       if (!res.ok) {
@@ -467,6 +535,7 @@ export default function RegistrationForm({
         return;
       }
 
+      setSubmissionWasWaitlist(isWaitlistMode);
       setSubmitted(true);
       if (onRegistrationComplete) onRegistrationComplete();
     } catch (error) {
@@ -481,9 +550,14 @@ export default function RegistrationForm({
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-green-600 mb-4">Registration Submitted!</h2>
+          <h2 className="text-2xl font-bold text-green-600 mb-4">
+            {submissionWasWaitlist ? 'Added to Waitlist!' : 'Registration Submitted!'}
+          </h2>
           <p className="text-gray-600 mb-4">
-            Thank you for registering for the Christmas Store! 
+            {submissionWasWaitlist 
+              ? 'Thank you for joining our Christmas Store waitlist! We\'ll contact you if a spot becomes available.'
+              : 'Thank you for registering for the Christmas Store!'
+            }
           </p>
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
             <div className="flex">
@@ -491,9 +565,13 @@ export default function RegistrationForm({
                 <span className="text-2xl">📧</span>
               </div>
               <div className="ml-3">
-                <h3 className="text-lg font-medium text-blue-800">Watch for Your Confirmation Email</h3>
+                <h3 className="text-lg font-medium text-blue-800">
+                  {submissionWasWaitlist ? 'Watch for Your Waitlist Confirmation Email' : 'Watch for Your Confirmation Email'}
+                </h3>
                 <div className="mt-2 text-sm text-blue-700">
-                  <p className="mb-2">You will receive a confirmation email shortly from:</p>
+                  <p className="mb-2">
+                    You will receive a {submissionWasWaitlist ? 'waitlist confirmation' : 'confirmation'} email shortly from:
+                  </p>
                   <p className="font-mono bg-white px-2 py-1 rounded border text-blue-900 font-semibold">
                     christmas-store@pathwayvineyard.com
                   </p>
@@ -504,7 +582,7 @@ export default function RegistrationForm({
               </div>
             </div>
           </div>
-          {registrationConfig?.textingNumber && (
+          {registrationConfig?.textingNumber && !submissionWasWaitlist && (
             <div className="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
               <div className="flex">
                 <div className="flex-shrink-0">
@@ -537,7 +615,16 @@ export default function RegistrationForm({
           <div className="bg-green-50 p-4 rounded-lg">
             <p className="text-gray-900"><strong>Name:</strong> {formData.firstName} {formData.lastName}</p>
             <p className="text-gray-900"><strong>Email:</strong> {formData.email}</p>
-            <p className="text-gray-900"><strong>Time Slot:</strong> {formData.timeSlot}</p>
+            {submissionWasWaitlist ? (
+              <>
+                {formData.timeSlot && (
+                  <p className="text-gray-900"><strong>Preferred Time Slot:</strong> {formData.timeSlot}</p>
+                )}
+                <p className="text-gray-900"><strong>Waitlist Status:</strong> Active</p>
+              </>
+            ) : (
+              <p className="text-gray-900"><strong>Time Slot:</strong> {formData.timeSlot}</p>
+            )}
             <p className="text-gray-900"><strong>Number of Children:</strong> {formData.numberOfKids}</p>
           </div>
         </div>
@@ -857,7 +944,7 @@ export default function RegistrationForm({
                       onChange={(e) => {
                         const newChildren = [...formData.children];
                         const value = e.target.value;
-                        newChildren[index].age = value === '<1' ? '<1' : parseInt(value);
+                        newChildren[index].age = value === '<1' ? '<1' : (value ? parseInt(value) : '');
                         setFormData(prev => ({ ...prev, children: newChildren }));
                       }}
                       className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
@@ -899,22 +986,65 @@ export default function RegistrationForm({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Preferred Time Slot *
+            {isWaitlistMode ? 'Preferred Time Slot (optional)' : 'Preferred Time Slot *'}
           </label>
+          
+          {showWaitlistOption && !isWaitlistMode && (
+            <div className="mb-4 p-4 bg-orange-50 border-2 border-orange-200 rounded-lg">
+              <div className="flex items-start space-x-3">
+                <div className="text-2xl">⚠️</div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-orange-800 mb-2">All Time Slots Are Full</h3>
+                  <p className="text-orange-700 mb-3">
+                    All available time slots are currently at capacity. However, you can join our waitlist and we'll contact you if a spot becomes available.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setIsWaitlistMode(true)}
+                    className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 font-semibold"
+                  >
+                    📋 Join Waitlist Instead
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {isWaitlistMode && (
+            <div className="mb-4 p-4 bg-purple-50 border-2 border-purple-200 rounded-lg">
+              <div className="flex items-start space-x-3">
+                <div className="text-2xl">📋</div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-purple-800 mb-2">Waitlist Mode</h3>
+                  <p className="text-purple-700 mb-3">
+                    You're joining our waitlist. We'll send you an email confirmation and contact you if a spot becomes available.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setIsWaitlistMode(false)}
+                    className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 font-semibold text-sm"
+                  >
+                    🔙 Back to Regular Registration
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <select
             value={formData.timeSlot}
             onChange={(e) => setFormData(prev => ({ ...prev, timeSlot: e.target.value }))}
             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
-            required
+            required={!isWaitlistMode}
           >
-            <option value="">Select a time slot</option>
+            <option value="">{isWaitlistMode ? 'Select preferred time slot (optional)' : 'Select a time slot'}</option>
             {timeSlots.map((slot, index) => {
               const capacity = timeSlotCapacities[slot];
               const isFull = capacity && capacity.current >= capacity.max;
               const availableText = capacity ? ` (${capacity.current}/${capacity.max} registered)` : '';
               
               return (
-                <option key={`${slot}-${index}`} value={slot} disabled={isFull}>
+                <option key={`${slot}-${index}`} value={slot} disabled={!isWaitlistMode && isFull}>
                   {slot}{availableText}{isFull ? ' - FULL' : ''}
                 </option>
               );
@@ -943,7 +1073,7 @@ export default function RegistrationForm({
           className="w-full py-3 px-6 rounded-md font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors hover:opacity-90"
           style={{ backgroundColor: BRANDING.primaryColor }}
         >
-          {loading ? 'Submitting...' : '🎁 Register for Christmas Store'}
+          {loading ? 'Submitting...' : isWaitlistMode ? '📋 Join Waitlist' : '🎁 Register for Christmas Store'}
         </button>
         
         <div className="text-center mt-8 pt-6 border-t border-gray-200">
