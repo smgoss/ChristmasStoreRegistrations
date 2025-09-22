@@ -2,12 +2,16 @@ import { POST } from '../send-invite-email/route';
 import { NextRequest } from 'next/server';
 
 // Mock AWS SDK
-jest.mock('@aws-sdk/client-lambda', () => ({
-  LambdaClient: jest.fn().mockImplementation(() => ({
-    send: jest.fn()
-  })),
-  InvokeCommand: jest.fn()
-}));
+jest.mock('@aws-sdk/client-lambda', () => {
+  const mockSend = jest.fn();
+  return {
+    LambdaClient: jest.fn().mockImplementation(() => ({
+      send: mockSend
+    })),
+    InvokeCommand: jest.fn(),
+    __mockSend: mockSend // Expose for test access
+  };
+});
 
 // Mock the API utilities
 jest.mock('@/lib/api-utils', () => ({
@@ -22,13 +26,16 @@ jest.mock('@/lib/api-utils', () => ({
 }));
 
 describe('/api/send-invite-email', () => {
+  let mockSend: jest.Mock;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    const lambdaMock = require('@aws-sdk/client-lambda');
+    mockSend = lambdaMock.__mockSend;
   });
 
   it('should successfully send invite email', async () => {
     const { validateRequestBody } = require('@/lib/api-utils');
-    const { LambdaClient } = require('@aws-sdk/client-lambda');
     
     validateRequestBody.mockResolvedValueOnce({
       success: true,
@@ -39,14 +46,10 @@ describe('/api/send-invite-email', () => {
       }
     });
 
-    // Mock the LambdaClient constructor to return our mock instance
-    const mockSend = jest.fn().mockResolvedValueOnce({
+    // Mock the Lambda send response
+    mockSend.mockResolvedValueOnce({
       Payload: new TextEncoder().encode(JSON.stringify({ statusCode: 200 }))
     });
-    
-    LambdaClient.mockImplementation(() => ({
-      send: mockSend
-    }));
 
     const validPayload = {
       email: 'test@example.com',
@@ -124,7 +127,6 @@ describe('/api/send-invite-email', () => {
 
   it('should handle Lambda function failure', async () => {
     const { validateRequestBody } = require('@/lib/api-utils');
-    const { LambdaClient } = require('@aws-sdk/client-lambda');
     
     validateRequestBody.mockResolvedValueOnce({
       success: true,
@@ -135,13 +137,41 @@ describe('/api/send-invite-email', () => {
       }
     });
 
-    const mockSend = jest.fn().mockResolvedValueOnce({
+    mockSend.mockResolvedValueOnce({
       Payload: new TextEncoder().encode(JSON.stringify({ statusCode: 500, error: 'Lambda error' }))
     });
+
+    const validPayload = {
+      email: 'test@example.com',
+      inviteLink: 'https://example.com/register/token123',
+      token: 'token123'
+    };
+
+    const request = new NextRequest('http://localhost:3000/api/send-invite-email', {
+      method: 'POST',
+      body: JSON.stringify(validPayload)
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(data.success).toBe(false);
+    expect(data.code).toBe('EMAIL_SEND_FAILED');
+  });
+
+  it('should handle Lambda invocation errors', async () => {
+    const { validateRequestBody } = require('@/lib/api-utils');
     
-    LambdaClient.mockImplementation(() => ({
-      send: mockSend
-    }));
+    validateRequestBody.mockResolvedValueOnce({
+      success: true,
+      data: {
+        email: 'test@example.com',
+        inviteLink: 'https://example.com/register/token123',
+        token: 'token123'
+      }
+    });
+
+    mockSend.mockRejectedValueOnce(new Error('Lambda invocation failed'));
 
     const validPayload = {
       email: 'test@example.com',
@@ -159,42 +189,6 @@ describe('/api/send-invite-email', () => {
 
     expect(data.success).toBe(false);
     expect(data.code).toBe('INTERNAL_ERROR');
-  });
-
-  it('should handle Lambda invocation errors', async () => {
-    const { validateRequestBody } = require('@/lib/api-utils');
-    const { LambdaClient } = require('@aws-sdk/client-lambda');
-    
-    validateRequestBody.mockResolvedValueOnce({
-      success: true,
-      data: {
-        email: 'test@example.com',
-        inviteLink: 'https://example.com/register/token123',
-        token: 'token123'
-      }
-    });
-
-    const mockSend = jest.fn().mockRejectedValueOnce(new Error('Lambda invocation failed'));
-    
-    LambdaClient.mockImplementation(() => ({
-      send: mockSend
-    }));
-
-    const validPayload = {
-      email: 'test@example.com',
-      inviteLink: 'https://example.com/register/token123',
-      token: 'token123'
-    };
-
-    const request = new NextRequest('http://localhost:3000/api/send-invite-email', {
-      method: 'POST',
-      body: JSON.stringify(validPayload)
-    });
-
-    const response = await POST(request);
-
-    expect((response as any).json.success).toBe(false);
-    expect((response as any).json.code).toBe('INTERNAL_ERROR');
   });
 
   it('should handle rate limiting', async () => {
