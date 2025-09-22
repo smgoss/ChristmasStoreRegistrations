@@ -3087,63 +3087,63 @@ function AdminDashboard() {
                           <input
                             type="text"
                             value={editWaitlistData?.firstName || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, firstName: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, firstName: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="First Name"
                           />
                           <input
                             type="text"
                             value={editWaitlistData?.lastName || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, lastName: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, lastName: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Last Name"
                           />
                           <input
                             type="email"
                             value={editWaitlistData?.email || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, email: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, email: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Email"
                           />
                           <input
                             type="tel"
                             value={editWaitlistData?.phone || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, phone: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, phone: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Phone"
                           />
                           <input
                             type="text"
                             value={editWaitlistData?.streetAddress || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, streetAddress: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, streetAddress: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Street Address"
                           />
                           <input
                             type="text"
                             value={editWaitlistData?.city || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, city: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, city: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="City"
                           />
                           <input
                             type="text"
                             value={editWaitlistData?.state || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, state: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, state: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="State"
                           />
                           <input
                             type="text"
                             value={editWaitlistData?.zipCode || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, zipCode: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, zipCode: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Zip Code"
                           />
                           <input
                             type="number"
                             value={editWaitlistData?.numberOfKids || 0}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, numberOfKids: parseInt(e.target.value) || 0} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, numberOfKids: parseInt(e.target.value) || 0} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Number of Kids"
                             min="0"
@@ -3151,14 +3151,14 @@ function AdminDashboard() {
                           <input
                             type="text"
                             value={editWaitlistData?.preferredTimeSlots || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, preferredTimeSlots: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, preferredTimeSlots: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Preferred Time Slots"
                           />
                           <input
                             type="text"
                             value={editWaitlistData?.referredBy || ''}
-                            onChange={(e) => setEditWaitlistData(prev => prev ? {...prev, referredBy: e.target.value} : null)}
+                            onChange={(e) => setEditWaitlistData((prev: any) => prev ? {...prev, referredBy: e.target.value} : null)}
                             className="px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                             placeholder="Referred By"
                           />
@@ -3191,7 +3191,7 @@ function AdminDashboard() {
                                             newChildren.push({ age: '', gender: 'boy' });
                                           }
                                           newChildren[index].age = e.target.value;
-                                          setEditWaitlistData(prev => prev ? {...prev, children: JSON.stringify(newChildren)} : null);
+                                          setEditWaitlistData((prev: any) => prev ? {...prev, children: JSON.stringify(newChildren)} : null);
                                         }}
                                         className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                                         required
@@ -3213,7 +3213,7 @@ function AdminDashboard() {
                                             newChildren.push({ age: '', gender: 'boy' });
                                           }
                                           newChildren[index].gender = e.target.value;
-                                          setEditWaitlistData(prev => prev ? {...prev, children: JSON.stringify(newChildren)} : null);
+                                          setEditWaitlistData((prev: any) => prev ? {...prev, children: JSON.stringify(newChildren)} : null);
                                         }}
                                         className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg font-bold text-black"
                                         required
