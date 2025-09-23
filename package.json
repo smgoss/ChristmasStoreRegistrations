@@ -10,9 +10,9 @@
     "sandbox": "npx ampx sandbox",
     "deploy": "npx ampx deploy",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:sms": "jest amplify/functions/send-sms-confirmation"
+    "test": "jest --config test/jest.config.js",
+    "test:watch": "jest --config test/jest.config.js --watch",
+    "test:sms": "jest --config test/jest.config.js amplify/functions/send-sms-confirmation"
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.16.1",

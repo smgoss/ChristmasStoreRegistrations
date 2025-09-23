@@ -33,9 +33,13 @@ export async function POST(request: NextRequest) {
     const command = new InvokeCommand({
       FunctionName: process.env.SEND_INVITE_EMAIL_FUNCTION_NAME || 'send-invite-email',
       Payload: JSON.stringify({
-        email,
-        inviteLink,
-        token
+        arguments: {
+          invite: {
+            email,
+            inviteUrl: inviteLink,
+            token
+          }
+        }
       }),
     });
 
@@ -44,7 +48,7 @@ export async function POST(request: NextRequest) {
     if (response.Payload) {
       const result = JSON.parse(new TextDecoder().decode(response.Payload));
       
-      if (result.statusCode === 200) {
+      if (result.success) {
         console.log('✅ Invite email sent successfully');
         return createSuccessResponse({ message: 'Invite email sent successfully' });
       } else {

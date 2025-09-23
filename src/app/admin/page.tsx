@@ -889,6 +889,41 @@ function AdminDashboard() {
     }
   };
 
+  const resendInviteEmail = async (invite: any) => {
+    if (!invite.email) {
+      setMessage('❌ Cannot resend: No email address associated with this invite.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log('📧 Resending invite email to:', invite.email);
+      
+      const inviteUrl = `${window.location.origin}/register/${invite.token}`;
+      const emailResult = await (await getClient()).mutations.sendInviteEmail({
+        invite: {
+          email: invite.email,
+          token: invite.token,
+          inviteUrl: inviteUrl
+        },
+        inviteId: invite.id
+      });
+      
+      console.log('📧 Resend email result:', emailResult);
+      
+      if (emailResult.data?.success) {
+        setMessage(`✅ Invite email resent successfully to ${invite.email}!`);
+      } else {
+        setMessage(`⚠️ Failed to resend invite email: ${emailResult.data?.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('❌ Error resending invite email:', error);
+      setMessage('❌ Error resending invite email: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const copyInviteLink = async (token: string) => {
     const inviteUrl = `${window.location.origin}/register/${token}`;
     try {
@@ -2383,6 +2418,16 @@ function AdminDashboard() {
                           >
                             📋 Copy
                           </button>
+                          {invite.email && (
+                            <button
+                              onClick={() => resendInviteEmail(invite)}
+                              disabled={loading}
+                              className="px-3 py-1 bg-green-500 text-white rounded text-xs hover:bg-green-600 disabled:opacity-50"
+                              title="Resend Invite Email"
+                            >
+                              📧 Resend
+                            </button>
+                          )}
                           {!invite.isUsed && (
                             <button
                               onClick={() => invalidateInviteLink(invite.id)}

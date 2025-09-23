@@ -48,7 +48,11 @@ describe('/api/send-invite-email', () => {
 
     // Mock the Lambda send response
     mockSend.mockResolvedValueOnce({
-      Payload: new TextEncoder().encode(JSON.stringify({ statusCode: 200 }))
+      Payload: new TextEncoder().encode(JSON.stringify({ 
+        success: true, 
+        message: 'Invite email sent successfully',
+        messageId: 'test-message-id'
+      }))
     });
 
     const validPayload = {
@@ -138,7 +142,11 @@ describe('/api/send-invite-email', () => {
     });
 
     mockSend.mockResolvedValueOnce({
-      Payload: new TextEncoder().encode(JSON.stringify({ statusCode: 500, error: 'Lambda error' }))
+      Payload: new TextEncoder().encode(JSON.stringify({ 
+        success: false, 
+        message: 'Failed to send invite email',
+        error: 'Lambda error'
+      }))
     });
 
     const validPayload = {

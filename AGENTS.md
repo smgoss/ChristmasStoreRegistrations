@@ -28,7 +28,7 @@
 ## Testing Guidelines
 - Framework: Jest + ts-jest, `testEnvironment: node`.
 - Location: `amplify/functions/**/__tests__/`; name tests `*.test.ts`.
-- Mocks: `global.fetch` is mocked in `jest.setup.js`; prefer unit tests with explicit inputs/outputs.
+- Mocks: `global.fetch` is mocked in `test/jest.setup.js`; prefer unit tests with explicit inputs/outputs.
 - Coverage is reported (text/lcov/html); add tests for new logic and error paths.
 
 ## Commit & Pull Request Guidelines
