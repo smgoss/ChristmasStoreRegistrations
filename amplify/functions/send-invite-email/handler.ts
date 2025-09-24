@@ -12,6 +12,7 @@ interface InviteData {
 export const handler: Handler = async (event: any) => {
   try {
     console.log('📧 Sending invite email:', event);
+    // Force redeploy to update FROM_EMAIL environment variable
     
     const { invite, inviteId }: { invite: InviteData; inviteId?: string } = event.arguments || event;
     
