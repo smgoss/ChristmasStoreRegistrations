@@ -901,26 +901,22 @@ function AdminDashboard() {
       
       const inviteUrl = `${window.location.origin}/register/${invite.token}`;
       
-      // Use the API route instead of GraphQL mutation for better debugging
-      const response = await fetch('/api/send-invite-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      // Use GraphQL mutation (same as initial invite creation)
+      const emailResult = await (await getClient()).mutations.sendInviteEmail({
+        invite: {
           email: invite.email,
-          inviteLink: inviteUrl,
-          token: invite.token
-        }),
+          token: invite.token,
+          inviteUrl: inviteUrl
+        },
+        inviteId: invite.id
       });
       
-      const result = await response.json();
-      console.log('📧 Resend email result:', result);
+      console.log('📧 Resend email result:', emailResult);
       
-      if (result.success) {
+      if (emailResult.data?.success) {
         setMessage(`✅ Invite email resent successfully to ${invite.email}!`);
       } else {
-        setMessage(`⚠️ Failed to resend invite email: ${result.message || 'Unknown error'}`);
+        setMessage(`⚠️ Failed to resend invite email: ${emailResult.data?.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('❌ Error resending invite email:', error);
