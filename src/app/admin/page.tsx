@@ -898,11 +898,18 @@ function AdminDashboard() {
     try {
       setLoading(true);
       console.log('📧 Resending invite email to:', invite.email);
+      console.log('📧 Invite object:', invite);
       
       const inviteUrl = `${window.location.origin}/register/${invite.token}`;
+      console.log('📧 Invite URL:', inviteUrl);
       
       // Use GraphQL mutation (same as initial invite creation)
-      const emailResult = await (await getClient()).mutations.sendInviteEmail({
+      console.log('📧 Getting GraphQL client...');
+      const client = await getClient();
+      console.log('📧 GraphQL client obtained:', !!client);
+      
+      console.log('📧 Calling sendInviteEmail mutation...');
+      const emailResult = await client.mutations.sendInviteEmail({
         invite: {
           email: invite.email,
           token: invite.token,
@@ -911,12 +918,15 @@ function AdminDashboard() {
         inviteId: invite.id
       });
       
-      console.log('📧 Resend email result:', emailResult);
+      console.log('📧 Resend email result (full):', emailResult);
+      console.log('📧 Result data:', emailResult.data);
+      console.log('📧 Result errors:', emailResult.errors);
       
       if (emailResult.data?.success) {
         setMessage(`✅ Invite email resent successfully to ${invite.email}!`);
       } else {
-        setMessage(`⚠️ Failed to resend invite email: ${emailResult.data?.message || 'Unknown error'}`);
+        console.error('📧 Email failed - data:', emailResult.data, 'errors:', emailResult.errors);
+        setMessage(`⚠️ Failed to resend invite email: ${emailResult.data?.message || emailResult.errors?.[0]?.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('❌ Error resending invite email:', error);
