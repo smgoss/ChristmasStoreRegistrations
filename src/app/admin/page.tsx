@@ -17,18 +17,12 @@ const getClient = async () => {
     try {
       // First ensure Amplify is configured
       await ensureAmplifyConfigured();
-      client = generateClient<Schema>({ authMode: 'userPool' });
-      console.log('✅ Client created with userPool auth');
-    } catch (userPoolError) {
-      console.warn('⚠️ UserPool client failed, trying apiKey fallback:', userPoolError);
-      try {
-        await ensureAmplifyConfigured();
-        client = generateClient<Schema>({ authMode: 'apiKey' });
-        console.log('✅ Client created with apiKey auth (fallback)');
-      } catch (apiKeyError) {
-        console.error('❌ All client creation attempts failed:', { userPoolError, apiKeyError });
-        throw new Error('Failed to create Amplify client. Check Amplify configuration.');
-      }
+      // Use apiKey authentication since mutations allow publicApiKey
+      client = generateClient<Schema>({ authMode: 'apiKey' });
+      console.log('✅ Client created with apiKey auth');
+    } catch (error) {
+      console.error('❌ Client creation failed:', error);
+      throw new Error('Failed to create Amplify client. Check Amplify configuration.');
     }
   }
   return client;
