@@ -36,6 +36,7 @@ async function getRegistrationConfig(): Promise<any> {
       if (item) {
         console.log('📋 Found config in table:', tableName);
         return {
+          fromEmail: item.fromEmail?.S || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
           replyToEmail: item.replyToEmail?.S || 'office@pathwayvineyard.com'
         };
       }
@@ -70,6 +71,7 @@ async function getRegistrationConfig(): Promise<any> {
       if (item) {
         console.log('📋 Found config in discovered table:', registrationConfigTable);
         return {
+          fromEmail: item.fromEmail?.S || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
           replyToEmail: item.replyToEmail?.S || 'office@pathwayvineyard.com'
         };
       }
@@ -81,6 +83,7 @@ async function getRegistrationConfig(): Promise<any> {
   // Fallback to default values
   console.log('📋 Using default configuration values');
   return {
+    fromEmail: 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
     replyToEmail: 'office@pathwayvineyard.com'
   };
 }
@@ -102,12 +105,13 @@ export const handler: Handler = async (event: any) => {
 
     // Load dynamic configuration
     const config = await getRegistrationConfig();
+    console.log('📋 Using from email:', config.fromEmail);
     console.log('📋 Using reply-to email:', config.replyToEmail);
 
     const emailContent = generateInviteEmailContent(invite);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
+      Source: config.fromEmail,
       ReplyToAddresses: [config.replyToEmail],
       Destination: {
         ToAddresses: [invite.email],

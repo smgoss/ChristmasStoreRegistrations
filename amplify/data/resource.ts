@@ -157,6 +157,7 @@ const schema = a.schema({
       closureMessage: a.string().default('Registration is currently closed. Please check back later.'),
       finalConfirmationDeadline: a.datetime(),
       finalConfirmationEnabled: a.boolean().default(false),
+      fromEmail: a.string().default('Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>'),
       replyToEmail: a.string().default('office@pathwayvineyard.com'),
       contactPhone: a.string().default('(208) 746-9089'),
       textingNumber: a.string().default('(208) 746-9089'),
