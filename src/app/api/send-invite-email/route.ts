@@ -28,10 +28,16 @@ export async function POST(request: NextRequest) {
     const { email, inviteLink, token } = validation.data;
 
     console.log('📧 Invoking send-invite-email Lambda function');
+    
+    // In sandbox mode, use the actual function name; in production, use env var
+    const functionName = process.env.SEND_INVITE_EMAIL_FUNCTION_NAME || 
+                        'amplify-christmasstorereg-sendinviteemaillambda3A3-6Ke0OQjIaPSS';
+    
+    console.log('📧 Using function name:', functionName);
 
     // Invoke the Lambda function
     const command = new InvokeCommand({
-      FunctionName: process.env.SEND_INVITE_EMAIL_FUNCTION_NAME || 'send-invite-email',
+      FunctionName: functionName,
       Payload: JSON.stringify({
         arguments: {
           invite: {

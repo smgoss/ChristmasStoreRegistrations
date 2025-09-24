@@ -26,7 +26,7 @@ export const handler: Handler = async (event: any) => {
     const emailContent = generateInviteEmailContent(invite);
 
     const command = new SendEmailCommand({
-      Source: process.env.FROM_EMAIL || 'Pathway Christmas Store <christmas-store@pathwayvineyard.com>',
+      Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
       ReplyToAddresses: ['office@pathwayvineyard.com'],
       Destination: {
         ToAddresses: [invite.email],
