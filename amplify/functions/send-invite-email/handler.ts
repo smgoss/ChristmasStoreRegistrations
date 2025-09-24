@@ -1,12 +1,88 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { DynamoDBClient, ScanCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
 import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
+const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 interface InviteData {
   email: string;
   token: string;
   inviteUrl: string;
+}
+
+async function getRegistrationConfig(): Promise<any> {
+  console.log('📋 Loading registration configuration...');
+  
+  // Try multiple possible table names
+  const possibleTableNames = [
+    'RegistrationConfig-t4m25rx7qjc2fizhs3sck45poy-NONE',
+    'RegistrationConfig-yvhicrblw5f4rp3xjkezk6qzqa-NONE',
+    'RegistrationConfig-h4mjfpor2bfmzcwwquva6nryoi-NONE'
+  ];
+  
+  for (const tableName of possibleTableNames) {
+    const command = new ScanCommand({
+      TableName: tableName,
+      FilterExpression: 'id = :id',
+      ExpressionAttributeValues: {
+        ':id': { S: 'main' }
+      }
+    });
+    
+    try {
+      const result = await ddbClient.send(command);
+      const item = result.Items?.[0];
+      if (item) {
+        console.log('📋 Found config in table:', tableName);
+        return {
+          replyToEmail: item.replyToEmail?.S || 'office@pathwayvineyard.com'
+        };
+      }
+    } catch (error) {
+      console.log('📋 Table query failed for:', tableName, error instanceof Error ? error.message : 'Unknown error');
+      continue;
+    }
+  }
+  
+  // Try to find the correct table name by listing all tables
+  try {
+    const listTablesCommand = new ListTablesCommand({});
+    const tablesResult = await ddbClient.send(listTablesCommand);
+    const registrationConfigTable = tablesResult.TableNames?.find(name => 
+      name.includes('RegistrationConfig')
+    );
+    
+    console.log('📋 Found tables:', tablesResult.TableNames);
+    console.log('📋 Found RegistrationConfig table:', registrationConfigTable);
+    
+    if (registrationConfigTable) {
+      const retryCommand = new ScanCommand({
+        TableName: registrationConfigTable,
+        FilterExpression: 'id = :id',
+        ExpressionAttributeValues: {
+          ':id': { S: 'main' }
+        }
+      });
+      
+      const retryResult = await ddbClient.send(retryCommand);
+      const item = retryResult.Items?.[0];
+      if (item) {
+        console.log('📋 Found config in discovered table:', registrationConfigTable);
+        return {
+          replyToEmail: item.replyToEmail?.S || 'office@pathwayvineyard.com'
+        };
+      }
+    }
+  } catch (error) {
+    console.log('📋 Table discovery failed:', error instanceof Error ? error.message : 'Unknown error');
+  }
+  
+  // Fallback to default values
+  console.log('📋 Using default configuration values');
+  return {
+    replyToEmail: 'office@pathwayvineyard.com'
+  };
 }
 
 export const handler: Handler = async (event: any) => {
@@ -24,11 +100,15 @@ export const handler: Handler = async (event: any) => {
       };
     }
 
+    // Load dynamic configuration
+    const config = await getRegistrationConfig();
+    console.log('📋 Using reply-to email:', config.replyToEmail);
+
     const emailContent = generateInviteEmailContent(invite);
 
     const command = new SendEmailCommand({
       Source: process.env.FROM_EMAIL || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
-      ReplyToAddresses: ['office@pathwayvineyard.com'],
+      ReplyToAddresses: [config.replyToEmail],
       Destination: {
         ToAddresses: [invite.email],
       },
