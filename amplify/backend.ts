@@ -63,8 +63,8 @@ backend.sendSmsConfirmation.resources.lambda.addToRolePolicy(
   })
 );
 
-// Grant email confirmation and cancellation functions access to DynamoDB for reading config
-[backend.sendConfirmationEmail, backend.sendCancellationEmail].forEach(emailFunction => {
+// Grant email confirmation, cancellation, and invite functions access to DynamoDB for reading config
+[backend.sendConfirmationEmail, backend.sendCancellationEmail, backend.sendInviteEmail].forEach(emailFunction => {
   emailFunction.resources.lambda.addToRolePolicy(
   new PolicyStatement({
     effect: Effect.ALLOW,
