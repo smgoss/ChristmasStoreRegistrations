@@ -21,7 +21,7 @@ function formatTimeSlot(timeSlot: string): { start: string; end: string } {
   const formatLocalDateTime = (hour: number, minute: number) => {
     const year = 2025;
     const month = 12; // December
-    const day = 6;
+    const day = 13;
     
     // Pad with zeros
     const pad = (num: number) => num.toString().padStart(2, '0');

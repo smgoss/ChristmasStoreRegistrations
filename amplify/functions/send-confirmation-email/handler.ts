@@ -421,7 +421,7 @@ function generateWaitlistEmailContent(waitlistEntry: any, config: RegistrationCo
         <h3>📍 Event Information</h3>
         <ul style="list-style: none; padding: 0;">
           <li><strong>Event:</strong> ${locationName}</li>
-          <li><strong>Date:</strong> Saturday, December 6th, 2025</li>
+          <li><strong>Date:</strong> Saturday, December 13th, 2025</li>
           <li><strong>Location:</strong> ${locationAddress}</li>
         </ul>
       </div>
@@ -513,7 +513,7 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
       <div class="header">
         ${locationEmoji ? `<span class="emoji">${locationEmoji}</span>` : ''}
         <h1>🚨 URGENT: Confirm Your Registration 🚨</h1>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 6th, 2025</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 13th, 2025</p>
       </div>
       
       <div class="urgent">
@@ -552,7 +552,7 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
           <li><strong>Time Slot:</strong> ${displayTimeSlot}</li>
           <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
           <li><strong>Location:</strong> ${locationAddress}</li>
-          <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
+          <li><strong>Event Date:</strong> Saturday, December 13th, 2025</li>
         </ul>
         
         ${registrationId ? `
@@ -669,7 +669,7 @@ function generateCustomEmailContent(registration: RegistrationData, subject: str
               <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
               <li><strong>Time Slot:</strong> ${registration.timeSlot}</li>
               <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
-              <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
+              <li><strong>Event Date:</strong> Saturday, December 13th, 2025</li>
             </ul>
           </div>
         </div>
@@ -800,7 +800,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
         <h1>🎄 Christmas Store Registration Confirmed! 🎁</h1>
         <h2>${locationName}</h2>
         <p>${locationAddress}</p>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 6th, 2025</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 13th, 2025</p>
       </div>
       
       <div class="content">
@@ -830,7 +830,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
         
         <h3>📍 Important Information:</h3>
         <ul>
-          <li><strong>Event Date:</strong> Saturday, December 6th, 2025</li>
+          <li><strong>Event Date:</strong> Saturday, December 13th, 2025</li>
           <li><strong>Your Time Slot:</strong> ${displayTimeSlot}</li>
           <li><strong>Location:</strong> ${locationAddress}</li>
           <li>Please contact the office if you need to change or cancel your registration.</li>

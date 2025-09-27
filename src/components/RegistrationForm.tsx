@@ -5,7 +5,6 @@ import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../amplify/data/resource';
 import { useLocationConfig } from '../hooks/useLocationConfig';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
-import '../styles/christmas-theme.css';
 
 // Lazy client initialization with retry mechanism
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
@@ -732,7 +731,7 @@ export default function RegistrationForm({
           </h2>
           <p className="christmas-location">{registrationConfig?.eventAddress || LOCATION_ADDRESS}</p>
           <p className="christmas-date" style={{fontSize: '1.1rem', fontWeight: 'bold', color: 'white', marginTop: '0.5rem', textShadow: '0 2px 6px rgb(0 0 0 / 0.7)'}}>
-            📅 Saturday, December 6th, 2025
+            📅 Saturday, December 13th, 2025
           </p>
         </div>
         

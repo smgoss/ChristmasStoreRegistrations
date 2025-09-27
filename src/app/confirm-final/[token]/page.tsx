@@ -202,7 +202,7 @@ export default function ConfirmFinalPage() {
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-6">
                   <h3 className="text-lg font-semibold text-blue-800 mb-2">Important Information</h3>
                   <ul className="text-blue-700 space-y-1 text-sm">
-                    <li>📅 <strong>Event Date:</strong> Saturday, December 6th, 2025</li>
+                    <li>📅 <strong>Event Date:</strong> Saturday, December 13th, 2025</li>
                     <li>📍 <strong>Location:</strong> {appSettings?.eventAddress || LOCATION_ADDRESS}</li>
                   </ul>
                 </div>

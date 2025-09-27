@@ -155,7 +155,7 @@ Hi ${registration.firstName}!
 ${message}
 
 Your Time: ${formatTimeSlot(registration.timeSlot)}
-Event: Sat, Dec 6, 2025
+Event: Sat, Dec 13, 2025
 
 Questions? Call (207) 746-9089
 
@@ -173,7 +173,7 @@ function generateSmsContent(registration: RegistrationData): string {
 
 Hi ${registration.firstName}! You MUST confirm your time slot or risk losing it to another family.
 
-📅 Saturday, Dec 6th, 2025
+📅 Saturday, Dec 13th, 2025
 🕘 Your Time: ${displayTimeSlot}  
 👶 Children: ${registration.numberOfKids}
 
@@ -194,7 +194,7 @@ Questions? Call (208) 746-9089
 Hello ${registration.firstName}!
 
 Your registration is confirmed for:
-📅 Saturday, December 6th, 2025
+📅 Saturday, December 13th, 2025
 🕘 Time: ${displayTimeSlot}
 📍 Location: 12 Foss Road, Lewiston, ME 04256
 👶 Children: ${registration.numberOfKids}

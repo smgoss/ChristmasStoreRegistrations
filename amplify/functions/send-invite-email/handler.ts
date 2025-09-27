@@ -166,7 +166,7 @@ function generateInviteEmailContent(invite: InviteData): string {
 
 Hello!
 
-You have been personally invited to register for our Christmas Store event on Saturday, December 6th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
+You have been personally invited to register for our Christmas Store event on Saturday, December 13th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
 
 Your personal invitation link:
 ${invite.inviteUrl}
@@ -177,11 +177,6 @@ Important Information:
 - You'll be able to select your preferred time slot during registration
 - Bring the whole family - childcare may be available during your shopping time
 
-What to Expect:
-- Browse through toys, clothes, and gifts organized by age and gender
-- Select items for the children in your family
-- Enjoy a warm, welcoming environment with volunteers ready to help
-- Experience the joy of Christmas giving in our community
 
 Questions? Please contact us or simply reply to this email.
 
@@ -243,13 +238,13 @@ Invitation ID: ${invite.token.slice(0, 8)}...
     <div class="header">
         <h1>🎄 You're Invited! 🎄</h1>
         <p>Christmas Store Registration</p>
-        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Saturday, December 6th, 2025</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Saturday, December 13th, 2025</p>
     </div>
     
     <div class="content">
         <p><strong>Hello!</strong></p>
         
-        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Saturday, December 6th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
+        <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Saturday, December 13th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
         
         <div class="invite-link">
             <p style="margin: 0 0 10px 0;">Your Personal Invitation Link:</p>
@@ -263,16 +258,6 @@ Invitation ID: ${invite.token.slice(0, 8)}...
                 <li>Please register as soon as possible as spots are limited</li>
                 <li>You'll be able to select your preferred time slot during registration</li>
                 <li>Bring the whole family - childcare may be available during your shopping time</li>
-            </ul>
-        </div>
-        
-        <div class="info-box">
-            <h3 style="margin-top: 0; color: #c41e3a;">🎁 What to Expect</h3>
-            <ul>
-                <li>Browse through toys, clothes, and gifts organized by age and gender</li>
-                <li>Select items for the children in your family</li>
-                <li>Enjoy a warm, welcoming environment with volunteers ready to help</li>
-                <li>Experience the joy of Christmas giving in our community</li>
             </ul>
         </div>
         
