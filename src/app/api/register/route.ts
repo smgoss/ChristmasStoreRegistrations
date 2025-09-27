@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';

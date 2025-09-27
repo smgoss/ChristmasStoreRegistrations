@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
-import { LOCATION_NAME, LOCATION_ADDRESS, CONTACT_EMAIL, CHURCH_INFO, BRANDING } from '@/config/locationConfig';
+import { LOCATION_NAME, CONTACT_EMAIL, CHURCH_INFO, BRANDING } from '@/config/locationConfig';
 
 interface RegistrationConfig {
   locationName?: string;
@@ -28,7 +28,7 @@ const getClient = async () => {
 function formatTimeSlot(timeSlot: string): string {
   const timeParts = timeSlot.split(':');
   if (timeParts.length === 2) {
-    let hour = parseInt(timeParts[0], 10);
+    const hour = parseInt(timeParts[0], 10);
     const minute = timeParts[1];
     
     if (hour === 0) {

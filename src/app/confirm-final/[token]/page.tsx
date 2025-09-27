@@ -46,7 +46,7 @@ const getClient = async () => {
 function formatTimeSlot(timeSlot: string): string {
   const timeParts = timeSlot.split(':');
   if (timeParts.length === 2) {
-    let hour = parseInt(timeParts[0], 10);
+    const hour = parseInt(timeParts[0], 10);
     const minute = timeParts[1];
     
     if (hour === 0) {

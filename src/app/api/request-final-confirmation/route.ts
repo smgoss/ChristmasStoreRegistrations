@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
@@ -29,8 +29,6 @@ const RequestFinalConfirmationSchema = z.object({
   registrations: z.array(RegistrationSchema)
 });
 
-// Rate limiting: max 1 request per second per registration
-const rateLimiter = new Map<string, number>();
 
 async function processRegistrationWithDelay(registration: any, index: number) {
   // Rate limit: wait index seconds to spread out requests

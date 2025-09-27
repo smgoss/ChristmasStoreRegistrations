@@ -1,4 +1,3 @@
-import { GET } from '../generate-ical/route';
 import { NextRequest } from 'next/server';
 
 // Mock Amplify

@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       filter: { timeSlot: { eq: validatedData.timeSlot } }
     });
 
-    let timeSlotConfig = timeSlotData?.[0];
+    const timeSlotConfig = timeSlotData?.[0];
     
     if (!timeSlotConfig) {
       return NextResponse.json(

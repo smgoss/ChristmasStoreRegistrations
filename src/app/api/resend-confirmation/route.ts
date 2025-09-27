@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     console.log('📋 Request body:', body);
     
-    const { type, registrationId, phone, firstName, timeSlot, email } = body;
+    const { type, registrationId, firstName, email } = body;
     
     if (!type || !registrationId) {
       return NextResponse.json(
