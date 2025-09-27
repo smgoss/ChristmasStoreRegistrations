@@ -11,20 +11,22 @@ async function configureAmplify(): Promise<void> {
   configurationPromise = (async () => {
     try {
       // Method 1: Root directory (server-side)
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const outputs = require('../../amplify_outputs.json');
       Amplify.configure(outputs);
       configured = true;
       console.log('✅ Amplify configured from root amplify_outputs.json');
       return;
-    } catch (rootError) {
+    } catch {
       try {
         // Method 2: Public directory (server-side)
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const outputs = require('../../public/amplify_outputs.json');
         Amplify.configure(outputs);
         configured = true;
         console.log('✅ Amplify configured from public/amplify_outputs.json');
         return;
-      } catch (publicError) {
+      } catch {
         // Method 3: Client-side fetch
         if (typeof window !== 'undefined') {
           try {

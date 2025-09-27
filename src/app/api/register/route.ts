@@ -26,7 +26,7 @@ async function withSlotLock<T>(slotKey: string, fn: () => Promise<T>): Promise<T
   try {
     return await fn();
   } finally {
-    // @ts-ignore release is assigned above
+    // @ts-expect-error release is assigned above
     release();
     // Cleanup if this is the last queued promise
     const current = slotQueues.get(slotKey);
