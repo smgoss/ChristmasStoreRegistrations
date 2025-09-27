@@ -2,7 +2,7 @@ import { DynamoDBClient, ScanCommand, UpdateItemCommand } from '@aws-sdk/client-
 
 const dynamodb = new DynamoDBClient({ region: process.env.AWS_REGION });
 
-export const handler = async (event: any) => {
+export const handler = async () => {
   try {
     console.log('🔍 Checking for registrations to auto-close...');
     

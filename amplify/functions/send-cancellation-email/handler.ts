@@ -192,7 +192,7 @@ function formatTimeSlot(timeSlot: string): string {
   // Handle formats like "09:30" -> "9:30 AM" or "13:30" -> "1:30 PM"
   const timeParts = timeSlot.split(':');
   if (timeParts.length === 2) {
-    let hour = parseInt(timeParts[0], 10);
+    const hour = parseInt(timeParts[0], 10);
     const minute = timeParts[1];
     
     if (hour === 0) {
