@@ -1,6 +1,5 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { DynamoDBClient, ScanCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
-import type { AppSyncResolverEvent } from 'aws-lambda';
 import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
@@ -112,11 +111,11 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
   }
 }
 
-export const handler: Handler = async (event: any) => {
+export const handler: Handler = async (event: {arguments?: {registration: RegistrationData; registrationId?: string}}) => {
   try {
     console.log('📧 Sending cancellation email:', event);
     
-    const { registration, registrationId }: { registration: RegistrationData; registrationId?: string } = event.arguments || event;
+    const { registration } = event.arguments || {};
 
     // Fetch location config from database
     const config = await getRegistrationConfig();
@@ -218,8 +217,6 @@ function generateCancellationEmailContent(registration: RegistrationData, config
   const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
-  const primaryColor = process.env.PRIMARY_COLOR || '#7c3aed';
-  const secondaryColor = process.env.SECONDARY_COLOR || '#059669';
   const locationEmoji = process.env.LOCATION_EMOJI || '';
   
   console.log('📧 Using locationName:', locationName);

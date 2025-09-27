@@ -2,7 +2,7 @@ import { CognitoIdentityProviderClient, AdminCreateUserCommand, AdminAddUserToGr
 
 const cognito = new CognitoIdentityProviderClient({ region: process.env.AWS_REGION });
 
-export const handler = async (event: any) => {
+export const handler = async () => {
   try {
     const userPoolId = process.env.AMPLIFY_AUTH_USERPOOL_ID;
     
@@ -21,8 +21,8 @@ export const handler = async (event: any) => {
         Precedence: 0
       }));
       console.log('✅ Admin group created');
-    } catch (error: any) {
-      if (error.name === 'GroupExistsException') {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'GroupExistsException') {
         console.log('ℹ️ Admin group already exists');
       } else {
         throw error;
@@ -41,8 +41,8 @@ export const handler = async (event: any) => {
         MessageAction: 'SUPPRESS' // Don't send welcome email - user will use forgot password
       }));
       console.log('✅ Admin user created');
-    } catch (error: any) {
-      if (error.name === 'UsernameExistsException') {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'UsernameExistsException') {
         console.log('ℹ️ Admin user already exists');
       } else {
         throw error;
@@ -57,11 +57,11 @@ export const handler = async (event: any) => {
         GroupName: 'admin'
       }));
       console.log('✅ Admin user added to admin group');
-    } catch (error: any) {
-      if (error.name === 'UserNotConfirmedException') {
+    } catch (error: unknown) {
+      if (error instanceof Error && error.name === 'UserNotConfirmedException') {
         console.log('ℹ️ User exists but not confirmed yet - group assignment will work after confirmation');
       } else {
-        console.warn('⚠️ Could not add user to group:', error.message);
+        console.warn('⚠️ Could not add user to group:', error instanceof Error ? error.message : 'Unknown error');
       }
     }
 

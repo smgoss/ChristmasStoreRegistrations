@@ -1,6 +1,5 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { DynamoDBClient, ScanCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
-import type { AppSyncResolverEvent } from 'aws-lambda';
 import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
@@ -119,19 +118,23 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
   }
 }
 
-export const handler: Handler = async (event: any) => {
+interface EventType {
+  arguments?: {
+    registration?: RegistrationData;
+    registrationId?: string;
+    subject?: string;
+    message?: string;
+    messageId?: string;
+    waitlistEntry?: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number};
+    waitlistId?: string;
+  };
+}
+
+export const handler: Handler = async (event: EventType) => {
   try {
     console.log('📱 Sending Email confirmation:', event);
     
-    const { registration, registrationId, subject, message, messageId, waitlistEntry, waitlistId }: { 
-      registration?: RegistrationData; 
-      registrationId?: string;
-      subject?: string;
-      message?: string;
-      messageId?: string;
-      waitlistEntry?: any;
-      waitlistId?: string;
-    } = event.arguments || event;
+    const { registration, registrationId, subject, message, messageId, waitlistEntry, waitlistId } = event.arguments || {};
 
     // Check if this is a custom message
     if (subject && message && messageId && registration) {
@@ -307,7 +310,7 @@ function formatTimeSlot(timeSlot: string): string {
   // Handle formats like "09:30" -> "9:30 AM" or "13:30" -> "1:30 PM"
   const timeParts = timeSlot.split(':');
   if (timeParts.length === 2) {
-    let hour = parseInt(timeParts[0], 10);
+    const hour = parseInt(timeParts[0], 10);
     const minute = timeParts[1];
     
     if (hour === 0) {
@@ -325,7 +328,7 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-function generateWaitlistEmailContent(waitlistEntry: any, config: RegistrationConfig = {}): string {
+function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number}, config: RegistrationConfig = {}): string {
   console.log('📧 generateWaitlistEmailContent called');
   
   // Get location config
@@ -698,8 +701,6 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
   const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
-  const primaryColor = process.env.PRIMARY_COLOR || '#7c3aed';
-  const secondaryColor = process.env.SECONDARY_COLOR || '#059669';
   const locationEmoji = process.env.LOCATION_EMOJI || '';
   
   console.log('📧 Using locationName:', locationName);

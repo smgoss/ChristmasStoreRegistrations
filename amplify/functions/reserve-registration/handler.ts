@@ -26,7 +26,7 @@ interface RegistrationInput {
 const ddb = new DynamoDBClient({});
 
 export const handler = async (event: AppSyncResolverEvent<{ input: RegistrationInput }>) => {
-  const input = (event?.arguments as any)?.input as RegistrationInput;
+  const input = event?.arguments?.input as RegistrationInput;
   if (!input) {
     return { ok: false, error: 'Missing input' };
   }
@@ -79,7 +79,7 @@ export const handler = async (event: AppSyncResolverEvent<{ input: RegistrationI
     await ddb.send(cmd);
 
     return { ok: true, id: regId };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('reserve-registration error', err);
     return { ok: false, error: 'Capacity full or transaction failed' };
   }

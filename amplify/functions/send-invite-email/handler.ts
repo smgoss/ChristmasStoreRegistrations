@@ -11,7 +11,7 @@ interface InviteData {
   inviteUrl: string;
 }
 
-async function getRegistrationConfig(): Promise<any> {
+async function getRegistrationConfig(): Promise<{fromEmail: string; replyToEmail: string}> {
   console.log('📋 Loading registration configuration...');
   
   // Try multiple possible table names
@@ -88,7 +88,7 @@ async function getRegistrationConfig(): Promise<any> {
   };
 }
 
-export const handler: Handler = async (event: any) => {
+export const handler: Handler = async (event: {arguments?: {invite: InviteData; inviteId?: string}}) => {
   try {
     console.log('📧 Sending invite email:', event);
     // Force redeploy to update FROM_EMAIL environment variable
@@ -161,35 +161,6 @@ export const handler: Handler = async (event: any) => {
 };
 
 function generateInviteEmailContent(invite: InviteData): string {
-  const text = `
-🎄 You're Invited to the Christmas Store! 🎄
-
-Hello!
-
-You have been personally invited to register for our Christmas Store event on Saturday, December 13th, 2025. This is a special opportunity to provide Christmas gifts for children in need in our community.
-
-Your personal invitation link:
-${invite.inviteUrl}
-
-Important Information:
-- This invitation link is unique to you and can only be used once
-- Please register as soon as possible as spots are limited
-- You'll be able to select your preferred time slot during registration
-- Bring the whole family - childcare may be available during your shopping time
-
-
-Questions? Please contact us or simply reply to this email.
-
-Thank you for being part of our Christmas Store community!
-
-With warm wishes,
-The Pathway Christmas Store Team
-
----
-This invitation was sent to: ${invite.email}
-Invitation ID: ${invite.token.slice(0, 8)}...
-`;
-
   const html = `
 <!DOCTYPE html>
 <html>
