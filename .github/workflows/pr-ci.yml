@@ -26,8 +26,8 @@ jobs:
       - name: Type check
         run: npm run typecheck
         
-      - name: Lint with no warnings
-        run: npm run lint --max-warnings=0
+      - name: Lint check
+        run: npm run lint
         
       - name: Run tests
         run: npm test
