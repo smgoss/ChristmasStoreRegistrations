@@ -174,7 +174,7 @@ describe('/api/generate-ical', () => {
     
     const icalContent = await response.text();
     // Should contain proper iCal datetime format
-    expect(icalContent).toMatch(/DTSTART;TZID=America\/Boise:20251206T090000/);
-    expect(icalContent).toMatch(/DTEND;TZID=America\/Boise:20251206T100000/);
+    expect(icalContent).toMatch(/DTSTART;TZID=America\/Boise:20251213T090000/);
+    expect(icalContent).toMatch(/DTEND;TZID=America\/Boise:20251213T100000/);
   });
 });
