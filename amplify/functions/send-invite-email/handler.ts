@@ -88,7 +88,7 @@ async function getRegistrationConfig(): Promise<{fromEmail: string; replyToEmail
   };
 }
 
-export const handler: Handler = async (event: {arguments?: {invite: InviteData; inviteId?: string}}) => {
+export const handler: Handler = async (event: {arguments?: {invite: InviteData; inviteId?: string}, inviteId?: string}) => {
   try {
     console.log('📧 Sending invite email:', event);
     // Force redeploy to update FROM_EMAIL environment variable
