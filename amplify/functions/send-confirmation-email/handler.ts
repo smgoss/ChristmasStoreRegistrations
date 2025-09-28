@@ -125,9 +125,10 @@ interface EventType {
     subject?: string;
     message?: string;
     messageId?: string;
-    waitlistEntry?: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number};
+    waitlistEntry?: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number; preferredTimeSlots?: string};
     waitlistId?: string;
   };
+  registrationId?: string;
 }
 
 export const handler: Handler = async (event: EventType) => {
@@ -416,7 +417,7 @@ function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastNam
           <li><strong>Email:</strong> ${waitlistEntry.email}</li>
           <li><strong>Phone:</strong> ${waitlistEntry.phone}</li>
           <li><strong>Number of Children:</strong> ${waitlistEntry.numberOfKids}</li>
-          ${waitlistEntry.preferredTimeSlots ? `<li><strong>Preferred Times:</strong> ${waitlistEntry.preferredTimeSlots}</li>` : ''}
+          ${(waitlistEntry as any).preferredTimeSlots ? `<li><strong>Preferred Times:</strong> ${(waitlistEntry as any).preferredTimeSlots}</li>` : ''}
         </ul>
       </div>
       

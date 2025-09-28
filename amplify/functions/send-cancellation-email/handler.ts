@@ -117,6 +117,15 @@ export const handler: Handler = async (event: {arguments?: {registration: Regist
     
     const { registration } = event.arguments || {};
 
+    if (!registration) {
+      console.error('❌ No registration data provided');
+      return {
+        success: false,
+        message: 'No registration data provided',
+        error: 'Registration data is required'
+      };
+    }
+
     // Fetch location config from database
     const config = await getRegistrationConfig();
     console.log('🎯 Config retrieved in handler:', JSON.stringify(config, null, 2));

@@ -88,12 +88,28 @@ async function getRegistrationConfig(): Promise<{fromEmail: string; replyToEmail
   };
 }
 
-export const handler: Handler = async (event: {arguments?: {invite: InviteData; inviteId?: string}, inviteId?: string}) => {
+export const handler: Handler = async (event: {arguments?: {invite: InviteData; inviteId?: string}, inviteId?: string, invite?: InviteData}) => {
   try {
     console.log('📧 Sending invite email:', event);
     // Force redeploy to update FROM_EMAIL environment variable
     
-    const { invite, inviteId }: { invite: InviteData; inviteId?: string } = event.arguments || event;
+    let invite: InviteData;
+    let inviteId: string | undefined;
+    
+    if (event.arguments?.invite) {
+      invite = event.arguments.invite;
+      inviteId = event.arguments.inviteId || event.inviteId;
+    } else if ('invite' in event && event.invite) {
+      invite = event.invite;
+      inviteId = event.inviteId;
+    } else {
+      console.error('❌ No invite data provided');
+      return {
+        success: false,
+        message: 'No invite data provided',
+        error: 'Invite data is required'
+      };
+    }
     
     if (!invite.email) {
       console.log('ℹ️ No email provided, skipping email send');
