@@ -220,6 +220,9 @@ export default function RegistrationForm({
       const client = await getClient();
       const { data: timeSlotData } = await client.models.TimeSlotConfig.list();
       
+      console.log('🕐 Gray branch - TimeSlotConfig data loaded:', timeSlotData?.length || 0, 'records');
+      console.log('🕐 Gray branch - TimeSlotConfig details:', timeSlotData);
+      
       // Load all registrations to calculate actual counts
       const { data: registrationData } = await client.models.Registration.list();
       
@@ -264,6 +267,9 @@ export default function RegistrationForm({
         }
         return timeA[1] - timeB[1];
       });
+      
+      console.log('🕐 Gray branch - Active time slots found:', activeTimeSlots);
+      console.log('🕐 Gray branch - Time slot capacities:', capacities);
       
       setTimeSlots(activeTimeSlots);
       setTimeSlotCapacities(capacities);
