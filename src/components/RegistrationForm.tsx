@@ -281,8 +281,50 @@ export default function RegistrationForm({
       });
       
       setShowWaitlistOption(allSlotsFull);
+      
+      // Auto-initialize time slots if none exist (for gray branch and other environments)
+      if (timeSlotData?.length === 0) {
+        console.log('🚀 No time slots found, auto-initializing...');
+        await autoInitializeTimeSlots();
+      }
     } catch (error) {
       console.error('Error loading time slot capacities:', error);
+    }
+  };
+
+  const autoInitializeTimeSlots = async () => {
+    try {
+      console.log('⏰ Auto-initializing time slots from config:', locationConfig.timeSlots);
+      const client = await getClient();
+      
+      // Create all time slots from location config
+      const results = [];
+      for (const timeSlot of locationConfig.timeSlots || []) {
+        console.log(`➕ Creating time slot: ${timeSlot}`);
+        
+        const result = await client.models.TimeSlotConfig.create({
+          timeSlot: timeSlot,
+          maxCapacity: locationConfig.defaultCapacity || 20,
+          currentRegistrations: 0,
+          isActive: true
+        });
+        
+        if (result.errors) {
+          console.error(`❌ Error creating ${timeSlot}:`, result.errors);
+        } else {
+          console.log(`✅ Auto-created ${timeSlot} successfully`);
+          results.push(result.data);
+        }
+      }
+      
+      // Reload time slots after creation
+      if (results.length > 0) {
+        console.log('🔄 Reloading time slots after auto-initialization...');
+        await loadTimeSlotCapacities();
+      }
+      
+    } catch (error) {
+      console.error('❌ Error auto-initializing time slots:', error);
     }
   };
 
