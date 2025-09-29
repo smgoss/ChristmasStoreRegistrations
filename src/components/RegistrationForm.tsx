@@ -223,9 +223,13 @@ export default function RegistrationForm({
       console.log('🕐 Gray branch - TimeSlotConfig data loaded:', timeSlotData?.length || 0, 'records');
       console.log('🕐 Gray branch - TimeSlotConfig details:', timeSlotData);
       
-      // Debug: Check isActive status of each time slot
-      timeSlotData?.forEach(slot => {
-        console.log(`🕐 Debug: ${slot.timeSlot} - isActive: ${slot.isActive}, maxCapacity: ${slot.maxCapacity}`);
+      // Debug: Check isActive status of each time slot with null safety
+      timeSlotData?.forEach((slot, index) => {
+        if (!slot) {
+          console.warn(`⚠️ Slot ${index} is null/undefined`);
+          return;
+        }
+        console.log(`🕐 Debug: ${slot.timeSlot || 'NO_TIMESLOT'} - isActive: ${slot.isActive}, maxCapacity: ${slot.maxCapacity}`);
       });
       
       // Load all registrations to calculate actual counts
@@ -235,13 +239,19 @@ export default function RegistrationForm({
       const activeTimeSlots: string[] = [];
       
       timeSlotData.forEach(config => {
+        // Skip null/undefined configs or configs without timeSlot
+        if (!config || !config.timeSlot) {
+          console.warn('⚠️ Skipping invalid time slot config:', config);
+          return;
+        }
+        
         // Only include active time slots and avoid duplicates (temporarily allowing null/undefined isActive)
         if ((config.isActive === true || config.isActive == null) && !activeTimeSlots.includes(config.timeSlot)) {
           activeTimeSlots.push(config.timeSlot);
           
-          // Calculate actual registration count for this time slot
+          // Calculate actual registration count for this time slot with null checks
           const actualCount = registrationData ? 
-            registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
+            registrationData.filter(reg => reg && reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
           
           capacities[config.timeSlot] = {
             max: config.maxCapacity || 0,
@@ -250,7 +260,7 @@ export default function RegistrationForm({
         } else if ((config.isActive === true || config.isActive == null) && activeTimeSlots.includes(config.timeSlot)) {
           // If time slot already exists, aggregate the capacity
           const actualCount = registrationData ? 
-            registrationData.filter(reg => reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
+            registrationData.filter(reg => reg && reg.timeSlot === config.timeSlot && !reg.isCancelled).length : 0;
           
           if (capacities[config.timeSlot]) {
             capacities[config.timeSlot].max += config.maxCapacity || 0;
