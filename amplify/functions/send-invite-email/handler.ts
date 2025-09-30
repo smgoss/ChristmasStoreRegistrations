@@ -11,81 +11,74 @@ interface InviteData {
   inviteUrl: string;
 }
 
-async function getRegistrationConfig(): Promise<{fromEmail: string; replyToEmail: string}> {
-  console.log('📋 Loading registration configuration...');
-  
-  // Try multiple possible table names
-  const possibleTableNames = [
-    'RegistrationConfig-t4m25rx7qjc2fizhs3sck45poy-NONE',
-    'RegistrationConfig-yvhicrblw5f4rp3xjkezk6qzqa-NONE',
-    'RegistrationConfig-h4mjfpor2bfmzcwwquva6nryoi-NONE'
-  ];
-  
-  for (const tableName of possibleTableNames) {
-    const command = new ScanCommand({
-      TableName: tableName,
-      FilterExpression: 'id = :id',
-      ExpressionAttributeValues: {
-        ':id': { S: 'main' }
-      }
-    });
-    
-    try {
-      const result = await ddbClient.send(command);
-      const item = result.Items?.[0];
-      if (item) {
-        console.log('📋 Found config in table:', tableName);
-        return {
-          fromEmail: item.fromEmail?.S || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
-          replyToEmail: item.replyToEmail?.S || 'office@pathwayvineyard.com'
-        };
-      }
-    } catch (error) {
-      console.log('📋 Table query failed for:', tableName, error instanceof Error ? error.message : 'Unknown error');
-      continue;
-    }
-  }
-  
-  // Try to find the correct table name by listing all tables
+interface RegistrationConfig {
+  fromEmail?: string;
+  replyToEmail?: string;
+  locationName?: string;
+  eventAddress?: string;
+  contactPhone?: string;
+}
+
+async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
+    console.log('📋 Looking for RegistrationConfig table...');
+    
+    // List all table names to find the correct RegistrationConfig table
     const listTablesCommand = new ListTablesCommand({});
     const tablesResult = await ddbClient.send(listTablesCommand);
-    const registrationConfigTable = tablesResult.TableNames?.find(name => 
-      name.includes('RegistrationConfig')
-    );
+    const registrationConfigTables = tablesResult.TableNames?.filter(name => name.includes('RegistrationConfig')) || [];
     
-    console.log('📋 Found tables:', tablesResult.TableNames);
-    console.log('📋 Found RegistrationConfig table:', registrationConfigTable);
+    console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
     
-    if (registrationConfigTable) {
-      const retryCommand = new ScanCommand({
-        TableName: registrationConfigTable,
-        FilterExpression: 'id = :id',
-        ExpressionAttributeValues: {
-          ':id': { S: 'main' }
+    // Try each RegistrationConfig table until we find one with data
+    for (const tableName of registrationConfigTables) {
+      try {
+        console.log('📋 Trying table:', tableName);
+        const command = new ScanCommand({
+          TableName: tableName,
+          Limit: 1
+        });
+        
+        const result = await ddbClient.send(command);
+        const item = result.Items?.[0];
+        
+        if (item) {
+          console.log('📋 Found data in table:', tableName);
+          const config: RegistrationConfig = {
+            fromEmail: item.fromEmail?.S,
+            replyToEmail: item.replyToEmail?.S,
+            locationName: item.locationName?.S,
+            eventAddress: item.eventAddress?.S,
+            contactPhone: item.contactPhone?.S
+          };
+          
+          console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
+          return config;
         }
-      });
-      
-      const retryResult = await ddbClient.send(retryCommand);
-      const item = retryResult.Items?.[0];
-      if (item) {
-        console.log('📋 Found config in discovered table:', registrationConfigTable);
-        return {
-          fromEmail: item.fromEmail?.S || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
-          replyToEmail: item.replyToEmail?.S || 'office@pathwayvineyard.com'
-        };
+      } catch (tableError) {
+        console.log('📋 Error trying table', tableName, ':', tableError);
+        continue;
       }
     }
+    
+    console.log('📋 No config found in any table, returning defaults');
+    return {
+      fromEmail: undefined,
+      replyToEmail: undefined,
+      locationName: undefined,
+      eventAddress: undefined,
+      contactPhone: undefined
+    };
   } catch (error) {
-    console.log('📋 Table discovery failed:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('❌ Error fetching registration config:', error);
+    return {
+      fromEmail: undefined,
+      replyToEmail: undefined,
+      locationName: undefined,
+      eventAddress: undefined,
+      contactPhone: undefined
+    };
   }
-  
-  // Fallback to default values
-  console.log('📋 Using default configuration values');
-  return {
-    fromEmail: 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
-    replyToEmail: 'office@pathwayvineyard.com'
-  };
 }
 
 export const handler: Handler = async (event: {arguments?: {invite: InviteData; inviteId?: string}, inviteId?: string, invite?: InviteData}) => {
@@ -121,14 +114,17 @@ export const handler: Handler = async (event: {arguments?: {invite: InviteData; 
 
     // Load dynamic configuration
     const config = await getRegistrationConfig();
-    console.log('📋 Using from email:', config.fromEmail);
-    console.log('📋 Using reply-to email:', config.replyToEmail);
+    const fromEmail = config.fromEmail || 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>';
+    const replyToEmail = config.replyToEmail || 'office@pathwayvineyard.com';
+    
+    console.log('📋 Using from email:', fromEmail);
+    console.log('📋 Using reply-to email:', replyToEmail);
 
-    const emailContent = generateInviteEmailContent(invite);
+    const emailContent = generateInviteEmailContent(invite, config);
 
     const command = new SendEmailCommand({
-      Source: config.fromEmail,
-      ReplyToAddresses: [config.replyToEmail],
+      Source: fromEmail,
+      ReplyToAddresses: [replyToEmail],
       Destination: {
         ToAddresses: [invite.email],
       },
@@ -176,7 +172,7 @@ export const handler: Handler = async (event: {arguments?: {invite: InviteData; 
   }
 };
 
-function generateInviteEmailContent(invite: InviteData): string {
+function generateInviteEmailContent(invite: InviteData, config: RegistrationConfig): string {
   const html = `
 <!DOCTYPE html>
 <html>
@@ -252,7 +248,7 @@ function generateInviteEmailContent(invite: InviteData): string {
         
         <p>Thank you for being part of our Christmas Store community!</p>
         
-        <p><strong>With warm wishes,<br>The Pathway Christmas Store Team</strong></p>
+        <p><strong>With warm wishes,<br>The ${config.locationName || 'Pathway Christmas Store'} Team</strong></p>
     </div>
     
     <div class="footer">
