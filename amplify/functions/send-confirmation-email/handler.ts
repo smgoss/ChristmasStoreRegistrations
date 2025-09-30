@@ -132,6 +132,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         contactPhone: undefined
       };
     }
+    }
     
     const config: RegistrationConfig = {
       locationName: item.locationName?.S,
