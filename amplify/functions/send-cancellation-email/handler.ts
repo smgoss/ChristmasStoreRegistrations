@@ -29,85 +29,60 @@ interface RegistrationConfig {
 
 async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
-    // Try different environment variables to get the correct table name
-    const amplifyId = process.env.AWS_AMPLIFY_IDENTIFIER || process.env.AMPLIFY_IDENTIFIER || process.env.AWS_AMPLIFY_APPID;
-    const tableName = amplifyId ? `RegistrationConfig-${amplifyId}` : 'RegistrationConfig';
+    console.log('📋 Looking for RegistrationConfig table...');
     
-    console.log('📋 Fetching config from table:', tableName);
-    console.log('📋 AWS_AMPLIFY_IDENTIFIER:', process.env.AWS_AMPLIFY_IDENTIFIER);
-    console.log('📋 AMPLIFY_IDENTIFIER:', process.env.AMPLIFY_IDENTIFIER);
-    console.log('📋 AWS_AMPLIFY_APPID:', process.env.AWS_AMPLIFY_APPID);
+    // List all table names to find the correct RegistrationConfig table
+    const listTablesCommand = new ListTablesCommand({});
+    const tablesResult = await ddbClient.send(listTablesCommand);
+    const registrationConfigTables = tablesResult.TableNames?.filter(name => name.includes('RegistrationConfig')) || [];
     
-    const command = new ScanCommand({
-      TableName: tableName,
-      Limit: 1
-    });
+    console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
     
-    let result;
-    let item;
-    
-    try {
-      result = await ddbClient.send(command);
-      item = result.Items?.[0];
-    } catch (error) {
-      console.log('📋 Initial table query failed:', error instanceof Error ? error.message : 'Unknown error');
-      item = null; // Force the table discovery logic
-    }
-    
-    if (!item) {
-      console.log('📋 No config found in table:', tableName);
-      console.log('📋 Trying to find the correct table...');
-      
-      // Try to find the correct table name by listing all tables
+    // Try each RegistrationConfig table until we find one with data
+    for (const tableName of registrationConfigTables) {
       try {
-        const listTablesCommand = new ListTablesCommand({});
-        const tablesResult = await ddbClient.send(listTablesCommand);
-        const registrationConfigTable = tablesResult.TableNames?.find(name => 
-          name.includes('RegistrationConfig')
-        );
+        console.log('📋 Trying table:', tableName);
+        const command = new ScanCommand({
+          TableName: tableName,
+          Limit: 1
+        });
         
-        console.log('📋 Found tables:', tablesResult.TableNames);
-        console.log('📋 Found RegistrationConfig table:', registrationConfigTable);
+        const result = await ddbClient.send(command);
+        const item = result.Items?.[0];
         
-        if (registrationConfigTable) {
-          const retryCommand = new ScanCommand({
-            TableName: registrationConfigTable,
-            Limit: 1
-          });
-          const retryResult = await ddbClient.send(retryCommand);
-          const retryItem = retryResult.Items?.[0];
+        if (item) {
+          console.log('📋 Found data in table:', tableName);
+          const config: RegistrationConfig = {
+            locationName: item.locationName?.S,
+            eventAddress: item.eventAddress?.S,
+            replyToEmail: item.replyToEmail?.S,
+            contactPhone: item.contactPhone?.S
+          };
           
-          if (retryItem) {
-            const config: RegistrationConfig = {
-              locationName: retryItem.locationName?.S,
-              eventAddress: retryItem.eventAddress?.S,
-              replyToEmail: retryItem.replyToEmail?.S,
-              contactPhone: retryItem.contactPhone?.S
-            };
-            
-            console.log('📋 Retrieved config from correct table:', JSON.stringify(config, null, 2));
-            return config;
-          }
+          console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
+          return config;
         }
-      } catch (listError) {
-        console.error('❌ Error listing tables:', listError);
+      } catch (tableError) {
+        console.log('📋 Error trying table', tableName, ':', tableError);
+        continue;
       }
-      
-      return {};
     }
     
-    const config: RegistrationConfig = {
-      locationName: item.locationName?.S,
-      eventAddress: item.eventAddress?.S,
-      replyToEmail: item.replyToEmail?.S,
-      contactPhone: item.contactPhone?.S
+    console.log('📋 No config found in any table, returning defaults');
+    return {
+      locationName: undefined,
+      eventAddress: undefined,
+      replyToEmail: undefined,
+      contactPhone: undefined
     };
-    
-    console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
-    return config;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
-    return {};
+    return {
+      locationName: undefined,
+      eventAddress: undefined,
+      replyToEmail: undefined,
+      contactPhone: undefined
+    };
   }
 }
 
