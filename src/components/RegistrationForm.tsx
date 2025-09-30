@@ -220,17 +220,8 @@ export default function RegistrationForm({
       const client = await getClient();
       const { data: timeSlotData } = await client.models.TimeSlotConfig.list();
       
-      console.log('🕐 Gray branch - TimeSlotConfig data loaded:', timeSlotData?.length || 0, 'records');
-      console.log('🕐 Gray branch - TimeSlotConfig details:', timeSlotData);
-      
-      // Debug: Check isActive status of each time slot with null safety
-      timeSlotData?.forEach((slot, index) => {
-        if (!slot) {
-          console.warn(`⚠️ Slot ${index} is null/undefined`);
-          return;
-        }
-        console.log(`🕐 Debug: ${slot.timeSlot || 'NO_TIMESLOT'} - isActive: ${slot.isActive}, maxCapacity: ${slot.maxCapacity}`);
-      });
+      // Debug logging can be enabled if needed
+      // console.log('🕐 TimeSlotConfig data loaded:', timeSlotData?.length || 0, 'records');
       
       // Load all registrations to calculate actual counts
       const { data: registrationData } = await client.models.Registration.list();
@@ -282,9 +273,6 @@ export default function RegistrationForm({
         }
         return timeA[1] - timeB[1];
       });
-      
-      console.log('🕐 Gray branch - Active time slots found:', activeTimeSlots);
-      console.log('🕐 Gray branch - Time slot capacities:', capacities);
       
       setTimeSlots(activeTimeSlots);
       setTimeSlotCapacities(capacities);
