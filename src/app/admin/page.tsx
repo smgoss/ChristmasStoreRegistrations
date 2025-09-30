@@ -1194,7 +1194,7 @@ function AdminDashboard() {
       }
       
       // Save contact and location settings to database
-      const updateResult = await (await getClient()).models.RegistrationConfig.update({
+      const updateResult = await (await getAdminClient()).models.RegistrationConfig.update({
         id: registrationConfig.id,
         replyToEmail: settings.replyToEmail,
         contactPhone: settings.contactPhone,
