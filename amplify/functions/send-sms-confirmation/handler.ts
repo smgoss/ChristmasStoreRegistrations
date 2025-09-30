@@ -1,5 +1,6 @@
 import type { Handler } from 'aws-lambda';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
+import { generateClient } from 'aws-amplify/data';
 interface RegistrationData {
   firstName: string;
   lastName: string;
@@ -15,6 +16,25 @@ interface RegistrationData {
   confirmationToken?: string;
   confirmationUrl?: string; // For final confirmation SMS
   registrationDate?: string;
+}
+
+interface RegistrationConfig {
+  id: string;
+  locationName?: string;
+  eventAddress?: string;
+  contactPhone?: string;
+  textingNumber?: string;
+}
+
+async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
+  try {
+    const client = generateClient({ authMode: 'apiKey' });
+    const { data: configData } = await client.models.RegistrationConfig.list();
+    return configData?.[0] as RegistrationConfig || null;
+  } catch (error) {
+    console.error('❌ Error fetching registration config:', error);
+    return null;
+  }
 }
 
 export const handler: Handler = async (event: any) => {
@@ -39,13 +59,17 @@ export const handler: Handler = async (event: any) => {
     // Clean phone number (ensure it has country code)
     const cleanPhone = cleanPhoneNumber(registration.phone);
     
+    // Fetch registration configuration for location-specific info
+    const config = await getRegistrationConfig();
+    console.log('📱 Fetched registration config:', config);
+    
     // Check if this is a custom message
     let smsContent: string;
     if (message && messageId) {
       console.log('📱 Sending custom SMS message:', { messageId });
-      smsContent = generateCustomSmsContent(registration, message);
+      smsContent = generateCustomSmsContent(registration, message, config);
     } else {
-      smsContent = generateSmsContent(registration);
+      smsContent = generateSmsContent(registration, config);
     }
     
     const response = await sendClearstreamSms(cleanPhone, smsContent);
@@ -147,8 +171,11 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-function generateCustomSmsContent(registration: RegistrationData, message: string): string {
-  return `🎄 Pathway Christmas Store
+function generateCustomSmsContent(registration: RegistrationData, message: string, config: RegistrationConfig | null): string {
+  const locationName = config?.locationName || 'Pathway Christmas Store';
+  const contactPhone = config?.contactPhone || '(207) 746-9089';
+  
+  return `🎄 ${locationName}
 
 Hi ${registration.firstName}!
 
@@ -157,13 +184,16 @@ ${message}
 Your Time: ${formatTimeSlot(registration.timeSlot)}
 Event: Sat, Dec 13, 2025
 
-Questions? Call (207) 746-9089
+Questions? Call ${contactPhone}
 
-- Pathway Christmas Store`;
+- ${locationName}`;
 }
 
-function generateSmsContent(registration: RegistrationData): string {
+function generateSmsContent(registration: RegistrationData, config: RegistrationConfig | null): string {
   const displayTimeSlot = formatTimeSlot(registration.timeSlot);
+  const locationName = config?.locationName || 'Pathway Christmas Store';
+  const eventAddress = config?.eventAddress || '12 Foss Road, Lewiston, ME 04256';
+  const contactPhone = config?.contactPhone || '(208) 746-9089';
   
   // Check if this is a final confirmation SMS
   if (registration.confirmationUrl) {
@@ -183,9 +213,9 @@ Hi ${registration.firstName}! You MUST confirm your time slot or risk losing it 
 
 Failure to confirm may result in your time slot being given to someone else.
 
-Questions? Call (208) 746-9089
+Questions? Call ${contactPhone}
 
-- Pathway Christmas Store`;
+- ${locationName}`;
   }
   
   // Regular confirmation SMS
@@ -196,14 +226,14 @@ Hello ${registration.firstName}!
 Your registration is confirmed for:
 📅 Saturday, December 13th, 2025
 🕘 Time: ${displayTimeSlot}
-📍 Location: 12 Foss Road, Lewiston, ME 04256
+📍 Location: ${eventAddress}
 👶 Children: ${registration.numberOfKids}
 
 We look forward to seeing you!
 
-Questions? Call (208) 746-9089 or reply to this message.
+Questions? Call ${contactPhone} or reply to this message.
 
-- Pathway Vineyard Christmas Store`;
+- ${locationName}`;
 }
 
 async function sendClearstreamSms(phone: string, message: string) {
