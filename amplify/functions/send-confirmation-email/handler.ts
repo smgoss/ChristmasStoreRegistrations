@@ -31,27 +31,54 @@ interface RegistrationConfig {
 
 async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
-    // Try different environment variables to get the correct table name
-    const amplifyId = process.env.AWS_AMPLIFY_IDENTIFIER || process.env.AMPLIFY_IDENTIFIER || process.env.AWS_AMPLIFY_APPID;
-    const tableName = amplifyId ? `RegistrationConfig-${amplifyId}` : 'RegistrationConfig';
-    
-    console.log('📋 Fetching config from table:', tableName);
+    console.log('📋 All env vars:', Object.keys(process.env).filter(k => k.includes('AMPLIFY')));
     console.log('📋 AWS_AMPLIFY_IDENTIFIER:', process.env.AWS_AMPLIFY_IDENTIFIER);
     console.log('📋 AMPLIFY_IDENTIFIER:', process.env.AMPLIFY_IDENTIFIER);
     console.log('📋 AWS_AMPLIFY_APPID:', process.env.AWS_AMPLIFY_APPID);
-    console.log('📋 All env vars:', Object.keys(process.env).filter(k => k.includes('AMPLIFY')));
     
-    const command = new ScanCommand({
-      TableName: tableName,
-      Limit: 1
-    });
+    // List all table names to find the correct RegistrationConfig table
+    const listTablesCommand = new ListTablesCommand({});
+    const tablesResult = await ddbClient.send(listTablesCommand);
+    const registrationConfigTables = tablesResult.TableNames?.filter(name => name.includes('RegistrationConfig')) || [];
     
-    let result;
+    console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
+    
     let item;
+    let tableName = 'RegistrationConfig'; // fallback
     
-    try {
-      result = await ddbClient.send(command);
-      item = result.Items?.[0];
+    // Try each RegistrationConfig table until we find one with data
+    for (const tableCandidate of registrationConfigTables) {
+      try {
+        console.log('📋 Trying table:', tableCandidate);
+        const command = new ScanCommand({
+          TableName: tableCandidate,
+          Limit: 1
+        });
+        
+        const result = await ddbClient.send(command);
+        const candidateItem = result.Items?.[0];
+        
+        if (candidateItem) {
+          console.log('📋 Found data in table:', tableCandidate);
+          item = candidateItem;
+          tableName = tableCandidate;
+          break;
+        }
+      } catch (tableError) {
+        console.log('📋 Error trying table', tableCandidate, ':', tableError);
+        continue;
+      }
+    }
+    
+    // If no tables had data, try the fallback
+    if (!item) {
+      try {
+        const command = new ScanCommand({
+          TableName: 'RegistrationConfig',
+          Limit: 1
+        });
+        const result = await ddbClient.send(command);
+        item = result.Items?.[0];
     } catch (error) {
       console.log('📋 Initial table query failed:', error instanceof Error ? error.message : 'Unknown error');
       item = null; // Force the table discovery logic

@@ -1,6 +1,6 @@
 import type { Handler } from 'aws-lambda';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
-import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, ScanCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
 interface RegistrationData {
   firstName: string;
   lastName: string;
@@ -30,35 +30,48 @@ const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
 
 async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
   try {
-    // Try different environment variables to get the correct table name
-    const amplifyId = process.env.AWS_AMPLIFY_IDENTIFIER || process.env.AMPLIFY_IDENTIFIER || process.env.AWS_AMPLIFY_APPID;
-    const tableName = amplifyId ? `RegistrationConfig-${amplifyId}` : 'RegistrationConfig';
+    console.log('📋 Looking for RegistrationConfig table...');
     
-    console.log('📋 Fetching config from table:', tableName);
+    // List all table names to find the correct RegistrationConfig table
+    const listTablesCommand = new ListTablesCommand({});
+    const tablesResult = await ddbClient.send(listTablesCommand);
+    const registrationConfigTables = tablesResult.TableNames?.filter(name => name.includes('RegistrationConfig')) || [];
     
-    const command = new ScanCommand({
-      TableName: tableName,
-      Limit: 1
-    });
+    console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
     
-    const result = await ddbClient.send(command);
-    const item = result.Items?.[0];
-    
-    if (!item) {
-      console.log('📋 No config found, returning defaults');
-      return null;
+    // Try each RegistrationConfig table until we find one with data
+    for (const tableName of registrationConfigTables) {
+      try {
+        console.log('📋 Trying table:', tableName);
+        const command = new ScanCommand({
+          TableName: tableName,
+          Limit: 1
+        });
+        
+        const result = await ddbClient.send(command);
+        const item = result.Items?.[0];
+        
+        if (item) {
+          console.log('📋 Found data in table:', tableName);
+          const config: RegistrationConfig = {
+            id: item.id?.S || 'main',
+            locationName: item.locationName?.S,
+            eventAddress: item.eventAddress?.S,
+            contactPhone: item.contactPhone?.S,
+            textingNumber: item.textingNumber?.S
+          };
+          
+          console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
+          return config;
+        }
+      } catch (tableError) {
+        console.log('📋 Error trying table', tableName, ':', tableError);
+        continue;
+      }
     }
     
-    const config: RegistrationConfig = {
-      id: item.id?.S || 'main',
-      locationName: item.locationName?.S,
-      eventAddress: item.eventAddress?.S,
-      contactPhone: item.contactPhone?.S,
-      textingNumber: item.textingNumber?.S
-    };
-    
-    console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
-    return config;
+    console.log('📋 No config found in any table, returning defaults');
+    return null;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
     return null;
