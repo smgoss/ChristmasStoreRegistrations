@@ -1,10 +1,48 @@
 import { defineFunction, secret } from '@aws-amplify/backend';
 
+// Get location from environment variable (set during deployment)
+const location = process.env.NEXT_PUBLIC_LOCATION || 'location1';
+
+// Location-specific configurations
+const locationConfigs = {
+  location1: {
+    LOCATION_NAME: 'Pathway Vineyard Lewiston Campus',
+    LOCATION_ADDRESS: 'Lewiston, Maine',
+    CONTACT_EMAIL: 'lewiston@pathwayvineyard.com',
+    CONTACT_PHONE: '(207) 555-0100',
+    LOCATION_EMOJI: '🎄',
+    SMS_HEADER: 'Pathway Lewiston Christmas Store'
+  },
+  location2: {
+    LOCATION_NAME: 'Pathway Vineyard Brunswick Campus', 
+    LOCATION_ADDRESS: 'Brunswick, Maine',
+    CONTACT_EMAIL: 'brunswick@pathwayvineyard.com',
+    CONTACT_PHONE: '(207) 555-0200',
+    LOCATION_EMOJI: '🎄',
+    SMS_HEADER: 'Pathway Brunswick Christmas Store'
+  },
+  location3: {
+    LOCATION_NAME: 'Pathway Vineyard Gray-New Gloucester Campus',
+    LOCATION_ADDRESS: 'Gray-New Gloucester, Maine', 
+    CONTACT_EMAIL: 'gray@pathwayvineyard.com',
+    CONTACT_PHONE: '(207) 555-0300',
+    LOCATION_EMOJI: '🎄',
+    SMS_HEADER: 'Pathway Gray Christmas Store'
+  }
+};
+
+const currentLocationConfig = locationConfigs[location as keyof typeof locationConfigs] || locationConfigs.location1;
+
 export const sendSmsConfirmation = defineFunction({
   name: 'send-sms-confirmation',
   entry: './handler.ts',
   environment: {
-    CLEARSTREAM_TEXT_HEADER: 'Pathway Christmas Store',
-    CLEAR_STREAM_API_KEY: secret('CLEAR_STREAM_API_KEY')
+    CLEARSTREAM_TEXT_HEADER: currentLocationConfig.SMS_HEADER,
+    CLEAR_STREAM_API_KEY: secret('CLEAR_STREAM_API_KEY'),
+    LOCATION_NAME: currentLocationConfig.LOCATION_NAME,
+    LOCATION_ADDRESS: currentLocationConfig.LOCATION_ADDRESS,
+    CONTACT_EMAIL: currentLocationConfig.CONTACT_EMAIL,
+    CONTACT_PHONE: currentLocationConfig.CONTACT_PHONE,
+    LOCATION_EMOJI: currentLocationConfig.LOCATION_EMOJI
   }
 });
