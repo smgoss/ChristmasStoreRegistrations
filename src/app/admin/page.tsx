@@ -193,6 +193,7 @@ function AdminDashboard() {
   
   // Settings state
   const [settings, setSettings] = useState({
+    id: process.env.NEXT_PUBLIC_LOCATION || 'main',
     replyToEmail: 'office@pathwayvineyard.com',
     contactPhone: '(208) 746-9089',
     textingNumber: '(208) 746-9089',
@@ -363,6 +364,9 @@ function AdminDashboard() {
       }
       
       // Load location settings from config
+      if (config?.id) {
+        setSettings(prev => ({ ...prev, id: config.id! }));
+      }
       if (config?.locationName) {
         setSettings(prev => ({ ...prev, locationName: config.locationName! }));
       }
@@ -1194,18 +1198,61 @@ function AdminDashboard() {
       }
       
       // Save contact and location settings to database
-      const updateResult = await (await getAdminClient()).models.RegistrationConfig.update({
-        id: registrationConfig.id,
-        replyToEmail: settings.replyToEmail,
-        contactPhone: settings.contactPhone,
-        textingNumber: settings.textingNumber,
-        locationName: settings.locationName,
-        eventAddress: settings.eventAddress,
-        finalConfirmationDeadline: settings.finalConfirmationDeadline && settings.finalConfirmationDeadline.trim() !== '' ? new Date(settings.finalConfirmationDeadline).toISOString() : null,
-        finalConfirmationEnabled: settings.finalConfirmationEnabled,
-        updatedAt: new Date().toISOString(),
-        updatedBy: 'admin'
-      });
+      let updateResult;
+      
+      // Check if ID has changed - if so, create new record and delete old one
+      if (settings.id !== registrationConfig.id) {
+        console.log('📝 ID changed from', registrationConfig.id, 'to', settings.id, '- creating new record');
+        
+        // Create new record with new ID
+        const createResult = await (await getAdminClient()).models.RegistrationConfig.create({
+          id: settings.id,
+          isRegistrationOpen: registrationConfig.isRegistrationOpen,
+          inviteOnlyMode: registrationConfig.inviteOnlyMode,
+          autoCloseEnabled: registrationConfig.autoCloseEnabled,
+          closureMessage: registrationConfig.closureMessage,
+          replyToEmail: settings.replyToEmail,
+          contactPhone: settings.contactPhone,
+          textingNumber: settings.textingNumber,
+          locationName: settings.locationName,
+          eventAddress: settings.eventAddress,
+          finalConfirmationDeadline: settings.finalConfirmationDeadline && settings.finalConfirmationDeadline.trim() !== '' ? new Date(settings.finalConfirmationDeadline).toISOString() : null,
+          finalConfirmationEnabled: settings.finalConfirmationEnabled,
+          updatedAt: new Date().toISOString(),
+          updatedBy: 'admin'
+        });
+        
+        if (createResult.errors) {
+          console.error('❌ Create errors:', createResult.errors);
+          setMessage('❌ Failed to create new configuration record: ' + JSON.stringify(createResult.errors));
+          return;
+        }
+        
+        // Delete old record
+        try {
+          await (await getAdminClient()).models.RegistrationConfig.delete({ id: registrationConfig.id });
+          console.log('✅ Deleted old config record with ID:', registrationConfig.id);
+        } catch (deleteError) {
+          console.warn('⚠️ Could not delete old config record:', deleteError);
+          // Don't fail the operation if delete fails
+        }
+        
+        updateResult = createResult;
+      } else {
+        // Normal update operation
+        updateResult = await (await getAdminClient()).models.RegistrationConfig.update({
+          id: registrationConfig.id,
+          replyToEmail: settings.replyToEmail,
+          contactPhone: settings.contactPhone,
+          textingNumber: settings.textingNumber,
+          locationName: settings.locationName,
+          eventAddress: settings.eventAddress,
+          finalConfirmationDeadline: settings.finalConfirmationDeadline && settings.finalConfirmationDeadline.trim() !== '' ? new Date(settings.finalConfirmationDeadline).toISOString() : null,
+          finalConfirmationEnabled: settings.finalConfirmationEnabled,
+          updatedAt: new Date().toISOString(),
+          updatedBy: 'admin'
+        });
+      }
 
       if (updateResult.errors) {
         console.error('❌ Update errors:', updateResult.errors);
@@ -3441,6 +3488,17 @@ function AdminDashboard() {
               <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-black mb-4">📍 Event Location</h3>
                 <div className="space-y-4">
+                  <div>
+                    <label className="block text-black font-bold mb-2">Configuration ID</label>
+                    <input
+                      type="text"
+                      value={settings.id}
+                      onChange={(e) => setSettings({...settings, id: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg text-black"
+                      placeholder="main, gray, brunswick, lewiston"
+                    />
+                    <p className="text-sm text-black mt-1">Unique identifier for this branch configuration (e.g., 'gray', 'brunswick', 'lewiston')</p>
+                  </div>
                   <div>
                     <label className="block text-black font-bold mb-2">Location Name</label>
                     <input
