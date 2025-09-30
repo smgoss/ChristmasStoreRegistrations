@@ -65,16 +65,32 @@ async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
   }
 }
 
-export const handler: Handler = async (event: { arguments?: { registration: RegistrationData; registrationId?: string; message?: string; messageId?: string } } & { registration?: RegistrationData; registrationId?: string; message?: string; messageId?: string }) => {
+interface SmsEvent {
+  arguments?: {
+    registration: RegistrationData;
+    registrationId?: string;
+    message?: string;
+    messageId?: string;
+  };
+  registration?: RegistrationData;
+  registrationId?: string;
+  message?: string;
+  messageId?: string;
+}
+
+export const handler: Handler = async (event: SmsEvent) => {
   try {
     console.log('📱 Sending SMS confirmation:', event);
     
-    const { registration, registrationId, message, messageId }: { 
-      registration: RegistrationData; 
-      registrationId?: string;
-      message?: string;
-      messageId?: string;
-    } = event.arguments || event;
+    const eventData = event.arguments || event;
+    const registration = eventData.registration;
+    const registrationId = eventData.registrationId;
+    const message = eventData.message;
+    const messageId = eventData.messageId;
+    
+    if (!registration) {
+      throw new Error('Registration data is required');
+    }
     
     if (!registration.phone) {
       console.log('ℹ️ No phone number provided, skipping SMS');
