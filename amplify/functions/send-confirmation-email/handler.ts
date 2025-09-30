@@ -372,7 +372,7 @@ function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastNam
   
   // Get location config
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
-  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
+  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || 'Event Location TBD';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
   const locationEmoji = process.env.LOCATION_EMOJI || '';
@@ -494,7 +494,7 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
   
   // Get location config
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
-  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
+  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || 'Event Location TBD';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
   const locationEmoji = process.env.LOCATION_EMOJI || '';
@@ -737,7 +737,7 @@ function generateEmailContent(registration: RegistrationData, config: Registrati
   
   // Get location config from database with fallbacks to environment variables and defaults
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
-  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || '1015 21st Ave, Lewiston, ID 83501';
+  const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || 'Event Location TBD';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
   const locationEmoji = process.env.LOCATION_EMOJI || '';

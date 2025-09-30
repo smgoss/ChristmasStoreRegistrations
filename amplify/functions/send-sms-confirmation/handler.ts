@@ -249,7 +249,7 @@ Questions? Call ${contactPhone}
 function generateSmsContent(registration: RegistrationData, config: RegistrationConfig | null): string {
   const displayTimeSlot = formatTimeSlot(registration.timeSlot);
   const locationName = config?.locationName || 'Pathway Christmas Store';
-  const eventAddress = config?.eventAddress || '12 Foss Road, Lewiston, ME 04256';
+  const eventAddress = config?.eventAddress || 'Event Location TBD';
   const contactPhone = config?.contactPhone || '(208) 746-9089';
   
   // Check if this is a final confirmation SMS
