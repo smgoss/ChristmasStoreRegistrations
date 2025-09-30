@@ -8,13 +8,13 @@ Use the current running sandbox and switch between campus configurations:
 
 ```bash
 # Test Lewiston Campus (Purple theme)
-./scripts/test-campus.sh location1
+./scripts/test-campus.sh lewiston
 
 # Test Brunswick Campus (Green theme)  
-./scripts/test-campus.sh location2
+./scripts/test-campus.sh brunswick
 
 # Test Gray Campus (Red theme)
-./scripts/test-campus.sh location3
+./scripts/test-campus.sh gray
 ```
 
 **Access at**: http://localhost:3004
@@ -38,7 +38,7 @@ Each gets its own AWS resources and database.
 
 ## 🎨 **What You'll See in Each Campus**
 
-### **🟣 Lewiston Campus (location1)**
+### **🟣 Lewiston Campus (lewiston)**
 - **Colors**: Purple header (#7c3aed) with green accents
 - **Name**: "Pathway Vineyard Lewiston Campus"
 - **Time Slots**: 09:00, 09:30, 10:00, 10:30, 11:00, 11:30
@@ -46,7 +46,7 @@ Each gets its own AWS resources and database.
 - **Contact**: lewiston@pathwayvineyard.com
 - **Admin Theme**: Purple gradient header
 
-### **🟢 Brunswick Campus (location2)**  
+### **🟢 Brunswick Campus (brunswick)**  
 - **Colors**: Green header (#059669) with red accents
 - **Name**: "Pathway Vineyard Brunswick Campus"
 - **Time Slots**: 10:00, 10:30, 11:00, 11:30, 12:00, 12:30
@@ -54,7 +54,7 @@ Each gets its own AWS resources and database.
 - **Contact**: brunswick@pathwayvineyard.com
 - **Admin Theme**: Green gradient header
 
-### **🔴 Gray-New Gloucester Campus (location3)**
+### **🔴 Gray-New Gloucester Campus (gray)**
 - **Colors**: Red header (#dc2626) with yellow accents
 - **Name**: "Pathway Vineyard Gray-New Gloucester Campus"  
 - **Time Slots**: 08:30, 09:00, 09:30, 10:00, 10:30, 11:00
@@ -95,23 +95,23 @@ Each gets its own AWS resources and database.
 1. **Current Method** (using existing sandbox):
    ```bash
    # Test Lewiston campus
-   export NEXT_PUBLIC_LOCATION=location1
+   export NEXT_PUBLIC_LOCATION=lewiston
    open http://localhost:3004
    
    # Test Brunswick campus  
-   export NEXT_PUBLIC_LOCATION=location2
+   export NEXT_PUBLIC_LOCATION=brunswick
    # Refresh browser
    
    # Test Gray campus
-   export NEXT_PUBLIC_LOCATION=location3
+   export NEXT_PUBLIC_LOCATION=gray
    # Refresh browser
    ```
 
 2. **Or use the helper script**:
    ```bash
-   ./scripts/test-campus.sh location1  # Lewiston
-   ./scripts/test-campus.sh location2  # Brunswick  
-   ./scripts/test-campus.sh location3  # Gray
+   ./scripts/test-campus.sh lewiston  # Lewiston
+   ./scripts/test-campus.sh brunswick  # Brunswick  
+   ./scripts/test-campus.sh gray  # Gray
    ```
 
 ## 💡 **Testing Tips**

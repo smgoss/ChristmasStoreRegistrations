@@ -27,9 +27,9 @@ This creates completely separate Amplify apps for maximum isolation:
 
 ```bash
 # Deploy each campus as separate app
-./scripts/deploy-location.sh location1  # Lewiston
-./scripts/deploy-location.sh location2  # Brunswick  
-./scripts/deploy-location.sh location3  # Gray
+./scripts/deploy-location.sh lewiston  # Lewiston
+./scripts/deploy-location.sh brunswick  # Brunswick  
+./scripts/deploy-location.sh gray  # Gray
 ```
 
 ### **Option 3: Manual Amplify Console Setup**
@@ -66,13 +66,13 @@ amplify configure
 cd <repo-root>
 
 # Deploy Lewiston Campus (Purple Theme)
-./scripts/deploy-location.sh location1
+./scripts/deploy-location.sh lewiston
 
 # Deploy Brunswick Campus (Green Theme)  
-./scripts/deploy-location.sh location2
+./scripts/deploy-location.sh brunswick
 
 # Deploy Gray Campus (Red Theme)
-./scripts/deploy-location.sh location3
+./scripts/deploy-location.sh gray
 ```
 
 ### **What the Script Does**
@@ -92,7 +92,7 @@ The script automatically sets these for each campus:
 
 ```bash
 # Frontend (Build Time)
-NEXT_PUBLIC_LOCATION=location1
+NEXT_PUBLIC_LOCATION=lewiston
 
 # Lambda Functions (Runtime)  
 LOCATION_NAME="Pathway Vineyard Lewiston Campus"
@@ -121,7 +121,7 @@ For each app, set these in **App Settings → Environment Variables**:
 
 #### **Lewiston Campus:**
 ```
-NEXT_PUBLIC_LOCATION = location1
+NEXT_PUBLIC_LOCATION = lewiston
 LOCATION_NAME = Pathway Vineyard Lewiston Campus
 LOCATION_ADDRESS = Lewiston, Maine
 CONTACT_EMAIL = lewiston@pathwayvineyard.com
@@ -155,10 +155,10 @@ git checkout main
 git commit -m "Add new feature"
 
 # Redeploy specific campus
-./scripts/deploy-location.sh location1  # Only redeploy Lewiston
+./scripts/deploy-location.sh lewiston  # Only redeploy Lewiston
 
 # Or redeploy all
-for location in location1 location2 location3; do
+for location in lewiston brunswick gray; do
   ./scripts/deploy-location.sh $location
 done
 ```

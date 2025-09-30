@@ -1,23 +1,23 @@
 #!/bin/bash
 
 # Test Campus Configuration Script
-# Usage: ./scripts/test-campus.sh location1
-#        ./scripts/test-campus.sh location2  
-#        ./scripts/test-campus.sh location3
+# Usage: ./scripts/test-campus.sh lewiston
+#        ./scripts/test-campus.sh brunswick
+#        ./scripts/test-campus.sh gray
 
 LOCATION=$1
-CAMPUS_NAMES=("location1:Lewiston" "location2:Brunswick" "location3:Gray-New_Gloucester")
+CAMPUS_NAMES=("lewiston:Lewiston" "brunswick:Brunswick" "gray:Gray-New_Gloucester")
 
 if [ -z "$LOCATION" ]; then
   echo "🎄 Christmas Store Campus Tester"
   echo "================================"
   echo ""
-  echo "Usage: $0 <location1|location2|location3>"
+  echo "Usage: $0 <lewiston|brunswick|gray>"
   echo ""
   echo "Available campuses:"
-  echo "  location1 - 🟣 Lewiston Campus (Purple theme)"
-  echo "  location2 - 🟢 Brunswick Campus (Green theme)"
-  echo "  location3 - 🔴 Gray-New Gloucester Campus (Red theme)"
+  echo "  lewiston - 🟣 Lewiston Campus (Purple theme)"
+  echo "  brunswick - 🟢 Brunswick Campus (Green theme)"
+  echo "  gray - 🔴 Gray-New Gloucester Campus (Red theme)"
   echo ""
   echo "This will start the dev server with campus-specific configuration."
   exit 1

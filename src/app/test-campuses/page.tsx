@@ -15,7 +15,7 @@ export default function TestCampusesPage() {
 
   const campuses = [
     {
-      id: 'location1',
+      id: 'lewiston',
       name: 'Lewiston Campus',
       fullName: 'Pathway Vineyard Lewiston Campus',
       color: '#7c3aed',
@@ -24,7 +24,7 @@ export default function TestCampusesPage() {
       capacity: '20 people per slot'
     },
     {
-      id: 'location2', 
+      id: 'brunswick', 
       name: 'Brunswick Campus',
       fullName: 'Pathway Vineyard Brunswick Campus',
       color: '#059669',
@@ -33,7 +33,7 @@ export default function TestCampusesPage() {
       capacity: '25 people per slot'
     },
     {
-      id: 'location3',
+      id: 'gray',
       name: 'Gray-New Gloucester Campus', 
       fullName: 'Pathway Vineyard Gray-New Gloucester Campus',
       color: '#dc2626',

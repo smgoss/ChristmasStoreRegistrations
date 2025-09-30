@@ -19,23 +19,23 @@ interface LocationConfig {
 }
 
 // Import all configs
-import location1Config from '../../config/location1.json';
-import location2Config from '../../config/location2.json';
-import location3Config from '../../config/location3.json';
+import lewistonConfig from '../../config/lewiston.json';
+import brunswickConfig from '../../config/brunswick.json';
+import grayConfig from '../../config/gray.json';
 
 // Function to get current config based on environment
 function getCurrentConfig(): LocationConfig {
-  const location = process.env.NEXT_PUBLIC_LOCATION || 'location1';
+  const location = process.env.NEXT_PUBLIC_LOCATION || 'lewiston';
   
   switch (location) {
-    case 'location1':
-      return location1Config;
-    case 'location2':
-      return location2Config;
-    case 'location3':
-      return location3Config;
+    case 'lewiston':
+      return lewistonConfig;
+    case 'brunswick':
+      return brunswickConfig;
+    case 'gray':
+      return grayConfig;
     default:
-      return location1Config;
+      return lewistonConfig;
   }
 }
 

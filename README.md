@@ -200,7 +200,7 @@ npm run build
 Local development
 - Copy `.env.example` to `.env.local` (ignored by git) and set local-only values. Next.js loads `.env.local` automatically.
 - Common local vars:
-  - `NEXT_PUBLIC_LOCATION` (e.g., `location1`)
+  - `NEXT_PUBLIC_LOCATION` (e.g., `lewiston`)
   - `RESERVE_FUNCTION_NAME` (optional; use if you enable durable capacity Lambda locally)
 
 Amplify / production

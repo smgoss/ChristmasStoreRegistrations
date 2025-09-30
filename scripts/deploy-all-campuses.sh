@@ -53,7 +53,7 @@ echo "🚀 Starting deployment process..."
 echo ""
 
 # Array of locations and their display names
-locations=("location1:Lewiston" "location2:Brunswick" "location3:Gray-New_Gloucester")
+locations=("lewiston:Lewiston" "brunswick:Brunswick" "gray:Gray-New_Gloucester")
 success_count=0
 total_count=${#locations[@]}
 
@@ -78,7 +78,7 @@ for location_info in "${locations[@]}"; do
     echo ""
     
     # Add delay between deployments to avoid rate limits
-    if [ $location != "location3" ]; then
+    if [ $location != "gray" ]; then
         echo "⏳ Waiting 30 seconds before next deployment..."
         sleep 30
     fi

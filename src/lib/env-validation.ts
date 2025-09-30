@@ -31,7 +31,7 @@ function validateEnvironment() {
   
   // Validate NEXT_PUBLIC_LOCATION format
   if (requiredEnvVars.NEXT_PUBLIC_LOCATION) {
-    const validLocations = ['location1', 'location2', 'location3'];
+    const validLocations = ['lewiston', 'brunswick', 'gray'];
     if (!validLocations.includes(requiredEnvVars.NEXT_PUBLIC_LOCATION)) {
       errors.push(`Invalid NEXT_PUBLIC_LOCATION: ${requiredEnvVars.NEXT_PUBLIC_LOCATION}. Must be one of: ${validLocations.join(', ')}`);
     }

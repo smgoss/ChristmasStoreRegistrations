@@ -1,11 +1,11 @@
 import { defineFunction, secret } from '@aws-amplify/backend';
 
 // Get location from environment variable (set during deployment)
-const location = process.env.NEXT_PUBLIC_LOCATION || 'location1';
+const location = process.env.NEXT_PUBLIC_LOCATION || 'lewiston';
 
 // Location-specific configurations
 const locationConfigs = {
-  location1: {
+  lewiston: {
     LOCATION_NAME: 'Pathway Vineyard Lewiston Campus',
     LOCATION_ADDRESS: 'Lewiston, Maine',
     CONTACT_EMAIL: 'lewiston@pathwayvineyard.com',
@@ -13,7 +13,7 @@ const locationConfigs = {
     LOCATION_EMOJI: '🎄',
     SMS_HEADER: 'Pathway Lewiston Christmas Store'
   },
-  location2: {
+  brunswick: {
     LOCATION_NAME: 'Pathway Vineyard Brunswick Campus', 
     LOCATION_ADDRESS: 'Brunswick, Maine',
     CONTACT_EMAIL: 'brunswick@pathwayvineyard.com',
@@ -21,7 +21,7 @@ const locationConfigs = {
     LOCATION_EMOJI: '🎄',
     SMS_HEADER: 'Pathway Brunswick Christmas Store'
   },
-  location3: {
+  gray: {
     LOCATION_NAME: 'Pathway Vineyard Gray-New Gloucester Campus',
     LOCATION_ADDRESS: 'Gray-New Gloucester, Maine', 
     CONTACT_EMAIL: 'gray@pathwayvineyard.com',
@@ -31,7 +31,7 @@ const locationConfigs = {
   }
 };
 
-const currentLocationConfig = locationConfigs[location as keyof typeof locationConfigs] || locationConfigs.location1;
+const currentLocationConfig = locationConfigs[location as keyof typeof locationConfigs] || locationConfigs.lewiston;
 
 export const sendSmsConfirmation = defineFunction({
   name: 'send-sms-confirmation',

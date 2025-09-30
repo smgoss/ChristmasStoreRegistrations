@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Amplify Multi-Campus Deployment Script
-# Usage: ./scripts/deploy-location.sh location1
-#        ./scripts/deploy-location.sh location2  
-#        ./scripts/deploy-location.sh location3
+# Usage: ./scripts/deploy-location.sh lewiston
+#        ./scripts/deploy-location.sh brunswick
+#        ./scripts/deploy-location.sh gray
 
 LOCATION=$1
-CAMPUS_NAMES=("location1:lewiston" "location2:brunswick" "location3:gray")
+CAMPUS_NAMES=("lewiston:lewiston" "brunswick:brunswick" "gray:gray")
 
 if [ -z "$LOCATION" ]; then
-  echo "Usage: $0 <location1|location2|location3>"
+  echo "Usage: $0 <lewiston|brunswick|gray>"
   echo "Available locations:"
-  echo "  location1 - Lewiston Campus"
-  echo "  location2 - Brunswick Campus"
-  echo "  location3 - Gray-New Gloucester Campus"
+  echo "  lewiston - Lewiston Campus"
+  echo "  brunswick - Brunswick Campus"
+  echo "  gray - Gray-New Gloucester Campus"
   exit 1
 fi
 

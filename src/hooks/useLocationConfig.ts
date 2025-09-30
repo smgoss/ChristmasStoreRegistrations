@@ -21,12 +21,12 @@ interface LocationConfig {
 }
 
 // Import all configs
-import location1Config from '../../config/location1.json';
-import location2Config from '../../config/location2.json';
-import location3Config from '../../config/location3.json';
+import lewistonConfig from '../../config/lewiston.json';
+import brunswickConfig from '../../config/brunswick.json';
+import grayConfig from '../../config/gray.json';
 
 export function useLocationConfig(): LocationConfig {
-  const [config, setConfig] = useState<LocationConfig>(location1Config);
+  const [config, setConfig] = useState<LocationConfig>(lewistonConfig);
 
   useEffect(() => {
     // Get location from environment variable or URL parameter or localStorage
@@ -49,23 +49,23 @@ export function useLocationConfig(): LocationConfig {
       }
 
       // Fall back to environment variable
-      return process.env.NEXT_PUBLIC_LOCATION || 'location1';
+      return process.env.NEXT_PUBLIC_LOCATION || 'lewiston';
     };
 
     const location = getLocationFromEnvironment();
     
     switch (location) {
-      case 'location1':
-        setConfig(location1Config);
+      case 'lewiston':
+        setConfig(lewistonConfig);
         break;
-      case 'location2':
-        setConfig(location2Config);
+      case 'brunswick':
+        setConfig(brunswickConfig);
         break;
-      case 'location3':
-        setConfig(location3Config);
+      case 'gray':
+        setConfig(grayConfig);
         break;
       default:
-        setConfig(location1Config);
+        setConfig(lewistonConfig);
     }
   }, []);
 

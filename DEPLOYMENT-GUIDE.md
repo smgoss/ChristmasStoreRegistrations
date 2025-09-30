@@ -50,19 +50,19 @@ cp -r . ../gray-christmas-store
 
 # Deploy Lewiston Campus
 cd ../lewiston-christmas-store
-export NEXT_PUBLIC_LOCATION=location1
+export NEXT_PUBLIC_LOCATION=lewiston
 amplify init --appname lewiston-christmas-store --yes
 amplify push --yes
 
 # Deploy Brunswick Campus
 cd ../brunswick-christmas-store
-export NEXT_PUBLIC_LOCATION=location2  
+export NEXT_PUBLIC_LOCATION=brunswick  
 amplify init --appname brunswick-christmas-store --yes
 amplify push --yes
 
 # Deploy Gray Campus
 cd ../gray-christmas-store
-export NEXT_PUBLIC_LOCATION=location3
+export NEXT_PUBLIC_LOCATION=gray
 amplify init --appname gray-christmas-store --yes  
 amplify push --yes
 ```
@@ -74,9 +74,9 @@ amplify push --yes
 chmod +x scripts/deploy-location.sh
 
 # Deploy all 3 locations
-./scripts/deploy-location.sh location1  # Lewiston
-./scripts/deploy-location.sh location2  # Brunswick
-./scripts/deploy-location.sh location3  # Gray
+./scripts/deploy-location.sh lewiston  # Lewiston
+./scripts/deploy-location.sh brunswick  # Brunswick
+./scripts/deploy-location.sh gray  # Gray
 ```
 
 ## ⚙️ **Environment Variables Setup**
@@ -85,7 +85,7 @@ After deployment, set these environment variables for each Lambda function in th
 
 ### **For Each Campus, Set These Variables:**
 
-#### **Lewiston Campus (location1):**
+#### **Lewiston Campus (lewiston):**
 ```bash
 LOCATION_NAME="Pathway Vineyard Lewiston Campus"
 LOCATION_ADDRESS="Lewiston, Maine"
@@ -97,7 +97,7 @@ LOCATION_EMOJI="🎄"
 FRONTEND_URL="https://your-lewiston-app-id.amplifyapp.com"
 ```
 
-#### **Brunswick Campus (location2):**
+#### **Brunswick Campus (brunswick):**
 ```bash
 LOCATION_NAME="Pathway Vineyard Brunswick Campus"
 LOCATION_ADDRESS="Brunswick, Maine"
@@ -109,7 +109,7 @@ LOCATION_EMOJI="🎄"
 FRONTEND_URL="https://your-brunswick-app-id.amplifyapp.com"
 ```
 
-#### **Gray Campus (location3):**
+#### **Gray Campus (gray):**
 ```bash
 LOCATION_NAME="Pathway Vineyard Gray-New Gloucester Campus"
 LOCATION_ADDRESS="Gray-New Gloucester, Maine"

@@ -6,7 +6,7 @@ echo "====================================="
 echo ""
 
 # Set campus configuration
-export NEXT_PUBLIC_LOCATION=location2
+export NEXT_PUBLIC_LOCATION=brunswick
 
 echo "Campus: Pathway Vineyard Brunswick Campus"
 echo "Theme: Green (#059669)" 
