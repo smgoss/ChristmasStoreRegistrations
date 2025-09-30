@@ -79,10 +79,10 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         });
         const result = await ddbClient.send(command);
         item = result.Items?.[0];
-    } catch (error) {
-      console.log('📋 Initial table query failed:', error instanceof Error ? error.message : 'Unknown error');
-      item = null; // Force the table discovery logic
-    }
+      } catch (error) {
+        console.log('📋 Initial table query failed:', error instanceof Error ? error.message : 'Unknown error');
+        item = null; // Force the table discovery logic
+      }
     
     if (!item) {
       console.log('📋 No config found in table:', tableName);
@@ -125,7 +125,13 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         console.error('❌ Error listing tables:', listError);
       }
       
-      return {};
+      return {
+        locationName: undefined,
+        eventAddress: undefined,
+        replyToEmail: undefined,
+        contactPhone: undefined
+      };
+    }
     }
     
     const config: RegistrationConfig = {
@@ -141,7 +147,12 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     return config;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
-    return {};
+    return {
+      locationName: undefined,
+      eventAddress: undefined,
+      replyToEmail: undefined,
+      contactPhone: undefined
+    };
   }
 }
 
