@@ -65,7 +65,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
   }
 }
 
-export const handler: Handler = async (event: any) => {
+export const handler: Handler = async (event: { arguments?: { registration: RegistrationData; registrationId?: string; message?: string; messageId?: string } } & { registration?: RegistrationData; registrationId?: string; message?: string; messageId?: string }) => {
   try {
     console.log('📱 Sending SMS confirmation:', event);
     

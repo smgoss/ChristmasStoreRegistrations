@@ -38,7 +38,7 @@ describe('Clearstream API Integration', () => {
         }
       };
 
-      await handler(event, {} as any, {} as any);
+      await handler(event, {} as never, {} as never);
 
       expect(mockFetch).toHaveBeenCalledWith(
         CLEARSTREAM_API_URL,
@@ -75,7 +75,7 @@ describe('Clearstream API Integration', () => {
         }
       };
 
-      await handler(event, {} as any, {} as any);
+      await handler(event, {} as never, {} as never);
 
       const callBody = mockFetch.mock.calls[0][1]?.body as URLSearchParams;
       
@@ -284,7 +284,7 @@ describe('Clearstream API Integration', () => {
         }
       };
 
-      await handler(event, {} as any, {} as any);
+      await handler(event, {} as never, {} as never);
 
       const callBody = mockFetch.mock.calls[0][1]?.body as URLSearchParams;
       const messageBody = callBody.get('text_body');
@@ -316,7 +316,7 @@ describe('Clearstream API Integration', () => {
         }
       };
 
-      await handler(event, {} as any, {} as any);
+      await handler(event, {} as never, {} as never);
 
       const callBody = mockFetch.mock.calls[0][1]?.body as URLSearchParams;
       const messageBody = callBody.get('text_body');
@@ -359,7 +359,7 @@ describe('Clearstream API Integration', () => {
           }
         };
 
-        await handler(event, {} as any, {} as any);
+        await handler(event, {} as never, {} as never);
 
         const callBody = mockFetch.mock.calls[0][1]?.body as URLSearchParams;
         expect(callBody.get('to')).toBe(expected);

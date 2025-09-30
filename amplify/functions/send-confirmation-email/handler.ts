@@ -417,7 +417,7 @@ function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastNam
           <li><strong>Email:</strong> ${waitlistEntry.email}</li>
           <li><strong>Phone:</strong> ${waitlistEntry.phone}</li>
           <li><strong>Number of Children:</strong> ${waitlistEntry.numberOfKids}</li>
-          ${(waitlistEntry as any).preferredTimeSlots ? `<li><strong>Preferred Times:</strong> ${(waitlistEntry as any).preferredTimeSlots}</li>` : ''}
+          ${(waitlistEntry as { preferredTimeSlots?: string }).preferredTimeSlots ? `<li><strong>Preferred Times:</strong> ${(waitlistEntry as { preferredTimeSlots?: string }).preferredTimeSlots}</li>` : ''}
         </ul>
       </div>
       
