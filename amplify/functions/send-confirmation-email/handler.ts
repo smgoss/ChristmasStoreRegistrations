@@ -46,12 +46,20 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     let item;
     let tableName = 'RegistrationConfig'; // fallback
     
-    // Try each RegistrationConfig table until we find one with data
+    // Determine the config ID based on the branch
+    const configId = process.env.AMPLIFY_BRANCH || 'main';
+    console.log('📋 Using config ID for branch:', configId);
+    
+    // Try each RegistrationConfig table to find the one with our specific config ID
     for (const tableCandidate of registrationConfigTables) {
       try {
         console.log('📋 Trying table:', tableCandidate);
         const command = new ScanCommand({
           TableName: tableCandidate,
+          FilterExpression: 'id = :configId',
+          ExpressionAttributeValues: {
+            ':configId': { S: configId }
+          },
           Limit: 1
         });
         
@@ -59,7 +67,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         const candidateItem = result.Items?.[0];
         
         if (candidateItem) {
-          console.log('📋 Found data in table:', tableCandidate);
+          console.log('📋 Found config with ID', configId, 'in table:', tableCandidate);
           item = candidateItem;
           tableName = tableCandidate;
           break;

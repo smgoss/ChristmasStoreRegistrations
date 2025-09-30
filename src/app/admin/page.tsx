@@ -307,21 +307,23 @@ function AdminDashboard() {
       
       // Load registration configuration (singleton)
       console.log('🔍 Fetching registration config...');
-      const { data: configData, errors: configErrors } = await (await getClient()).models.RegistrationConfig.list();
+      const configId = process.env.NEXT_PUBLIC_LOCATION || 'main';
+      console.log('🔍 Using config ID:', configId);
+      const { data: configData, errors: configErrors } = await (await getClient()).models.RegistrationConfig.get({ id: configId });
       
       if (configErrors) {
         console.error('❌ Config errors:', configErrors);
       }
       
       console.log('📋 Config data received:', configData);
-      let config = configData?.[0] as RegistrationConfig;
+      let config = configData as RegistrationConfig;
       
       if (!config) {
         // Create default config if none exists using admin client
         console.log('🚀 Creating default registration config...');
         try {
           const createResult = await (await getAdminClient()).models.RegistrationConfig.create({
-            id: 'main',
+            id: process.env.NEXT_PUBLIC_LOCATION || 'main',
             isRegistrationOpen: true,
             inviteOnlyMode: false,
             autoCloseEnabled: false,

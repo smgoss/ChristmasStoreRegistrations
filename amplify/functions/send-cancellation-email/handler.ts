@@ -31,6 +31,10 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
     console.log('📋 Looking for RegistrationConfig table...');
     
+    // Determine the config ID based on the branch
+    const configId = process.env.AMPLIFY_BRANCH || 'main';
+    console.log('📋 Using config ID for branch:', configId);
+    
     // List all table names to find the correct RegistrationConfig table
     const listTablesCommand = new ListTablesCommand({});
     const tablesResult = await ddbClient.send(listTablesCommand);
@@ -38,12 +42,16 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     
     console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
     
-    // Try each RegistrationConfig table until we find one with data
+    // Try each RegistrationConfig table to find the one with our specific config ID
     for (const tableName of registrationConfigTables) {
       try {
         console.log('📋 Trying table:', tableName);
         const command = new ScanCommand({
           TableName: tableName,
+          FilterExpression: 'id = :configId',
+          ExpressionAttributeValues: {
+            ':configId': { S: configId }
+          },
           Limit: 1
         });
         
@@ -51,7 +59,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         const item = result.Items?.[0];
         
         if (item) {
-          console.log('📋 Found data in table:', tableName);
+          console.log('📋 Found config with ID', configId, 'in table:', tableName);
           const config: RegistrationConfig = {
             locationName: item.locationName?.S,
             eventAddress: item.eventAddress?.S,
@@ -68,7 +76,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       }
     }
     
-    console.log('📋 No config found in any table, returning defaults');
+    console.log('📋 No config found with ID', configId, 'returning defaults');
     return {
       locationName: undefined,
       eventAddress: undefined,
