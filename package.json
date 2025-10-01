@@ -10,9 +10,13 @@
     "sandbox": "npx ampx sandbox",
     "deploy": "npx ampx deploy",
     "typecheck": "tsc --noEmit",
+    "validate": "./scripts/pre-push-validation.sh",
+    "validate:quick": "./scripts/quick-validate.sh",
+    "pre-push": "npm run validate",
     "test": "jest --config test/jest.config.js",
     "test:watch": "jest --config test/jest.config.js --watch",
-    "test:sms": "jest --config test/jest.config.js amplify/functions/send-sms-confirmation"
+    "test:sms": "jest --config test/jest.config.js amplify/functions/send-sms-confirmation",
+    "prepare": "husky"
   },
   "dependencies": {
     "@aws-amplify/backend": "^1.16.1",
@@ -37,6 +41,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.7.0",
     "tailwindcss": "^4",
