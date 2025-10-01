@@ -54,10 +54,10 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
           },
           Limit: 1
         });
-        
+
         const result = await ddbClient.send(command);
         const item = result.Items?.[0];
-        
+
         if (item) {
           console.log('📋 Found config with ID', configId, 'in table:', tableName);
           const config: RegistrationConfig = {
@@ -66,7 +66,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
             replyToEmail: item.replyToEmail?.S,
             contactPhone: item.contactPhone?.S
           };
-          
+
           console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
           return config;
         }
@@ -75,8 +75,40 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         continue;
       }
     }
-    
-    console.log('📋 No config found with ID', configId, 'returning defaults');
+
+    // If no config found with branch ID, try to get any config
+    if (registrationConfigTables.length > 0) {
+      console.log('📋 No config found with ID', configId, ', trying to get any available config');
+      for (const tableName of registrationConfigTables) {
+        try {
+          const command = new ScanCommand({
+            TableName: tableName,
+            Limit: 1
+          });
+
+          const result = await ddbClient.send(command);
+          const item = result.Items?.[0];
+
+          if (item) {
+            console.log('📋 Found fallback config in table:', tableName);
+            const config: RegistrationConfig = {
+              locationName: item.locationName?.S,
+              eventAddress: item.eventAddress?.S,
+              replyToEmail: item.replyToEmail?.S,
+              contactPhone: item.contactPhone?.S
+            };
+
+            console.log('📋 Retrieved fallback config:', JSON.stringify(config, null, 2));
+            return config;
+          }
+        } catch (tableError) {
+          console.log('📋 Error trying fallback table', tableName, ':', tableError);
+          continue;
+        }
+      }
+    }
+
+    console.log('📋 No config found, returning defaults');
     return {
       locationName: undefined,
       eventAddress: undefined,

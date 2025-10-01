@@ -171,7 +171,7 @@ describe('SMS Confirmation Handler', () => {
       expect(messageBody).toContain('Hello John!');
       expect(messageBody).toContain('🕘 Time: 9:00 AM');
       expect(messageBody).toContain('👶 Children: 2');
-      expect(messageBody).toContain('Pathway Vineyard Christmas Store');
+      expect(messageBody).toContain('Pathway Christmas Store');
     });
 
     it('should use correct text header', async () => {
@@ -343,7 +343,7 @@ describe('SMS Confirmation Handler', () => {
       expect(result).toEqual({
         success: false,
         message: 'Error sending SMS confirmation',
-        error: "Cannot read properties of undefined (reading 'phone')"
+        error: "Registration data is required"
       });
     });
   });

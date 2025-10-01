@@ -77,8 +77,37 @@ async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
         continue;
       }
     }
-    
-    console.log('📋 No config found with ID', configId, 'returning null');
+
+    // If no config found with branch ID, try to get any config
+    if (registrationConfigTables.length > 0) {
+      console.log('📋 No config found with ID', configId, ', trying to get any available config');
+      for (const tableName of registrationConfigTables) {
+        try {
+          const command = new ScanCommand({
+            TableName: tableName,
+            Limit: 1
+          });
+
+          const result = await ddbClient.send(command);
+          const item = result.Items?.[0];
+
+          if (item) {
+            console.log('📋 Found fallback config in table:', tableName);
+            return {
+              locationName: item.locationName?.S,
+              eventAddress: item.eventAddress?.S,
+              replyToEmail: item.replyToEmail?.S,
+              contactPhone: item.contactPhone?.S
+            };
+          }
+        } catch (tableError) {
+          console.log('📋 Error trying fallback table', tableName, ':', tableError);
+          continue;
+        }
+      }
+    }
+
+    console.log('📋 No config found, returning null');
     return null;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);

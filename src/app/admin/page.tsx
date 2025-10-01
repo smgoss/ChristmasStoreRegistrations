@@ -3505,6 +3505,7 @@ function AdminDashboard() {
                       type="text"
                       value={settings.locationName}
                       onChange={(e) => setSettings({...settings, locationName: e.target.value})}
+                      onBlur={(e) => updateRegistrationStatus('locationName', e.target.value)}
                       className="w-full px-3 py-2 border-2 border-green-300 rounded-lg text-black"
                       placeholder="Christmas Store Location"
                     />
@@ -3514,6 +3515,7 @@ function AdminDashboard() {
                     <textarea
                       value={settings.eventAddress}
                       onChange={(e) => setSettings({...settings, eventAddress: e.target.value})}
+                      onBlur={(e) => updateRegistrationStatus('eventAddress', e.target.value)}
                       className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20 text-black"
                       placeholder="123 Main St, City, State 12345"
                     />

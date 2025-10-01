@@ -49,7 +49,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     // Determine the config ID based on the branch
     const configId = process.env.AMPLIFY_BRANCH || 'main';
     console.log('📋 Using config ID for branch:', configId);
-    
+
     // Try each RegistrationConfig table to find the one with our specific config ID
     for (const tableCandidate of registrationConfigTables) {
       try {
@@ -62,10 +62,10 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
           },
           Limit: 1
         });
-        
+
         const result = await ddbClient.send(command);
         const candidateItem = result.Items?.[0];
-        
+
         if (candidateItem) {
           console.log('📋 Found config with ID', configId, 'in table:', tableCandidate);
           item = candidateItem;
@@ -75,6 +75,32 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       } catch (tableError) {
         console.log('📋 Error trying table', tableCandidate, ':', tableError);
         continue;
+      }
+    }
+
+    // If no config found with branch ID, try to get any config
+    if (!item && registrationConfigTables.length > 0) {
+      console.log('📋 No config found with ID', configId, ', trying to get any available config');
+      for (const tableCandidate of registrationConfigTables) {
+        try {
+          const command = new ScanCommand({
+            TableName: tableCandidate,
+            Limit: 1
+          });
+
+          const result = await ddbClient.send(command);
+          const candidateItem = result.Items?.[0];
+
+          if (candidateItem) {
+            console.log('📋 Found fallback config in table:', tableCandidate);
+            item = candidateItem;
+            tableName = tableCandidate;
+            break;
+          }
+        } catch (tableError) {
+          console.log('📋 Error trying fallback table', tableCandidate, ':', tableError);
+          continue;
+        }
       }
     }
     
@@ -141,7 +167,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       };
     }
     }
-    
+
     const config: RegistrationConfig = {
       locationName: item.locationName?.S,
       eventAddress: item.eventAddress?.S,
