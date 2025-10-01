@@ -96,10 +96,12 @@ async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
           if (item) {
             console.log('📋 Found fallback config in table:', tableName);
             return {
+              id: item.id?.S || 'default',
               locationName: item.locationName?.S,
               eventAddress: item.eventAddress?.S,
               contactPhone: item.contactPhone?.S,
-              replyToEmail: item.replyToEmail?.S
+              replyToEmail: item.replyToEmail?.S,
+              textingNumber: item.textingNumber?.S
             };
           }
         } catch (tableError) {
