@@ -1,31 +1,60 @@
-import { DynamoDBClient, ScanCommand, UpdateItemCommand } from '@aws-sdk/client-dynamodb';
-
-const dynamodb = new DynamoDBClient({ region: process.env.AWS_REGION });
-
 export const handler = async () => {
   try {
     console.log('🔍 Checking for registrations to auto-close...');
-    
-    // Get the table name from environment variables
-    const tableName = `RegistrationConfig-${process.env.AMPLIFY_BRANCH || 'main'}-${process.env.AMPLIFY_APP_ID || 'sandbox'}`;
-    
-    // Get registration configuration
-    const scanResult = await dynamodb.send(new ScanCommand({
-      TableName: tableName,
-      Limit: 1
-    }));
-    
-    const config = scanResult.Items?.[0];
-    
+
+    // Use GraphQL API to fetch config
+    const apiUrl = process.env.AMPLIFY_DATA_GRAPHQL_ENDPOINT;
+    const apiKey = process.env.AMPLIFY_DATA_API_KEY;
+
+    if (!apiUrl || !apiKey) {
+      console.error('❌ GraphQL endpoint or API key not set');
+      return { statusCode: 500, body: 'GraphQL configuration missing' };
+    }
+
+    // Determine the config ID based on the branch
+    const configId = process.env.AMPLIFY_BRANCH || 'main';
+    console.log('📋 Fetching config for branch:', configId);
+
+    const query = `
+      query GetConfig($id: String!) {
+        getRegistrationConfig(id: $id) {
+          id
+          autoCloseEnabled
+          isRegistrationOpen
+          scheduledCloseDate
+        }
+      }
+    `;
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey
+      },
+      body: JSON.stringify({
+        query,
+        variables: { id: configId }
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.errors) {
+      console.error('❌ GraphQL errors:', result.errors);
+      return { statusCode: 500, body: 'Failed to fetch config' };
+    }
+
+    const config = result.data?.getRegistrationConfig;
+
     if (!config) {
       console.log('⚠️ No registration configuration found');
       return { statusCode: 404, body: 'No registration configuration found' };
     }
-    
-    const autoCloseEnabled = config.autoCloseEnabled?.BOOL;
-    const isRegistrationOpen = config.isRegistrationOpen?.BOOL;
-    const scheduledCloseDate = config.scheduledCloseDate?.S;
-    const configId = config.id?.S;
+
+    const autoCloseEnabled = config.autoCloseEnabled;
+    const isRegistrationOpen = config.isRegistrationOpen;
+    const scheduledCloseDate = config.scheduledCloseDate;
     
     // Only process if auto-close is enabled and registration is currently open
     if (!autoCloseEnabled || !isRegistrationOpen || !scheduledCloseDate) {
@@ -41,19 +70,45 @@ export const handler = async () => {
     
     if (now >= scheduledDate) {
       console.log('🔒 Time to close registration!');
-      
-      // Close registration
-      await dynamodb.send(new UpdateItemCommand({
-        TableName: tableName,
-        Key: { id: { S: configId! } },
-        UpdateExpression: 'SET isRegistrationOpen = :false, updatedAt = :now, updatedBy = :system',
-        ExpressionAttributeValues: {
-          ':false': { BOOL: false },
-          ':now': { S: now.toISOString() },
-          ':system': { S: 'auto-close-system' }
+
+      // Close registration using GraphQL mutation
+      const mutation = `
+        mutation CloseRegistration($id: String!) {
+          updateRegistrationConfig(input: {
+            id: $id
+            isRegistrationOpen: false
+            updatedAt: "${now.toISOString()}"
+            updatedBy: "auto-close-system"
+          }) {
+            id
+            isRegistrationOpen
+            updatedAt
+          }
         }
-      }));
-      
+      `;
+
+      const updateResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey
+        },
+        body: JSON.stringify({
+          query: mutation,
+          variables: { id: configId }
+        })
+      });
+
+      const updateResult = await updateResponse.json();
+
+      if (updateResult.errors) {
+        console.error('❌ Failed to close registration:', updateResult.errors);
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Failed to close registration' })
+        };
+      }
+
       console.log('✅ Registration closed successfully');
       
       return { 
