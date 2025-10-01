@@ -1,3 +1,20 @@
+interface GraphQLResponse {
+  data?: {
+    getRegistrationConfig?: {
+      id: string;
+      autoCloseEnabled?: boolean;
+      isRegistrationOpen?: boolean;
+      scheduledCloseDate?: string;
+    };
+    updateRegistrationConfig?: {
+      id: string;
+      isRegistrationOpen?: boolean;
+      updatedAt?: string;
+    };
+  };
+  errors?: Array<{ message: string }>;
+}
+
 export const handler = async () => {
   try {
     console.log('🔍 Checking for registrations to auto-close...');
@@ -38,7 +55,7 @@ export const handler = async () => {
       })
     });
 
-    const result = await response.json();
+    const result = await response.json() as GraphQLResponse;
 
     if (result.errors) {
       console.error('❌ GraphQL errors:', result.errors);
@@ -99,7 +116,7 @@ export const handler = async () => {
         })
       });
 
-      const updateResult = await updateResponse.json();
+      const updateResult = await updateResponse.json() as GraphQLResponse;
 
       if (updateResult.errors) {
         console.error('❌ Failed to close registration:', updateResult.errors);
