@@ -1,9 +1,10 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
-import { DynamoDBClient, ScanCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
-const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+const ddbClient = DynamoDBDocumentClient.from(new DynamoDBClient({ region: process.env.AWS_REGION }));
 
 interface RegistrationData {
   id?: string;
@@ -31,134 +32,11 @@ interface RegistrationConfig {
 
 async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
-    console.log('📋 All env vars:', Object.keys(process.env).filter(k => k.includes('AMPLIFY')));
-    console.log('📋 AWS_AMPLIFY_IDENTIFIER:', process.env.AWS_AMPLIFY_IDENTIFIER);
-    console.log('📋 AMPLIFY_IDENTIFIER:', process.env.AMPLIFY_IDENTIFIER);
-    console.log('📋 AWS_AMPLIFY_APPID:', process.env.AWS_AMPLIFY_APPID);
-    
-    // List all table names to find the correct RegistrationConfig table
-    const listTablesCommand = new ListTablesCommand({});
-    const tablesResult = await ddbClient.send(listTablesCommand);
-    const registrationConfigTables = tablesResult.TableNames?.filter(name => name.includes('RegistrationConfig')) || [];
-    
-    console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
-    
-    let item;
-    let tableName = 'RegistrationConfig'; // fallback
-    
-    // Determine the config ID based on the branch
-    const configId = process.env.AMPLIFY_BRANCH || 'main';
-    console.log('📋 Using config ID for branch:', configId);
+    // Use the Amplify-provided table name environment variable
+    const tableName = process.env.AMPLIFY_DATA_REGISTRATIONCONFIG_TABLE_NAME;
 
-    // Try each RegistrationConfig table to find the one with our specific config ID
-    for (const tableCandidate of registrationConfigTables) {
-      try {
-        console.log('📋 Trying table:', tableCandidate);
-        const command = new ScanCommand({
-          TableName: tableCandidate,
-          FilterExpression: 'id = :configId',
-          ExpressionAttributeValues: {
-            ':configId': { S: configId }
-          },
-          Limit: 1
-        });
-
-        const result = await ddbClient.send(command);
-        const candidateItem = result.Items?.[0];
-
-        if (candidateItem) {
-          console.log('📋 Found config with ID', configId, 'in table:', tableCandidate);
-          item = candidateItem;
-          tableName = tableCandidate;
-          break;
-        }
-      } catch (tableError) {
-        console.log('📋 Error trying table', tableCandidate, ':', tableError);
-        continue;
-      }
-    }
-
-    // If no config found with branch ID, try to get any config
-    if (!item && registrationConfigTables.length > 0) {
-      console.log('📋 No config found with ID', configId, ', trying to get any available config');
-      for (const tableCandidate of registrationConfigTables) {
-        try {
-          const command = new ScanCommand({
-            TableName: tableCandidate,
-            Limit: 1
-          });
-
-          const result = await ddbClient.send(command);
-          const candidateItem = result.Items?.[0];
-
-          if (candidateItem) {
-            console.log('📋 Found fallback config in table:', tableCandidate);
-            item = candidateItem;
-            tableName = tableCandidate;
-            break;
-          }
-        } catch (tableError) {
-          console.log('📋 Error trying fallback table', tableCandidate, ':', tableError);
-          continue;
-        }
-      }
-    }
-    
-    // If no tables had data, try the fallback
-    if (!item) {
-      try {
-        const command = new ScanCommand({
-          TableName: 'RegistrationConfig',
-          Limit: 1
-        });
-        const result = await ddbClient.send(command);
-        item = result.Items?.[0];
-      } catch (error) {
-        console.log('📋 Initial table query failed:', error instanceof Error ? error.message : 'Unknown error');
-        item = null; // Force the table discovery logic
-      }
-    
-    if (!item) {
-      console.log('📋 No config found in table:', tableName);
-      console.log('📋 Trying to find the correct table...');
-      
-      // Try to find the correct table name by listing all tables
-      try {
-        const listTablesCommand = new ListTablesCommand({});
-        const tablesResult = await ddbClient.send(listTablesCommand);
-        const registrationConfigTable = tablesResult.TableNames?.find(name => 
-          name.includes('RegistrationConfig')
-        );
-        
-        console.log('📋 Found tables:', tablesResult.TableNames);
-        console.log('📋 Found RegistrationConfig table:', registrationConfigTable);
-        
-        if (registrationConfigTable) {
-          const retryCommand = new ScanCommand({
-            TableName: registrationConfigTable,
-            Limit: 1
-          });
-          const retryResult = await ddbClient.send(retryCommand);
-          const retryItem = retryResult.Items?.[0];
-          
-          if (retryItem) {
-            const config: RegistrationConfig = {
-              locationName: retryItem.locationName?.S,
-              eventAddress: retryItem.eventAddress?.S,
-              replyToEmail: retryItem.replyToEmail?.S,
-              contactPhone: retryItem.contactPhone?.S
-            };
-            
-            console.log('📋 Retrieved config from correct table:', JSON.stringify(config, null, 2));
-            console.log('📋 Final locationName:', config.locationName);
-            console.log('📋 Final eventAddress:', config.eventAddress);
-            return config;
-          }
-        }
-      } catch (listError) {
-        console.error('❌ Error listing tables:', listError);
-      }
-      
+    if (!tableName) {
+      console.error('❌ AMPLIFY_DATA_REGISTRATIONCONFIG_TABLE_NAME not set');
       return {
         locationName: undefined,
         eventAddress: undefined,
@@ -166,19 +44,43 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         contactPhone: undefined
       };
     }
+
+    console.log('📋 Using RegistrationConfig table:', tableName);
+
+    // Determine the config ID based on the branch
+    const configId = process.env.AMPLIFY_BRANCH || 'main';
+    console.log('📋 Looking for config ID:', configId);
+
+    const command = new QueryCommand({
+      TableName: tableName,
+      KeyConditionExpression: 'id = :configId',
+      ExpressionAttributeValues: {
+        ':configId': configId
+      },
+      Limit: 1
+    });
+
+    const result = await ddbClient.send(command);
+    const item = result.Items?.[0];
+
+    if (item) {
+      console.log('📋 Found config:', JSON.stringify(item, null, 2));
+      const config: RegistrationConfig = {
+        locationName: item.locationName,
+        eventAddress: item.eventAddress,
+        replyToEmail: item.replyToEmail,
+        contactPhone: item.contactPhone
+      };
+      return config;
     }
 
-    const config: RegistrationConfig = {
-      locationName: item.locationName?.S,
-      eventAddress: item.eventAddress?.S,
-      replyToEmail: item.replyToEmail?.S,
-      contactPhone: item.contactPhone?.S
+    console.log('📋 No config found with ID', configId);
+    return {
+      locationName: undefined,
+      eventAddress: undefined,
+      replyToEmail: undefined,
+      contactPhone: undefined
     };
-    
-    console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
-    console.log('📋 Final locationName:', config.locationName);
-    console.log('📋 Final eventAddress:', config.eventAddress);
-    return config;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
     return {
@@ -188,19 +90,6 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       contactPhone: undefined
     };
   }
-}
-
-interface EventType {
-  arguments?: {
-    registration?: RegistrationData;
-    registrationId?: string;
-    subject?: string;
-    message?: string;
-    messageId?: string;
-    waitlistEntry?: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number; preferredTimeSlots?: string};
-    waitlistId?: string;
-  };
-  registrationId?: string;
 }
 
 export const handler: Handler = async (event: EventType) => {

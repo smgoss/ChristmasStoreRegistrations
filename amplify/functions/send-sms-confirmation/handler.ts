@@ -1,6 +1,7 @@
 import type { Handler } from 'aws-lambda';
 import { SecretsManagerClient, GetSecretValueCommand } from '@aws-sdk/client-secrets-manager';
-import { DynamoDBClient, ScanCommand, ListTablesCommand } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
 interface RegistrationData {
   firstName: string;
   lastName: string;
@@ -27,91 +28,50 @@ interface RegistrationConfig {
   replyToEmail?: string;
 }
 
-const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
+const ddbClient = DynamoDBDocumentClient.from(new DynamoDBClient({ region: process.env.AWS_REGION }));
 
 async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
   try {
-    console.log('📋 Looking for RegistrationConfig table...');
-    
+    // Use the Amplify-provided table name environment variable
+    const tableName = process.env.AMPLIFY_DATA_REGISTRATIONCONFIG_TABLE_NAME;
+
+    if (!tableName) {
+      console.error('❌ AMPLIFY_DATA_REGISTRATIONCONFIG_TABLE_NAME not set');
+      return null;
+    }
+
+    console.log('📋 Using RegistrationConfig table:', tableName);
+
     // Determine the config ID based on the branch
     const configId = process.env.AMPLIFY_BRANCH || 'main';
-    console.log('📋 Using config ID for branch:', configId);
-    
-    // List all table names to find the correct RegistrationConfig table
-    const listTablesCommand = new ListTablesCommand({});
-    const tablesResult = await ddbClient.send(listTablesCommand);
-    const registrationConfigTables = tablesResult.TableNames?.filter(name => name.includes('RegistrationConfig')) || [];
-    
-    console.log('📋 Found RegistrationConfig tables:', registrationConfigTables);
-    
-    // Try each RegistrationConfig table to find the one with our specific config ID
-    for (const tableName of registrationConfigTables) {
-      try {
-        console.log('📋 Trying table:', tableName);
-        const command = new ScanCommand({
-          TableName: tableName,
-          FilterExpression: 'id = :configId',
-          ExpressionAttributeValues: {
-            ':configId': { S: configId }
-          },
-          Limit: 1
-        });
-        
-        const result = await ddbClient.send(command);
-        const item = result.Items?.[0];
-        
-        if (item) {
-          console.log('📋 Found config with ID', configId, 'in table:', tableName);
-          const config: RegistrationConfig = {
-            id: item.id?.S || configId,
-            locationName: item.locationName?.S,
-            eventAddress: item.eventAddress?.S,
-            contactPhone: item.contactPhone?.S,
-            textingNumber: item.textingNumber?.S,
-            replyToEmail: item.replyToEmail?.S
-          };
-          
-          console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
-          return config;
-        }
-      } catch (tableError) {
-        console.log('📋 Error trying table', tableName, ':', tableError);
-        continue;
-      }
+    console.log('📋 Looking for config ID:', configId);
+
+    const command = new QueryCommand({
+      TableName: tableName,
+      KeyConditionExpression: 'id = :configId',
+      ExpressionAttributeValues: {
+        ':configId': configId
+      },
+      Limit: 1
+    });
+
+    const result = await ddbClient.send(command);
+    const item = result.Items?.[0];
+
+    if (item) {
+      console.log('📋 Found config:', JSON.stringify(item, null, 2));
+      const config: RegistrationConfig = {
+        id: item.id || configId,
+        locationName: item.locationName,
+        eventAddress: item.eventAddress,
+        contactPhone: item.contactPhone,
+        textingNumber: item.textingNumber,
+        replyToEmail: item.replyToEmail
+      };
+      return config;
     }
 
-    // If no config found with branch ID, try to get any config
-    if (registrationConfigTables.length > 0) {
-      console.log('📋 No config found with ID', configId, ', trying to get any available config');
-      for (const tableName of registrationConfigTables) {
-        try {
-          const command = new ScanCommand({
-            TableName: tableName,
-            Limit: 1
-          });
-
-          const result = await ddbClient.send(command);
-          const item = result.Items?.[0];
-
-          if (item) {
-            console.log('📋 Found fallback config in table:', tableName);
-            return {
-              id: item.id?.S || 'default',
-              locationName: item.locationName?.S,
-              eventAddress: item.eventAddress?.S,
-              contactPhone: item.contactPhone?.S,
-              replyToEmail: item.replyToEmail?.S,
-              textingNumber: item.textingNumber?.S
-            };
-          }
-        } catch (tableError) {
-          console.log('📋 Error trying fallback table', tableName, ':', tableError);
-          continue;
-        }
-      }
-    }
-
-    console.log('📋 No config found, returning null');
+    console.log('📋 No config found with ID', configId);
     return null;
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
