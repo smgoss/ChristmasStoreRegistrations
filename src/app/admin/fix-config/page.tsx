@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { getAdminClient } from '@/lib/amplify';
+import { generateClient } from 'aws-amplify/data';
+import type { Schema } from '../../../../amplify/data/resource';
+import { ensureAmplifyConfigured } from '@/lib/amplify';
+
+// Create admin client function
+const getAdminClient = async () => {
+  await ensureAmplifyConfigured();
+  return generateClient<Schema>({ authMode: 'userPool' });
+};
 
 const branchConfigs = {
   gray: {
