@@ -30,6 +30,28 @@ interface RegistrationConfig {
   contactPhone?: string;
 }
 
+interface WaitlistEntry {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  numberOfKids: number;
+  preferredTimeSlots?: string;
+}
+
+interface EventType {
+  arguments?: {
+    registration?: RegistrationData;
+    registrationId?: string;
+    subject?: string;
+    message?: string;
+    messageId?: string;
+    waitlistEntry?: WaitlistEntry;
+    waitlistId?: string;
+  };
+  registrationId?: string;
+}
+
 async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
     // Use the Amplify-provided table name environment variable
