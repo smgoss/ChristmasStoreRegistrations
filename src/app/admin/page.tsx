@@ -308,9 +308,9 @@ function AdminDashboard() {
       
       // Load registration configuration (singleton)
       console.log('🔍 Fetching registration config...');
-      const configId = process.env.NEXT_PUBLIC_LOCATION || 'main';
-      console.log('🔍 Using config ID:', configId);
-      const { data: configData, errors: configErrors } = await (await getClient()).models.RegistrationConfig.get({ id: configId });
+      const { data: configList, errors: configErrors } = await (await getClient()).models.RegistrationConfig.list();
+      console.log('📋 Found configs:', configList?.length || 0, configList);
+      const configData = configList?.[0] || null;
       
       if (configErrors) {
         console.error('❌ Config errors:', configErrors);

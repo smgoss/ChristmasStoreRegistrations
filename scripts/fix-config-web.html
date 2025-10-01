@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix RegistrationConfig</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .branch { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; margin: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Fix RegistrationConfig Database Records</h1>
+    
+    <div class="branch">
+        <h3>🔴 Gray Branch</h3>
+        <p><strong>Should be:</strong> Pathway Vineyard Gray-New Gloucester Campus</p>
+        <button onclick="fixConfig('gray')">Fix Gray Config</button>
+        <div id="gray-log" class="log"></div>
+    </div>
+    
+    <div class="branch">
+        <h3>🟢 Brunswick Branch</h3>
+        <p><strong>Should be:</strong> Pathway Vineyard Brunswick Campus</p>
+        <button onclick="fixConfig('brunswick')">Fix Brunswick Config</button>
+        <div id="brunswick-log" class="log"></div>
+    </div>
+    
+    <div class="branch">
+        <h3>🟣 Lewiston Branch</h3>
+        <p><strong>Should be:</strong> Pathway Vineyard Lewiston Campus</p>
+        <button onclick="fixConfig('lewiston')">Fix Lewiston Config</button>
+        <div id="lewiston-log" class="log"></div>
+    </div>
+
+    <script type="module">
+        import { generateClient } from 'https://cdn.skypack.dev/aws-amplify/data';
+        import { Amplify } from 'https://cdn.skypack.dev/aws-amplify';
+
+        // Configure Amplify
+        const amplifyConfig = {
+            // You'll need to paste your amplify_outputs.json content here
+        };
+        
+        Amplify.configure(amplifyConfig);
+        const client = generateClient({ authMode: 'apiKey' });
+
+        const branchConfigs = {
+            gray: {
+                id: 'gray',
+                locationName: 'Pathway Vineyard Gray-New Gloucester Campus',
+                eventAddress: 'Gray-New Gloucester, Maine',
+                contactEmail: 'gray@pathwayvineyard.com',
+                fromEmail: 'noreply@pathwayvineyard.com',
+                contactPhone: '(207) 555-0300'
+            },
+            brunswick: {
+                id: 'brunswick', 
+                locationName: 'Pathway Vineyard Brunswick Campus',
+                eventAddress: '2 Columbus Dr, Brunswick, ME 04011',
+                contactEmail: 'brunswick@pathwayvineyard.com',
+                fromEmail: 'noreply@pathwayvineyard.com',
+                contactPhone: '(207) 555-0200'
+            },
+            lewiston: {
+                id: 'lewiston',
+                locationName: 'Pathway Vineyard Lewiston Campus', 
+                eventAddress: '12 Foss Road, Lewiston, ME 04240',
+                contactEmail: 'lewiston@pathwayvineyard.com',
+                fromEmail: 'noreply@pathwayvineyard.com',
+                contactPhone: '(207) 555-0100'
+            }
+        };
+
+        window.fixConfig = async function(branch) {
+            const logEl = document.getElementById(`${branch}-log`);
+            
+            try {
+                logEl.textContent = `🔧 Fixing ${branch} configuration...\n`;
+                
+                // Delete existing configs
+                const { data: existing } = await client.models.RegistrationConfig.list();
+                
+                if (existing && existing.length > 0) {
+                    logEl.textContent += `Found ${existing.length} existing records, deleting...\n`;
+                    
+                    for (const config of existing) {
+                        await client.models.RegistrationConfig.delete({ id: config.id });
+                        logEl.textContent += `✅ Deleted record: ${config.id}\n`;
+                    }
+                }
+                
+                // Create new config
+                const newConfig = branchConfigs[branch];
+                logEl.textContent += `\n✨ Creating new config for ${branch}...\n`;
+                
+                const { data: created } = await client.models.RegistrationConfig.create({
+                    id: newConfig.id,
+                    locationName: newConfig.locationName,
+                    eventAddress: newConfig.eventAddress,
+                    contactEmail: newConfig.contactEmail,
+                    fromEmail: newConfig.fromEmail,
+                    contactPhone: newConfig.contactPhone,
+                    registrationOpenDate: '2025-12-01T00:00:00.000Z',
+                    registrationDeadline: '2025-12-10T23:59:59.000Z', 
+                    finalConfirmationDeadline: '2025-12-11T23:59:59.000Z'
+                });
+                
+                if (created) {
+                    logEl.textContent += `\n🎉 SUCCESS!\n`;
+                    logEl.textContent += `ID: ${created.id}\n`;
+                    logEl.textContent += `Location: ${created.locationName}\n`;
+                    logEl.textContent += `Address: ${created.eventAddress}\n`;
+                    logEl.className = 'log success';
+                } else {
+                    logEl.textContent += `\n❌ Failed to create config\n`;
+                    logEl.className = 'log error';
+                }
+                
+            } catch (error) {
+                logEl.textContent += `\n❌ Error: ${error.message}\n`;
+                logEl.className = 'log error';
+            }
+        };
+    </script>
+</body>
+</html>
