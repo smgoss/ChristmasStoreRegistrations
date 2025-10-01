@@ -16,7 +16,7 @@ const branchConfigs = {
     id: 'gray',
     locationName: 'Pathway Vineyard Gray-New Gloucester Campus',
     eventAddress: 'Gray-New Gloucester, Maine',
-    contactEmail: 'gray@pathwayvineyard.com',
+    replyToEmail: 'gray@pathwayvineyard.com',
     fromEmail: 'noreply@pathwayvineyard.com',
     contactPhone: '(207) 555-0300'
   },
@@ -24,7 +24,7 @@ const branchConfigs = {
     id: 'brunswick', 
     locationName: 'Pathway Vineyard Brunswick Campus',
     eventAddress: '2 Columbus Dr, Brunswick, ME 04011',
-    contactEmail: 'brunswick@pathwayvineyard.com',
+    replyToEmail: 'brunswick@pathwayvineyard.com',
     fromEmail: 'noreply@pathwayvineyard.com',
     contactPhone: '(207) 555-0200'
   },
@@ -32,7 +32,7 @@ const branchConfigs = {
     id: 'lewiston',
     locationName: 'Pathway Vineyard Lewiston Campus', 
     eventAddress: '12 Foss Road, Lewiston, ME 04240',
-    contactEmail: 'lewiston@pathwayvineyard.com',
+    replyToEmail: 'lewiston@pathwayvineyard.com',
     fromEmail: 'noreply@pathwayvineyard.com',
     contactPhone: '(207) 555-0100'
   }
@@ -80,11 +80,9 @@ export default function FixConfigPage() {
         id: config.id,
         locationName: config.locationName,
         eventAddress: config.eventAddress,
-        contactEmail: config.contactEmail,
+        replyToEmail: config.replyToEmail,
         fromEmail: config.fromEmail,
         contactPhone: config.contactPhone,
-        registrationOpenDate: '2025-12-01T00:00:00.000Z',
-        registrationDeadline: '2025-12-10T23:59:59.000Z', 
         finalConfirmationDeadline: '2025-12-11T23:59:59.000Z'
       });
       
@@ -93,7 +91,7 @@ export default function FixConfigPage() {
         setStatus(prev => prev + `   ID: ${newConfig.id}\n`);
         setStatus(prev => prev + `   Location: ${newConfig.locationName}\n`);
         setStatus(prev => prev + `   Address: ${newConfig.eventAddress}\n`);
-        setStatus(prev => prev + `   Contact: ${newConfig.contactEmail}\n\n`);
+        setStatus(prev => prev + `   Contact: ${newConfig.replyToEmail}\n\n`);
         setStatus(prev => prev + '📋 What this fixes:\n');
         setStatus(prev => prev + '   ✅ Cancellation emails will show correct location\n');
         setStatus(prev => prev + '   ✅ SMS messages will work properly\n');
