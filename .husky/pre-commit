@@ -1,1 +1,5 @@
+# Quick TypeScript validation
 npm run validate:quick
+
+# Validate package-lock.json integrity
+./scripts/validate-package-lock.sh

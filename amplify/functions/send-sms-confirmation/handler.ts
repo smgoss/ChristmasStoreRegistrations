@@ -24,6 +24,7 @@ interface RegistrationConfig {
   eventAddress?: string;
   contactPhone?: string;
   textingNumber?: string;
+  replyToEmail?: string;
 }
 
 const ddbClient = new DynamoDBClient({ region: process.env.AWS_REGION });
@@ -66,7 +67,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
             locationName: item.locationName?.S,
             eventAddress: item.eventAddress?.S,
             contactPhone: item.contactPhone?.S,
-            textingNumber: item.textingNumber?.S
+            textingNumber: item.textingNumber?.S,
+            replyToEmail: item.replyToEmail?.S
           };
           
           console.log('📋 Retrieved config:', JSON.stringify(config, null, 2));
@@ -96,8 +98,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig | null> {
             return {
               locationName: item.locationName?.S,
               eventAddress: item.eventAddress?.S,
-              replyToEmail: item.replyToEmail?.S,
-              contactPhone: item.contactPhone?.S
+              contactPhone: item.contactPhone?.S,
+              replyToEmail: item.replyToEmail?.S
             };
           }
         } catch (tableError) {
