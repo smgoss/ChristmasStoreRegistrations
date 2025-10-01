@@ -1,10 +1,7 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
-const ddbClient = DynamoDBDocumentClient.from(new DynamoDBClient({ region: process.env.AWS_REGION }));
 
 interface RegistrationData {
   firstName: string;
@@ -30,11 +27,12 @@ interface RegistrationConfig {
 
 async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
-    // Use the Amplify-provided table name environment variable
-    const tableName = process.env.AMPLIFY_DATA_REGISTRATIONCONFIG_TABLE_NAME;
+    // Use GraphQL API to fetch config - it automatically uses the correct table
+    const apiUrl = process.env.AMPLIFY_DATA_GRAPHQL_ENDPOINT;
+    const apiKey = process.env.AMPLIFY_DATA_API_KEY;
 
-    if (!tableName) {
-      console.error('❌ AMPLIFY_DATA_REGISTRATIONCONFIG_TABLE_NAME not set');
+    if (!apiUrl || !apiKey) {
+      console.error('❌ GraphQL endpoint or API key not set');
       return {
         locationName: undefined,
         eventAddress: undefined,
@@ -43,33 +41,56 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       };
     }
 
-    console.log('📋 Using RegistrationConfig table:', tableName);
-
     // Determine the config ID based on the branch
     const configId = process.env.AMPLIFY_BRANCH || 'main';
-    console.log('📋 Looking for config ID:', configId);
+    console.log('📋 Fetching config for branch:', configId);
 
-    const command = new QueryCommand({
-      TableName: tableName,
-      KeyConditionExpression: 'id = :configId',
-      ExpressionAttributeValues: {
-        ':configId': configId
+    const query = `
+      query GetConfig($id: String!) {
+        getRegistrationConfig(id: $id) {
+          id
+          locationName
+          eventAddress
+          replyToEmail
+          contactPhone
+        }
+      }
+    `;
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey
       },
-      Limit: 1
+      body: JSON.stringify({
+        query,
+        variables: { id: configId }
+      })
     });
 
-    const result = await ddbClient.send(command);
-    const item = result.Items?.[0];
+    const result = await response.json();
 
-    if (item) {
-      console.log('📋 Found config:', JSON.stringify(item, null, 2));
-      const config: RegistrationConfig = {
-        locationName: item.locationName,
-        eventAddress: item.eventAddress,
-        replyToEmail: item.replyToEmail,
-        contactPhone: item.contactPhone
+    if (result.errors) {
+      console.error('❌ GraphQL errors:', result.errors);
+      return {
+        locationName: undefined,
+        eventAddress: undefined,
+        replyToEmail: undefined,
+        contactPhone: undefined
       };
-      return config;
+    }
+
+    const config = result.data?.getRegistrationConfig;
+
+    if (config) {
+      console.log('📋 Found config via GraphQL:', JSON.stringify(config, null, 2));
+      return {
+        locationName: config.locationName,
+        eventAddress: config.eventAddress,
+        replyToEmail: config.replyToEmail,
+        contactPhone: config.contactPhone
+      };
     }
 
     console.log('📋 No config found with ID', configId);
