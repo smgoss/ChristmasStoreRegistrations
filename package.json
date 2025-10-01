@@ -26,7 +26,6 @@
     "@aws-sdk/client-dynamodb": "^3.883.0",
     "@aws-sdk/client-lambda": "^3.883.0",
     "@aws-sdk/client-ses": "^3.883.0",
-    "@aws-sdk/lib-dynamodb": "^3.899.0",
     "aws-amplify": "^6.15.5",
     "next": "15.5.2",
     "react": "19.1.0",
