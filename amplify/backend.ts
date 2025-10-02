@@ -72,6 +72,7 @@ if (apiKey) {
   [backend.sendConfirmationEmail, backend.sendCancellationEmail, backend.sendInviteEmail, backend.sendSmsConfirmation, backend.autoCloseRegistration].forEach(func => {
     func.addEnvironment('AMPLIFY_DATA_GRAPHQL_ENDPOINT', graphqlApi.attrGraphQlUrl);
     func.addEnvironment('AMPLIFY_DATA_API_KEY', apiKey.attrApiKey);
+    func.addEnvironment('AMPLIFY_BRANCH', process.env.NEXT_PUBLIC_LOCATION || 'main');
 
     // Grant permission to call GraphQL API
     func.resources.lambda.addToRolePolicy(
