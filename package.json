@@ -16,6 +16,8 @@
     "test": "jest --config test/jest.config.js",
     "test:watch": "jest --config test/jest.config.js --watch",
     "test:sms": "jest --config test/jest.config.js amplify/functions/send-sms-confirmation",
+    "test:integration": "jest --config test/jest.integration.config.js",
+    "test:integration:verbose": "VERBOSE_TESTS=true jest --config test/jest.integration.config.js",
     "prepare": "husky"
   },
   "dependencies": {
