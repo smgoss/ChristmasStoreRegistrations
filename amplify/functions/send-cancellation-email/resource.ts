@@ -35,8 +35,7 @@ export const sendCancellationEmail = defineFunction({
   entry: './handler.ts',
   environment: {
     FROM_EMAIL: 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
-    LOCATION_NAME: currentLocationConfig.LOCATION_NAME,
-    LOCATION_ADDRESS: currentLocationConfig.LOCATION_ADDRESS,
+    // LOCATION_NAME and LOCATION_ADDRESS are now fetched from database via GraphQL
     CONTACT_EMAIL: currentLocationConfig.CONTACT_EMAIL,
     CONTACT_PHONE: currentLocationConfig.CONTACT_PHONE,
     LOCATION_EMOJI: currentLocationConfig.LOCATION_EMOJI
