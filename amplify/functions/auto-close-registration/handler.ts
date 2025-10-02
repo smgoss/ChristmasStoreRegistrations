@@ -1,10 +1,14 @@
+interface RegistrationConfig {
+  id: string;
+  autoCloseEnabled?: boolean;
+  isRegistrationOpen?: boolean;
+  scheduledCloseDate?: string;
+}
+
 interface GraphQLResponse {
   data?: {
-    getRegistrationConfig?: {
-      id: string;
-      autoCloseEnabled?: boolean;
-      isRegistrationOpen?: boolean;
-      scheduledCloseDate?: string;
+    listRegistrationConfigs?: {
+      items: RegistrationConfig[];
     };
     updateRegistrationConfig?: {
       id: string;
@@ -33,12 +37,14 @@ export const handler = async () => {
     console.log('📋 Fetching config for branch:', configId);
 
     const query = `
-      query GetConfig($id: String!) {
-        getRegistrationConfig(id: $id) {
-          id
-          autoCloseEnabled
-          isRegistrationOpen
-          scheduledCloseDate
+      query ListConfigs {
+        listRegistrationConfigs {
+          items {
+            id
+            autoCloseEnabled
+            isRegistrationOpen
+            scheduledCloseDate
+          }
         }
       }
     `;
@@ -50,8 +56,7 @@ export const handler = async () => {
         'x-api-key': apiKey
       },
       body: JSON.stringify({
-        query,
-        variables: { id: configId }
+        query
       })
     });
 
@@ -62,7 +67,9 @@ export const handler = async () => {
       return { statusCode: 500, body: 'Failed to fetch config' };
     }
 
-    const config = result.data?.getRegistrationConfig;
+    // Find the config that matches our branch ID
+    const configs = result.data?.listRegistrationConfigs?.items || [];
+    const config = configs.find(c => c.id === configId);
 
     if (!config) {
       console.log('⚠️ No registration configuration found');

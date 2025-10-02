@@ -27,7 +27,9 @@ interface RegistrationConfig {
 
 interface GraphQLResponse {
   data?: {
-    getRegistrationConfig?: RegistrationConfig;
+    listRegistrationConfigs?: {
+      items: RegistrationConfig[];
+    };
   };
   errors?: Array<{ message: string }>;
 }
@@ -53,13 +55,15 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     console.log('📋 Fetching config for branch:', configId);
 
     const query = `
-      query GetConfig($id: String!) {
-        getRegistrationConfig(id: $id) {
-          id
-          locationName
-          eventAddress
-          replyToEmail
-          contactPhone
+      query ListConfigs {
+        listRegistrationConfigs {
+          items {
+            id
+            locationName
+            eventAddress
+            replyToEmail
+            contactPhone
+          }
         }
       }
     `;
@@ -71,8 +75,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         'x-api-key': apiKey
       },
       body: JSON.stringify({
-        query,
-        variables: { id: configId }
+        query
       })
     });
 
@@ -88,7 +91,9 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       };
     }
 
-    const config = result.data?.getRegistrationConfig;
+    // Find the config that matches our branch ID
+    const configs = result.data?.listRegistrationConfigs?.items || [];
+    const config = configs.find(c => c.id === configId);
 
     if (config) {
       console.log('📋 Found config via GraphQL:', JSON.stringify(config, null, 2));
