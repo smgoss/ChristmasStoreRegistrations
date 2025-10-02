@@ -10,6 +10,7 @@ interface InviteData {
 }
 
 interface RegistrationConfig {
+  id: string;
   fromEmail?: string;
   replyToEmail?: string;
   locationName?: string;

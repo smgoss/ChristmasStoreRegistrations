@@ -21,6 +21,7 @@ interface RegistrationData {
 }
 
 interface RegistrationConfig {
+  id: string;
   locationName?: string;
   eventAddress?: string;
   replyToEmail?: string;
