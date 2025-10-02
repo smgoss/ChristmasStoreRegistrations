@@ -63,23 +63,5 @@ backend.sendSmsConfirmation.resources.lambda.addToRolePolicy(
   })
 );
 
-// Grant email confirmation, cancellation, and invite functions access to GraphQL API and DynamoDB
-[backend.sendConfirmationEmail, backend.sendCancellationEmail, backend.sendInviteEmail, backend.sendSmsConfirmation, backend.autoCloseRegistration].forEach(func => {
-  // Add GraphQL endpoint URL
-  func.addEnvironment('AMPLIFY_DATA_GRAPHQL_ENDPOINT', backend.data.resources.cfnResources.cfnGraphqlApi.attrGraphQlUrl);
-
-  // Add API key - get it from the cfnApiKey resource
-  const apiKey = backend.data.resources.cfnResources.cfnApiKey;
-  if (apiKey) {
-    func.addEnvironment('AMPLIFY_DATA_API_KEY', apiKey.attrApiKey);
-  }
-
-  // Grant DynamoDB read access to RegistrationConfig table
-  func.resources.lambda.addToRolePolicy(
-    new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ['appsync:GraphQL'],
-      resources: [`${backend.data.resources.cfnResources.cfnGraphqlApi.attrArn}/*`]
-    })
-  );
-});
+// Note: Functions that use GraphQL API are assigned to 'data' stack via resourceGroupName
+// They automatically get access to AMPLIFY_DATA_GRAPHQL_ENDPOINT and AMPLIFY_DATA_API_KEY environment variables
