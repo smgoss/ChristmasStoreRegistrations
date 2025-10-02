@@ -321,7 +321,7 @@ Questions? ${contactPhone}
 
 async function sendClearstreamSms(phone: string, message: string) {
   try {
-    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
+    const textHeader = 'Pathway Christmas Store';
 
     const apiKey = await getApiKey();
 

@@ -8,24 +8,24 @@ const locationConfigs = {
   lewiston: {
     LOCATION_NAME: 'Pathway Vineyard Lewiston Campus',
     LOCATION_ADDRESS: 'Lewiston, Maine',
-    CONTACT_EMAIL: 'lewiston@pathwayvineyard.com',
-    CONTACT_PHONE: '(207) 555-0100',
+    CONTACT_EMAIL: 'office@pathwayvineyard.com',
+    CONTACT_PHONE: '(207) 784-9500',
     LOCATION_EMOJI: '🎄',
     SMS_HEADER: 'Pathway Lewiston Christmas Store'
   },
   brunswick: {
     LOCATION_NAME: 'Pathway Vineyard Brunswick Campus', 
     LOCATION_ADDRESS: 'Brunswick, Maine',
-    CONTACT_EMAIL: 'brunswick@pathwayvineyard.com',
-    CONTACT_PHONE: '(207) 555-0200',
+    CONTACT_EMAIL: 'office@pathwayvineyard.com',
+    CONTACT_PHONE: '(207) 784-9500',
     LOCATION_EMOJI: '🎄',
     SMS_HEADER: 'Pathway Brunswick Christmas Store'
   },
   gray: {
     LOCATION_NAME: 'Pathway Vineyard Gray-New Gloucester Campus',
     LOCATION_ADDRESS: 'Gray-New Gloucester, Maine', 
-    CONTACT_EMAIL: 'gray@pathwayvineyard.com',
-    CONTACT_PHONE: '(207) 555-0300',
+    CONTACT_EMAIL: 'office@pathwayvineyard.com',
+    CONTACT_PHONE: '(207) 784-9500',
     LOCATION_EMOJI: '🎄',
     SMS_HEADER: 'Pathway Gray Christmas Store'
   }
