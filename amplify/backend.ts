@@ -63,5 +63,23 @@ backend.sendSmsConfirmation.resources.lambda.addToRolePolicy(
   })
 );
 
-// Note: Functions that use GraphQL API are assigned to 'data' stack via resourceGroupName
-// They automatically get access to AMPLIFY_DATA_GRAPHQL_ENDPOINT and AMPLIFY_DATA_API_KEY environment variables
+// Grant functions access to GraphQL API endpoint and key
+// These functions are assigned to 'data' stack via resourceGroupName to avoid circular dependency
+const graphqlApi = backend.data.resources.cfnResources.cfnGraphqlApi;
+const apiKey = backend.data.resources.cfnResources.cfnApiKey;
+
+if (apiKey) {
+  [backend.sendConfirmationEmail, backend.sendCancellationEmail, backend.sendInviteEmail, backend.sendSmsConfirmation, backend.autoCloseRegistration].forEach(func => {
+    func.addEnvironment('AMPLIFY_DATA_GRAPHQL_ENDPOINT', graphqlApi.attrGraphQlUrl);
+    func.addEnvironment('AMPLIFY_DATA_API_KEY', apiKey.attrApiKey);
+
+    // Grant permission to call GraphQL API
+    func.resources.lambda.addToRolePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        actions: ['appsync:GraphQL'],
+        resources: [`${graphqlApi.attrArn}/*`]
+      })
+    );
+  });
+}
