@@ -68,6 +68,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     if (!apiUrl || !apiKey) {
       console.error('❌ GraphQL endpoint or API key not set');
       return {
+        id: '',
         locationName: undefined,
         eventAddress: undefined,
         replyToEmail: undefined,
@@ -109,6 +110,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     if (result.errors) {
       console.error('❌ GraphQL errors:', result.errors);
       return {
+        id: '',
         locationName: undefined,
         eventAddress: undefined,
         replyToEmail: undefined,
@@ -123,6 +125,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
     if (config) {
       console.log('📋 Found config via GraphQL:', JSON.stringify(config, null, 2));
       return {
+        id: config.id,
         locationName: config.locationName,
         eventAddress: config.eventAddress,
         replyToEmail: config.replyToEmail,
@@ -132,6 +135,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
 
     console.log('📋 No config found with ID', configId);
     return {
+      id: '',
       locationName: undefined,
       eventAddress: undefined,
       replyToEmail: undefined,
@@ -140,6 +144,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
     return {
+      id: '',
       locationName: undefined,
       eventAddress: undefined,
       replyToEmail: undefined,
