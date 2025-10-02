@@ -25,6 +25,13 @@ interface RegistrationConfig {
   contactPhone?: string;
 }
 
+interface GraphQLResponse {
+  data?: {
+    getRegistrationConfig?: RegistrationConfig;
+  };
+  errors?: Array<{ message: string }>;
+}
+
 async function getRegistrationConfig(): Promise<RegistrationConfig> {
   try {
     // Use GraphQL API to fetch config - it automatically uses the correct table
@@ -69,7 +76,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       })
     });
 
-    const result = await response.json();
+    const result = await response.json() as GraphQLResponse;
 
     if (result.errors) {
       console.error('❌ GraphQL errors:', result.errors);

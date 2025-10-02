@@ -27,6 +27,13 @@ interface RegistrationConfig {
   contactPhone?: string;
 }
 
+interface GraphQLResponse {
+  data?: {
+    getRegistrationConfig?: RegistrationConfig;
+  };
+  errors?: Array<{ message: string }>;
+}
+
 interface WaitlistEntry {
   firstName: string;
   lastName: string;
@@ -93,7 +100,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       })
     });
 
-    const result = await response.json();
+    const result = await response.json() as GraphQLResponse;
 
     if (result.errors) {
       console.error('❌ GraphQL errors:', result.errors);
