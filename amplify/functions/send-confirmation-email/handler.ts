@@ -351,7 +351,7 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number}, config: RegistrationConfig = {}): string {
+function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastName: string; email: string; phone?: string; numberOfKids: number}, config: Partial<RegistrationConfig> = {}): string {
   console.log('📧 generateWaitlistEmailContent called');
   
   // Get location config
@@ -473,7 +473,7 @@ function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastNam
   `;
 }
 
-function generateFinalConfirmationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}, registrationId?: string): string {
+function generateFinalConfirmationEmailContent(registration: RegistrationData, config: Partial<RegistrationConfig> = {}, registrationId?: string): string {
   console.log('📧 generateFinalConfirmationEmailContent called');
   
   // Get location config
@@ -711,7 +711,7 @@ function generateCustomEmailContent(registration: RegistrationData, subject: str
   `;
 }
 
-function generateEmailContent(registration: RegistrationData, config: RegistrationConfig = {}, registrationId?: string): string {
+function generateEmailContent(registration: RegistrationData, config: Partial<RegistrationConfig> = {}, registrationId?: string): string {
   console.log('📧 generateEmailContent called with config:', JSON.stringify(config, null, 2));
   
   // Check if this is a final confirmation email

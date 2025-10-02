@@ -236,7 +236,7 @@ function formatTimeSlot(timeSlot: string): string {
   return timeSlot;
 }
 
-function generateCancellationEmailContent(registration: RegistrationData, config: RegistrationConfig = {}): string {
+function generateCancellationEmailContent(registration: RegistrationData, config: Partial<RegistrationConfig> = {}): string {
   console.log('📧 generateCancellationEmailContent called with config:', JSON.stringify(config, null, 2));
   
   // Get location config from database with fallbacks to environment variables and defaults
