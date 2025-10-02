@@ -305,19 +305,16 @@ Questions? Call ${contactPhone}
   }
   
   // Regular confirmation SMS
-  return `🎄 Christmas Store Registration Confirmed!
+  return `🎄 Registration Confirmed!
 
-Hello ${registration.firstName}!
+Hi ${registration.firstName}!
 
-Your registration is confirmed for:
-📅 Saturday, December 13th, 2025
-🕘 Time: ${displayTimeSlot}
-📍 Location: ${eventAddress}
-👶 Children: ${registration.numberOfKids}
+📅 Sat, Dec 13, 2025
+🕘 ${displayTimeSlot}
+📍 ${eventAddress}
+👶 ${registration.numberOfKids} child${registration.numberOfKids > 1 ? 'ren' : ''}
 
-We look forward to seeing you!
-
-Questions? Call ${contactPhone} or reply to this message.
+Questions? ${contactPhone}
 
 - ${locationName}`;
 }
