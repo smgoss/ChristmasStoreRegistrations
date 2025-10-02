@@ -322,84 +322,158 @@ Questions? ${contactPhone}
 async function sendClearstreamSms(phone: string, message: string) {
   try {
     const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
-    
-    // Try environment variable first
-    let apiKey = process.env.CLEAR_STREAM_API_KEY;
-    console.log('Environment variable API key:', JSON.stringify(apiKey?.substring(0, 10)));
-    
-    // If environment variable doesn't work, try getting from Secrets Manager directly
-    if (!apiKey || apiKey.includes('<value')) {
-      console.log('Environment variable failed, trying Secrets Manager...');
-      const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
-      
-      try {
-        const secretName = `amplify-${process.env.AWS_AMPLIFY_IDENTIFIER || 'christmasstoreregistration'}-CLEAR_STREAM_API_KEY`;
-        console.log('Trying secret name:', secretName);
-        
-        const command = new GetSecretValueCommand({ SecretId: secretName });
-        const result = await secretsClient.send(command);
-        apiKey = result.SecretString;
-        console.log('Secrets Manager API key:', JSON.stringify(apiKey?.substring(0, 10)));
-      } catch (secretError) {
-        console.error('Secrets Manager error:', secretError);
-        // Try alternative secret name format
-        try {
-          const alternativeSecretName = `CLEAR_STREAM_API_KEY`;
-          console.log('Trying alternative secret name:', alternativeSecretName);
-          const altCommand = new GetSecretValueCommand({ SecretId: alternativeSecretName });
-          const altResult = await secretsClient.send(altCommand);
-          apiKey = altResult.SecretString;
-          console.log('Alternative Secrets Manager API key:', JSON.stringify(apiKey?.substring(0, 10)));
-        } catch (altError) {
-          console.error('Alternative Secrets Manager error:', altError);
-        }
-      }
-    }
-    
+
+    const apiKey = await getApiKey();
+
     console.log('Environment variables check:');
     console.log('CLEARSTREAM_TEXT_HEADER:', textHeader);
     console.log('CLEAR_STREAM_API_KEY exists:', !!apiKey);
     console.log('API Key length:', apiKey?.length);
     console.log('API Key type:', typeof apiKey);
     console.log('Final API Key first 10 chars:', JSON.stringify(apiKey?.substring(0, 10)));
-    
-    // Log the exact body being sent to Clearstream
-    const requestBody = new URLSearchParams({
+
+    // Split message into chunks if needed
+    const chunks = splitMessage(message);
+    console.log(`Message split into ${chunks.length} chunk(s)`);
+
+    const results = [];
+
+    for (let i = 0; i < chunks.length; i++) {
+      const chunk = chunks[i];
+      const partInfo = chunks.length > 1 ? ` (${i + 1}/${chunks.length})` : '';
+      console.log(`Sending chunk ${i + 1}/${chunks.length} (${chunk.length} chars)${partInfo}`);
+
+      // Log the exact body being sent to Clearstream
+      const requestBody = new URLSearchParams({
+        to: phone,
+        text_header: textHeader,
+        text_body: chunk,
+      });
+      console.log('Clearstream request body:', requestBody.toString());
+
+      const result = await sendSingleSms(phone, chunk, apiKey);
+      results.push(result);
+
+      if (!result.success) {
+        console.error(`Failed to send chunk ${i + 1}/${chunks.length}`);
+        return { success: false, error: result.error };
+      }
+
+      // Wait 1 second between sends (except for the last one)
+      if (i < chunks.length - 1) {
+        console.log('Waiting 1 second before next chunk...');
+        await delay(1000);
+      }
+    }
+
+    return { success: true, data: `Sent ${chunks.length} message(s) successfully` };
+  } catch (error) {
+    console.error('Error sending SMS:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+// Helper function to get API key from environment or Secrets Manager
+async function getApiKey(): Promise<string> {
+  // Try environment variable first
+  let apiKey = process.env.CLEAR_STREAM_API_KEY;
+  console.log('Environment variable API key:', JSON.stringify(apiKey?.substring(0, 10)));
+
+  // If environment variable doesn't work, try getting from Secrets Manager directly
+  if (!apiKey || apiKey.includes('<value')) {
+    console.log('Environment variable failed, trying Secrets Manager...');
+    const secretsClient = new SecretsManagerClient({ region: process.env.AWS_REGION });
+
+    try {
+      const secretName = `amplify-${process.env.AWS_AMPLIFY_IDENTIFIER || 'christmasstoreregistration'}-CLEAR_STREAM_API_KEY`;
+      console.log('Trying secret name:', secretName);
+
+      const command = new GetSecretValueCommand({ SecretId: secretName });
+      const result = await secretsClient.send(command);
+      apiKey = result.SecretString;
+      console.log('Secrets Manager API key:', JSON.stringify(apiKey?.substring(0, 10)));
+    } catch (secretError) {
+      console.error('Secrets Manager error:', secretError);
+      // Try alternative secret name format
+      try {
+        const alternativeSecretName = `CLEAR_STREAM_API_KEY`;
+        console.log('Trying alternative secret name:', alternativeSecretName);
+        const altCommand = new GetSecretValueCommand({ SecretId: alternativeSecretName });
+        const altResult = await secretsClient.send(altCommand);
+        apiKey = altResult.SecretString;
+        console.log('Alternative Secrets Manager API key:', JSON.stringify(apiKey?.substring(0, 10)));
+      } catch (altError) {
+        console.error('Alternative Secrets Manager error:', altError);
+      }
+    }
+  }
+
+  if (!apiKey || apiKey.includes('<value')) {
+    console.error('Available environment variables:', Object.keys(process.env));
+    throw new Error('CLEAR_STREAM_API_KEY not found in environment or Secrets Manager');
+  }
+
+  return apiKey;
+}
+
+// Helper function to send a single SMS chunk
+async function sendSingleSms(phone: string, message: string, apiKey: string) {
+  const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
+
+  const response = await fetch('https://api.getclearstream.com/v1/texts', {
+    method: 'POST',
+    headers: {
+      'X-Api-Key': apiKey,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: new URLSearchParams({
       to: phone,
       text_header: textHeader,
       text_body: message,
-    });
-    console.log('Clearstream request body:', requestBody.toString());
-    
-    if (!apiKey || apiKey.includes('<value')) {
-      console.error('Available environment variables:', Object.keys(process.env));
-      throw new Error('CLEAR_STREAM_API_KEY not found in environment or Secrets Manager');
-    }
-    
-    const response = await fetch('https://api.getclearstream.com/v1/texts', {
-      method: 'POST',
-      headers: {
-        'X-Api-Key': apiKey,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        to: phone,
-        text_header: textHeader,
-        text_body: message,
-      }),
-    });
-    
-    if (response.ok) {
-      const result = await response.text();
-      console.log('Clearstream API response:', result);
-      return { success: true, data: result };
-    } else {
-      const error = await response.text();
-      console.error('Clearstream API error:', error);
-      return { success: false, error: error };
-    }
-  } catch (error) {
-    console.error('Error calling Clearstream API:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }),
+  });
+
+  if (response.ok) {
+    const result = await response.text();
+    console.log('Clearstream API response:', result);
+    return { success: true, data: result };
+  } else {
+    const error = await response.text();
+    console.error('Clearstream API error:', error);
+    return { success: false, error: error };
   }
+}
+
+// Helper function to split message into chunks
+function splitMessage(message: string, maxLength: number = 330): string[] {
+  if (message.length <= maxLength) {
+    return [message];
+  }
+
+  const chunks: string[] = [];
+  let remaining = message;
+
+  while (remaining.length > 0) {
+    if (remaining.length <= maxLength) {
+      chunks.push(remaining);
+      break;
+    }
+
+    // Find the last space before maxLength to avoid breaking words
+    let splitIndex = maxLength;
+    const lastSpace = remaining.lastIndexOf(' ', maxLength);
+    if (lastSpace > maxLength * 0.7) { // Only use space if it's not too far back
+      splitIndex = lastSpace;
+    }
+
+    chunks.push(remaining.substring(0, splitIndex).trim());
+    remaining = remaining.substring(splitIndex).trim();
+  }
+
+  return chunks;
+}
+
+// Helper function to delay execution
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
