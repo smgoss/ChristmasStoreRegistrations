@@ -33,6 +33,7 @@ const currentLocationConfig = locationConfigs[location as keyof typeof locationC
 export const sendInviteEmail = defineFunction({
   name: 'send-invite-email',
   entry: './handler.ts',
+  resourceGroupName: 'data',
   environment: {
     // LOCATION_NAME and LOCATION_ADDRESS are now fetched from database via GraphQL
     CONTACT_EMAIL: currentLocationConfig.CONTACT_EMAIL,

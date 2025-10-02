@@ -36,6 +36,7 @@ const currentLocationConfig = locationConfigs[location as keyof typeof locationC
 export const sendSmsConfirmation = defineFunction({
   name: 'send-sms-confirmation',
   entry: './handler.ts',
+  resourceGroupName: 'data',
   environment: {
     CLEARSTREAM_TEXT_HEADER: currentLocationConfig.SMS_HEADER,
     CLEAR_STREAM_API_KEY: secret('CLEAR_STREAM_API_KEY'),

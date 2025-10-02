@@ -33,6 +33,7 @@ const currentLocationConfig = locationConfigs[location as keyof typeof locationC
 export const sendConfirmationEmail = defineFunction({
   name: 'send-confirmation-email',
   entry: './handler.ts',
+  resourceGroupName: 'data',
   environment: {
     FROM_EMAIL: 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
     // LOCATION_NAME and LOCATION_ADDRESS are now fetched from database via GraphQL
