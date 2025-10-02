@@ -214,6 +214,11 @@ function formatPhoneForDisplay(phone: string): string {
   return digits;
 }
 
+function formatAddressForEmail(address: string): string {
+  // Convert newlines to <br> tags for HTML email display
+  return address.replace(/\n/g, '<br>');
+}
+
 function formatTimeSlot(timeSlot: string): string {
   // Handle formats like "09:30" -> "9:30 AM" or "13:30" -> "1:30 PM"
   const timeParts = timeSlot.split(':');
@@ -342,7 +347,7 @@ function generateCancellationEmailContent(registration: RegistrationData, config
         ${locationEmoji ? `<span class="emoji">${locationEmoji}</span>` : ''}
         <h1>🚫 Christmas Store Registration Cancelled</h1>
         <h2>${locationName}</h2>
-        <p>${locationAddress}</p>
+        <p>${formatAddressForEmail(locationAddress)}</p>
         <p style="font-size: 18px; font-weight: bold; margin-top: 15px;">📅 Saturday, December 13th, 2025</p>
       </div>
       

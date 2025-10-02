@@ -329,6 +329,11 @@ function formatPhoneForDisplay(phone: string): string {
   return digits;
 }
 
+function formatAddressForEmail(address: string): string {
+  // Convert newlines to <br> tags for HTML email display
+  return address.replace(/\n/g, '<br>');
+}
+
 function formatTimeSlot(timeSlot: string): string {
   // Handle formats like "09:30" -> "9:30 AM" or "13:30" -> "1:30 PM"
   const timeParts = timeSlot.split(':');
@@ -448,7 +453,7 @@ function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastNam
         <ul style="list-style: none; padding: 0;">
           <li><strong>Event:</strong> ${locationName}</li>
           <li><strong>Date:</strong> Saturday, December 13th, 2025</li>
-          <li><strong>Location:</strong> ${locationAddress}</li>
+          <li><strong>Location:</strong> ${formatAddressForEmail(locationAddress)}</li>
         </ul>
       </div>
       
@@ -577,7 +582,7 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
           <li><strong>Name:</strong> ${registration.firstName} ${registration.lastName}</li>
           <li><strong>Time Slot:</strong> ${displayTimeSlot}</li>
           <li><strong>Number of Children:</strong> ${registration.numberOfKids}</li>
-          <li><strong>Location:</strong> ${locationAddress}</li>
+          <li><strong>Location:</strong> ${formatAddressForEmail(locationAddress)}</li>
           <li><strong>Event Date:</strong> Saturday, December 13th, 2025</li>
         </ul>
         
@@ -856,7 +861,7 @@ function generateEmailContent(registration: RegistrationData, config: Partial<Re
         <ul>
           <li><strong>Event Date:</strong> Saturday, December 13th, 2025</li>
           <li><strong>Your Time Slot:</strong> ${displayTimeSlot}</li>
-          <li><strong>Location:</strong> ${locationAddress}</li>
+          <li><strong>Location:</strong> ${formatAddressForEmail(locationAddress)}</li>
           <li>Please contact the office if you need to change or cancel your registration.</li>
         </ul>
         
