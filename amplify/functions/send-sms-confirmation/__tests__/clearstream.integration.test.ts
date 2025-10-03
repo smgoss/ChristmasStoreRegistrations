@@ -81,9 +81,9 @@ describe('Clearstream API Integration', () => {
       
       expect(callBody.get('to')).toBe('+15551234567');
       expect(callBody.get('text_header')).toBe('Test Header');
-      expect(callBody.get('text_body')).toContain('Hello John!');
-      expect(callBody.get('text_body')).toContain('🕘 Time: 9:00 AM');
-      expect(callBody.get('text_body')).toContain('👶 Children: 2');
+      expect(callBody.get('text_body')).toContain('Hi John!');
+      expect(callBody.get('text_body')).toContain('🕘 9:00 AM');
+      expect(callBody.get('text_body')).toContain('👶 2 child');
     });
   });
 

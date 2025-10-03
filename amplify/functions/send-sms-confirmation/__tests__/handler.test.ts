@@ -167,10 +167,10 @@ describe('SMS Confirmation Handler', () => {
       const callBody = mockFetch.mock.calls[0][1]?.body as URLSearchParams;
       const messageBody = callBody.get('text_body');
       
-      expect(messageBody).toContain('🎄 Christmas Store Registration Confirmed!');
-      expect(messageBody).toContain('Hello John!');
-      expect(messageBody).toContain('🕘 Time: 9:00 AM');
-      expect(messageBody).toContain('👶 Children: 2');
+      expect(messageBody).toContain('🎄 Registration Confirmed!');
+      expect(messageBody).toContain('Hi John!');
+      expect(messageBody).toContain('🕘 9:00 AM');
+      expect(messageBody).toContain('👶 2 child');
       expect(messageBody).toContain('Pathway Christmas Store');
     });
 
