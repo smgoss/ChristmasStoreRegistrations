@@ -170,7 +170,7 @@ describe('SMS Confirmation Handler', () => {
       expect(messageBody).toContain('🎄 Registration Confirmed!');
       expect(messageBody).toContain('Hi John!');
       expect(messageBody).toContain('🕘 9:00 AM');
-      expect(messageBody).toContain('👶 2 child');
+      expect(messageBody).toContain('👶 Children: 2');
       expect(messageBody).toContain('Pathway Christmas Store');
     });
 

@@ -312,7 +312,7 @@ Hi ${registration.firstName}!
 📅 Sat, Dec 13, 2025
 🕘 ${displayTimeSlot}
 📍 ${eventAddress}
-👶 ${registration.numberOfKids} child${registration.numberOfKids > 1 ? 'ren' : ''}
+👶 Children: ${registration.numberOfKids}
 
 Questions? ${contactPhone}
 
