@@ -30,13 +30,13 @@ const RequestFinalConfirmationSchema = z.object({
 });
 
 
-async function processRegistrationWithDelay(registration: any, index: number) {
+async function processRegistrationWithDelay(registration: any, index: number, frontendUrl: string) {
   // Rate limit: wait index seconds to spread out requests
   await new Promise(resolve => setTimeout(resolve, index * 1000));
-  
+
   const finalConfirmationToken = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
   const now = new Date().toISOString();
-  
+
   try {
     // Update registration status to 'unconfirmed' and set token
     const updateResult = await (await getClient()).models.Registration.update({
@@ -51,7 +51,7 @@ async function processRegistrationWithDelay(registration: any, index: number) {
       return { success: false, id: registration.id, error: 'Failed to update registration' };
     }
 
-    const confirmationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3004'}/confirm-final/${finalConfirmationToken}`;
+    const confirmationUrl = `${frontendUrl}/confirm-final/${finalConfirmationToken}`;
 
     // Send email confirmation
     try {
@@ -162,10 +162,13 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Get frontendUrl from config
+    const frontendUrl = config.frontendUrl || 'http://localhost:3004';
+
     // Process only eligible registrations with rate limiting (1 per second)
     const results = await Promise.all(
-      eligibleRegistrations.map((registration, index) => 
-        processRegistrationWithDelay(registration, index)
+      eligibleRegistrations.map((registration, index) =>
+        processRegistrationWithDelay(registration, index, frontendUrl)
       )
     );
 

@@ -111,13 +111,19 @@ export default function RegistrationForm({
   const [showWaitlistOption, setShowWaitlistOption] = useState(false);
   const [isWaitlistMode, setIsWaitlistMode] = useState(false);
   const [submissionWasWaitlist, setSubmissionWasWaitlist] = useState(false);
-  
+  const [agencyName, setAgencyName] = useState<string | null>(null);
+  const [agencyInvite, setAgencyInvite] = useState<any | null>(null);
 
   useEffect(() => {
     // Load time slot capacities and registration config
     loadTimeSlotCapacities();
     loadRegistrationConfig();
-  }, []);
+
+    // Load agency invite data if token is present
+    if (inviteToken) {
+      loadInviteData();
+    }
+  }, [inviteToken]);
 
   const loadRegistrationConfig = async () => {
     try {
@@ -155,6 +161,27 @@ export default function RegistrationForm({
       console.error('Error loading registration config:', error);
     } finally {
       setConfigLoading(false);
+    }
+  };
+
+  const loadInviteData = async () => {
+    try {
+      const client = await getClient();
+      const { data: inviteData } = await client.models.InviteLink.list({
+        filter: { token: { eq: inviteToken } }
+      });
+
+      if (inviteData && inviteData.length > 0) {
+        const invite = inviteData[0];
+        setAgencyInvite(invite);
+
+        // If it's an agency invite, store the agency name
+        if (invite.isAgencyInvite && invite.agencyName) {
+          setAgencyName(invite.agencyName);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading invite data:', error);
     }
   };
 
@@ -414,18 +441,31 @@ export default function RegistrationForm({
         const { data: inviteData } = await client.models.InviteLink.list({
           filter: { token: { eq: inviteToken } }
         });
-        
+
         const invite = inviteData?.[0];
         if (!invite) {
           newErrors.general = 'Invalid invite link. Please contact us for assistance.';
           setErrors(newErrors);
           return false;
         }
-        
-        if (invite.isUsed) {
+
+        // For non-agency invites, check if it's been used
+        if (!invite.isAgencyInvite && invite.isUsed) {
           newErrors.general = 'This invite link has already been used.';
           setErrors(newErrors);
           return false;
+        }
+
+        // For agency invites, check usage count against max
+        if (invite.isAgencyInvite) {
+          const currentUsage = invite.currentUsageCount || 0;
+          const maxUsage = invite.maxUsageCount || 1;
+
+          if (currentUsage >= maxUsage) {
+            newErrors.general = `This agency invite link has reached its maximum usage limit (${maxUsage} registrations). Please contact your agency for additional slots.`;
+            setErrors(newErrors);
+            return false;
+          }
         }
       } catch (error) {
         console.error('Error validating invite token:', error);
@@ -570,6 +610,7 @@ export default function RegistrationForm({
       } : {
         ...formData,
         inviteToken: inviteToken || undefined,
+        agencyName: agencyName || undefined,
       };
       
       // Create registration or waitlist entry via secure server route
@@ -785,7 +826,20 @@ export default function RegistrationForm({
             📅 Saturday, December 13th, 2025
           </p>
         </div>
-        
+
+        {/* Agency Banner */}
+        {agencyName && (
+          <div className="bg-blue-600 text-white p-4 text-center border-t-4 border-blue-700">
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-2xl">🏢</span>
+              <div>
+                <p className="text-lg font-bold">Registering via {agencyName}</p>
+                <p className="text-sm opacity-90">This registration link was provided by your agency</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="christmas-content">
       
       <form onSubmit={handleSubmit} className="space-y-6">

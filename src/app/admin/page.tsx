@@ -174,6 +174,13 @@ function AdminDashboard() {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [inviteLinks, setInviteLinks] = useState<InviteLink[]>([]);
   const [inviteEmail, setInviteEmail] = useState('');
+
+  // Agency invite state
+  const [agencyName, setAgencyName] = useState('');
+  const [agencyEmail, setAgencyEmail] = useState('');
+  const [agencyContact, setAgencyContact] = useState('');
+  const [agencySlots, setAgencySlots] = useState(5);
+
   const [waitlistEntries, setWaitlistEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -200,6 +207,7 @@ function AdminDashboard() {
     locationName: LOCATION_NAME,
     eventPhone: '',
     eventAddress: '',
+    frontendUrl: 'http://localhost:3004',
     finalConfirmationDeadline: '',
     finalConfirmationEnabled: false
   });
@@ -372,6 +380,9 @@ function AdminDashboard() {
       }
       if (config?.eventAddress) {
         setSettings(prev => ({ ...prev, eventAddress: config.eventAddress! }));
+      }
+      if (config?.frontendUrl) {
+        setSettings(prev => ({ ...prev, frontendUrl: config.frontendUrl! }));
       }
       if (config?.finalConfirmationDeadline) {
         // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:MM)
@@ -819,6 +830,116 @@ function AdminDashboard() {
     } catch (error) {
       console.error('Error generating invite link:', error);
       setMessage('Error generating invite link.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateAgencyInviteLink = async () => {
+    if (!agencyName.trim() || !agencyEmail.trim()) {
+      setMessage('Please enter agency name and email address.');
+      return;
+    }
+
+    if (agencySlots < 1) {
+      setMessage('Please enter a valid number of slots (at least 1).');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Use cryptographically strong token generation
+      let token = '';
+      if (typeof window !== 'undefined' && (window as any).crypto?.randomUUID) {
+        token = (window as any).crypto.randomUUID().replace(/-/g, '');
+      } else if (typeof window !== 'undefined' && (window as any).crypto?.getRandomValues) {
+        const bytes = (window as any).crypto.getRandomValues(new Uint8Array(16)) as Uint8Array;
+        const arr: number[] = Array.from(bytes as unknown as number[]);
+        token = arr.map((b: number) => b.toString(16).padStart(2, '0')).join('');
+      } else {
+        token = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      }
+
+      console.log('Creating agency invite link with data:', {
+        token,
+        email: agencyEmail,
+        isUsed: false,
+        isAgencyInvite: true,
+        agencyName,
+        agencyContact,
+        maxUsageCount: agencySlots,
+        currentUsageCount: 0
+      });
+
+      const inviteResult = await (await getClient()).models.InviteLink.create({
+        token,
+        email: agencyEmail,
+        isUsed: false,
+        isAgencyInvite: true,
+        agencyName,
+        agencyEmail,
+        agencyContact: agencyContact || undefined,
+        maxUsageCount: agencySlots,
+        currentUsageCount: 0
+      });
+
+      console.log('Agency invite creation result:', inviteResult);
+
+      if (inviteResult.errors) {
+        console.error('Agency invite creation errors:', inviteResult.errors);
+        setMessage('Error creating agency invite: ' + JSON.stringify(inviteResult.errors));
+        return;
+      }
+
+      const inviteUrl = `${window.location.origin}/register/${token}`;
+
+      // Send invite email
+      if (inviteResult.data) {
+        try {
+          console.log('📧 Sending agency invite email to:', agencyEmail);
+          const emailResult = await (await getClient()).mutations.sendInviteEmail({
+            invite: {
+              email: agencyEmail,
+              token: token,
+              inviteUrl: inviteUrl,
+              isAgencyInvite: true,
+              agencyName: agencyName,
+              agencyContact: agencyContact || undefined,
+              maxUsageCount: agencySlots
+            },
+            inviteId: inviteResult.data.id
+          });
+
+          console.log('📧 Email result:', emailResult);
+
+          if (emailResult.data?.success) {
+            setMessage(`✅ Agency invite link generated and email sent to ${agencyEmail}! Link copied to clipboard: ${inviteUrl}`);
+          } else {
+            setMessage(`⚠️ Agency invite link generated and copied to clipboard: ${inviteUrl}. Email failed to send: ${emailResult.data?.message || 'Unknown error'}`);
+          }
+        } catch (emailError) {
+          console.error('❌ Error sending agency invite email:', emailError);
+          setMessage(`⚠️ Agency invite link generated and copied to clipboard: ${inviteUrl}. Email failed to send.`);
+        }
+      } else {
+        setMessage(`Agency invite link generated and copied to clipboard: ${inviteUrl}`);
+      }
+
+      try {
+        await navigator.clipboard.writeText(inviteUrl);
+      } catch {}
+
+      // Clear form
+      setAgencyName('');
+      setAgencyEmail('');
+      setAgencyContact('');
+      setAgencySlots(5);
+
+      // Reload invite links to show the new one
+      loadData();
+    } catch (error) {
+      console.error('Error generating agency invite link:', error);
+      setMessage('Error generating agency invite link: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -1888,6 +2009,7 @@ function AdminDashboard() {
     { id: 'add-registration', name: 'Add Registration', icon: '➕' },
     { id: 'waitlist', name: 'Waitlist', icon: '📋' },
     { id: 'invites', name: 'Invites', icon: '📧' },
+    { id: 'agency-invites', name: 'Agency Invites', icon: '🏢' },
     { id: 'bulk-email', name: 'Bulk Email', icon: '📨' },
     { id: 'timeslots', name: 'Time Slots', icon: '⏰' },
     { id: 'settings', name: 'Settings', icon: '⚙️' }
@@ -2513,6 +2635,175 @@ function AdminDashboard() {
           </div>
         )}
 
+        {activeTab === 'agency-invites' && (
+          <div>
+            <h2 className="text-2xl font-bold mb-6 text-black flex items-center">
+              🏢 Agency Invite Links
+            </h2>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Generate Agency Invite Form */}
+              <div className="bg-white border-2 border-blue-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-black mb-4">
+                  Generate New Agency Invite Link
+                </h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Agency Name *
+                    </label>
+                    <input
+                      type="text"
+                      value={agencyName}
+                      onChange={(e) => setAgencyName(e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="e.g., Family Services Agency"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Agency Email *
+                    </label>
+                    <input
+                      type="email"
+                      value={agencyEmail}
+                      onChange={(e) => setAgencyEmail(e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="agency@example.com"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Agency Contact Person
+                    </label>
+                    <input
+                      type="text"
+                      value={agencyContact}
+                      onChange={(e) => setAgencyContact(e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Contact person name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-black mb-2">
+                      Number of Registration Slots *
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      value={agencySlots}
+                      onChange={(e) => setAgencySlots(parseInt(e.target.value) || 1)}
+                      className="w-full px-4 py-2 border-2 border-gray-300 text-black rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="5"
+                      required
+                    />
+                    <p className="text-sm text-gray-600 mt-1">
+                      How many times this link can be used to register families
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={generateAgencyInviteLink}
+                    disabled={loading || !agencyName || !agencyEmail || agencySlots < 1}
+                    className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Generate Agency Invite Link
+                  </button>
+                </div>
+              </div>
+
+              {/* Existing Agency Invite Links */}
+              <div className="bg-white border-2 border-blue-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-black mb-4">
+                  Existing Agency Invite Links ({inviteLinks.filter(inv => inv.isAgencyInvite).length})
+                </h3>
+
+                {inviteLinks.filter(inv => inv.isAgencyInvite).length === 0 ? (
+                  <p className="text-black italic text-center py-8">No agency invite links have been generated yet.</p>
+                ) : (
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {inviteLinks
+                      .filter(invite => invite.isAgencyInvite)
+                      .map((invite) => (
+                        <div
+                          key={invite.id}
+                          className={`p-4 rounded-lg border-2 ${
+                            (invite.currentUsageCount || 0) >= (invite.maxUsageCount || 1)
+                              ? 'bg-gray-50 border-gray-300'
+                              : 'bg-blue-50 border-blue-300'
+                          }`}
+                        >
+                          <div className="flex flex-col space-y-2">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1">
+                                <div className="font-bold text-black text-lg">
+                                  {invite.agencyName}
+                                </div>
+                                <div className="text-sm text-gray-700">
+                                  📧 {invite.agencyEmail || invite.email}
+                                </div>
+                                {invite.agencyContact && (
+                                  <div className="text-sm text-gray-700">
+                                    👤 {invite.agencyContact}
+                                  </div>
+                                )}
+                                <div className="text-sm font-semibold mt-2">
+                                  Slots: {invite.currentUsageCount || 0} / {invite.maxUsageCount || 1} used
+                                  {(invite.currentUsageCount || 0) >= (invite.maxUsageCount || 1) && (
+                                    <span className="ml-2 text-red-600">✓ All slots used</span>
+                                  )}
+                                </div>
+                                {invite.createdAt && (
+                                  <div className="text-xs text-gray-500 mt-1">
+                                    Created: {new Date(invite.createdAt).toLocaleString()}
+                                  </div>
+                                )}
+                                <div className="mt-2 font-mono text-sm bg-gray-100 text-black p-2 rounded border break-all">
+                                  {window.location.origin}/register/{invite.token}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={() => copyInviteLink(invite.token)}
+                                className="flex-1 bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 font-bold text-sm"
+                              >
+                                📋 Copy Link
+                              </button>
+                              <button
+                                onClick={() => resendInviteEmail(invite)}
+                                disabled={loading || !invite.agencyEmail}
+                                className="flex-1 bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 font-bold disabled:opacity-50 text-sm"
+                              >
+                                📧 Resend Email
+                              </button>
+                              {(invite.currentUsageCount || 0) >= (invite.maxUsageCount || 1) && (
+                                <button
+                                  onClick={() => deleteInviteLink(invite.id)}
+                                  disabled={loading}
+                                  className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 font-bold disabled:opacity-50 text-sm"
+                                >
+                                  🗑️ Delete
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'timeslots' && (
           <div>
             <div className="flex justify-between items-center mb-6">
@@ -2763,7 +3054,7 @@ function AdminDashboard() {
                 <select
                   value={targetStatus}
                   onChange={(e) => setTargetStatus(e.target.value as 'all' | 'registered' | 'unconfirmed' | 'confirmed')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   disabled={bulkEmailSending}
                 >
                   <option value="all">All Non-Cancelled Registrations</option>
@@ -2783,7 +3074,7 @@ function AdminDashboard() {
                   value={bulkEmailSubject}
                   onChange={(e) => setBulkEmailSubject(e.target.value)}
                   placeholder="e.g., Important Update from Christmas Store"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   disabled={bulkEmailSending}
                   maxLength={100}
                 />
@@ -2800,7 +3091,7 @@ function AdminDashboard() {
                   onChange={(e) => setBulkEmailMessage(e.target.value)}
                   placeholder="Enter your message here. You can include HTML formatting if needed."
                   rows={10}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
                   disabled={bulkEmailSending}
                   maxLength={5000}
                 />
@@ -3519,6 +3810,21 @@ function AdminDashboard() {
                       className="w-full px-3 py-2 border-2 border-green-300 rounded-lg h-20 text-black"
                       placeholder="123 Main St, City, State 12345"
                     />
+                  </div>
+                  <div>
+                    <label className="block text-black font-bold mb-2">Frontend URL</label>
+                    <input
+                      type="text"
+                      value={settings.frontendUrl}
+                      onChange={(e) => setSettings({...settings, frontendUrl: e.target.value})}
+                      onBlur={(e) => updateRegistrationStatus('frontendUrl', e.target.value)}
+                      className="w-full px-3 py-2 border-2 border-green-300 rounded-lg text-black"
+                      placeholder="https://your-app-id.amplifyapp.com"
+                    />
+                    <p className="text-sm text-black mt-1">
+                      The base URL for this deployment. Used in confirmation/cancellation email links.
+                      Example: https://gray.d123abc.amplifyapp.com
+                    </p>
                   </div>
                 </div>
               </div>

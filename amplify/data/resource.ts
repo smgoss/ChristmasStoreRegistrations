@@ -29,7 +29,8 @@ const schema = a.schema({
       // Additional requirements
       needsChildcare: a.boolean().default(false), // Kept for backward compatibility, not used in UI
       referredBy: a.string(),
-      
+      agencyName: a.string(), // Agency name if registered via agency invite
+
       // Invite link tracking
       inviteToken: a.string(),
       inviteUsed: a.boolean().default(false),
@@ -136,7 +137,15 @@ const schema = a.schema({
       isUsed: a.boolean().default(false),
       createdAt: a.datetime(),
       usedAt: a.datetime(),
-      
+
+      // Agency invite fields
+      isAgencyInvite: a.boolean().default(false),
+      agencyName: a.string(),
+      agencyEmail: a.email(),
+      agencyContact: a.string(),
+      maxUsageCount: a.integer().default(1), // How many times this link can be used
+      currentUsageCount: a.integer().default(0), // How many times it has been used
+
       // Email delivery status tracking for invite emails - temporarily disabled for deployment
       // emailDeliveryStatus: a.enum(['pending', 'sent', 'delivered', 'failed', 'bounced']),
       // emailDeliveryAttemptedAt: a.datetime(),
@@ -163,6 +172,7 @@ const schema = a.schema({
       textingNumber: a.string().default('(208) 746-9089'),
       locationName: a.string().default('Christmas Store'),
       eventAddress: a.string().default(''),
+      frontendUrl: a.string().default('http://localhost:3004'),
       updatedBy: a.string(),
       updatedAt: a.datetime(),
     })
@@ -229,6 +239,10 @@ const schema = a.schema({
         email: a.string().required(),
         token: a.string().required(),
         inviteUrl: a.string().required(),
+        isAgencyInvite: a.boolean(),
+        agencyName: a.string(),
+        agencyContact: a.string(),
+        maxUsageCount: a.integer(),
       }),
       inviteId: a.string()
     })

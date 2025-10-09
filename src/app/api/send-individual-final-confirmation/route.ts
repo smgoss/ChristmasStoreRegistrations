@@ -98,7 +98,9 @@ export async function POST(request: NextRequest) {
       console.log(`✅ Successfully updated registration ${registrationId} to unconfirmed status`);
       console.log(`✅ Updated registration data:`, updateResult.data);
 
-      const confirmationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3004'}/confirm-final/${finalConfirmationToken}`;
+      // Use frontendUrl from config instead of environment variable
+      const frontendUrl = config.frontendUrl || 'http://localhost:3004';
+      const confirmationUrl = `${frontendUrl}/confirm-final/${finalConfirmationToken}`;
 
       // Send email confirmation
       let emailSuccess = false;

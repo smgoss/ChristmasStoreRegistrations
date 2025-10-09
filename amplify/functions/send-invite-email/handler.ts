@@ -7,6 +7,10 @@ interface InviteData {
   email: string;
   token: string;
   inviteUrl: string;
+  isAgencyInvite?: boolean;
+  agencyName?: string;
+  agencyContact?: string;
+  maxUsageCount?: number;
 }
 
 interface RegistrationConfig {
@@ -167,6 +171,9 @@ export const handler: Handler = async (event: {arguments?: {invite: InviteData; 
     console.log('📋 Using reply-to email:', replyToEmail);
 
     const emailContent = generateInviteEmailContent(invite, config);
+    const emailSubject = invite.isAgencyInvite
+      ? `🏢 Agency Registration Links for ${invite.agencyName || 'Your Agency'} - Christmas Store`
+      : '🎄 You\'re Invited to Register for Christmas Store!';
 
     const command = new SendEmailCommand({
       Source: fromEmail,
@@ -176,7 +183,7 @@ export const handler: Handler = async (event: {arguments?: {invite: InviteData; 
       },
       Message: {
         Subject: {
-          Data: '🎄 You\'re Invited to Register for Christmas Store!',
+          Data: emailSubject,
           Charset: 'UTF-8',
         },
         Body: {
@@ -219,6 +226,12 @@ export const handler: Handler = async (event: {arguments?: {invite: InviteData; 
 };
 
 function generateInviteEmailContent(invite: InviteData, config: RegistrationConfig): string {
+  // Generate agency invite email if this is an agency invite
+  if (invite.isAgencyInvite) {
+    return generateAgencyInviteEmail(invite, config);
+  }
+
+  // Otherwise generate regular invite email
   const html = `
 <!DOCTYPE html>
 <html>
@@ -228,30 +241,30 @@ function generateInviteEmailContent(invite: InviteData, config: RegistrationConf
     <title>Christmas Store Invitation</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { 
+        .header {
           background: linear-gradient(rgba(185, 28, 28, 0.7), rgba(5, 150, 105, 0.7)), url('https://images.unsplash.com/photo-1545048702-79362596cdc9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
-          color: white; 
-          padding: 48px 30px; 
-          text-align: center; 
-          border-radius: 16px; 
-          margin-bottom: 30px; 
+          color: white;
+          padding: 48px 30px;
+          text-align: center;
+          border-radius: 16px;
+          margin-bottom: 30px;
           position: relative;
           overflow: hidden;
         }
-        .header h1 { 
-          margin: 0; 
-          font-size: 2rem; 
-          font-weight: 700; 
-          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5); 
+        .header h1 {
+          margin: 0;
+          font-size: 2rem;
+          font-weight: 700;
+          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5);
         }
-        .header p { 
-          margin: 10px 0 0 0; 
-          font-size: 18px; 
-          opacity: 0.9; 
-          text-shadow: 0 2px 6px rgb(0 0 0 / 0.7); 
+        .header p {
+          margin: 10px 0 0 0;
+          font-size: 18px;
+          opacity: 0.9;
+          text-shadow: 0 2px 6px rgb(0 0 0 / 0.7);
         }
         .content { background: #f9f9f9; padding: 30px; border-radius: 10px; margin-bottom: 20px; }
         .invite-link { background: #228b22; color: white; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; }
@@ -269,17 +282,17 @@ function generateInviteEmailContent(invite: InviteData, config: RegistrationConf
         <p>Christmas Store Registration</p>
         <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Saturday, December 13th, 2025</p>
     </div>
-    
+
     <div class="content">
         <p><strong>Hello!</strong></p>
-        
+
         <p>You have been personally invited to register for our <strong>Christmas Store</strong> event on <strong>Saturday, December 13th, 2025</strong>. This is a special opportunity to provide Christmas gifts for children in need in our community.</p>
-        
+
         <div class="invite-link">
             <p style="margin: 0 0 10px 0;">Your Personal Invitation Link:</p>
             <a href="${invite.inviteUrl}" target="_blank">${invite.inviteUrl}</a>
         </div>
-        
+
         <div class="info-box">
             <h3 style="margin-top: 0; color: #228b22;">📋 Important Information</h3>
             <ul>
@@ -289,17 +302,124 @@ function generateInviteEmailContent(invite: InviteData, config: RegistrationConf
                 <li>Bring the whole family - childcare may be available during your shopping time</li>
             </ul>
         </div>
-        
+
         <p><strong>Questions?</strong> Please contact us or simply reply to this email.</p>
-        
+
         <p>Thank you for being part of our Christmas Store community!</p>
-        
+
         <p><strong>With warm wishes,<br>The ${config.locationName || 'Pathway Christmas Store'} Team</strong></p>
     </div>
-    
+
     <div class="footer">
         <p>This invitation was sent to: ${invite.email}</p>
         <p>Invitation ID: ${invite.token.slice(0, 8)}...</p>
+    </div>
+</body>
+</html>
+`;
+
+  return html;
+}
+
+function generateAgencyInviteEmail(invite: InviteData, config: RegistrationConfig): string {
+  const slotCount = invite.maxUsageCount || 1;
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Store Agency Registration Link</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header {
+          background: linear-gradient(rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9)), url('https://images.unsplash.com/photo-1545048702-79362596cdc9?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          color: white;
+          padding: 48px 30px;
+          text-align: center;
+          border-radius: 16px;
+          margin-bottom: 30px;
+          position: relative;
+          overflow: hidden;
+        }
+        .header h1 {
+          margin: 0;
+          font-size: 2rem;
+          font-weight: 700;
+          text-shadow: 0 2px 8px rgb(0 0 0 / 0.8), 0 0 20px rgb(0 0 0 / 0.5);
+        }
+        .header p {
+          margin: 10px 0 0 0;
+          font-size: 18px;
+          opacity: 0.9;
+          text-shadow: 0 2px 6px rgb(0 0 0 / 0.7);
+        }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 10px; margin-bottom: 20px; }
+        .invite-link { background: #2563eb; color: white; padding: 15px; text-align: center; border-radius: 8px; margin: 20px 0; }
+        .invite-link a { color: white; text-decoration: none; font-weight: bold; font-size: 16px; word-break: break-all; }
+        .invite-link a:hover { text-decoration: underline; }
+        .info-box { background: #dbeafe; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0; }
+        .warning-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 20px; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+        .slot-count { background: #2563eb; color: white; display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏢 Agency Registration Link</h1>
+        <p>Christmas Store - ${config.locationName || 'Pathway Christmas Store'}</p>
+        <p style="font-size: 18px; font-weight: bold; margin-top: 10px;">📅 Saturday, December 13th, 2025</p>
+    </div>
+
+    <div class="content">
+        <p><strong>Hello${invite.agencyContact ? ' ' + invite.agencyContact : ''},</strong></p>
+
+        <p>Thank you for partnering with us to serve families in need. We've generated a special registration link for <strong>${invite.agencyName || 'your agency'}</strong> that you can share with your clients.</p>
+
+        <div class="info-box">
+            <h3 style="margin-top: 0; color: #2563eb;">📊 Your Registration Allocation</h3>
+            <p style="text-align: center; margin: 10px 0;">
+                <span class="slot-count">${slotCount} Registration${slotCount === 1 ? '' : 's'} Available</span>
+            </p>
+            <p style="margin: 10px 0 0 0;">This link can be used <strong>${slotCount} time${slotCount === 1 ? '' : 's'}</strong> to register families for the Christmas Store event.</p>
+        </div>
+
+        <div class="invite-link">
+            <p style="margin: 0 0 10px 0;"><strong>Your Agency Registration Link:</strong></p>
+            <a href="${invite.inviteUrl}" target="_blank">${invite.inviteUrl}</a>
+        </div>
+
+        <div class="info-box">
+            <h3 style="margin-top: 0; color: #2563eb;">📋 How to Use This Link</h3>
+            <ul>
+                <li><strong>Share with clients:</strong> You can share this link directly with families you're working with</li>
+                <li><strong>Multiple uses:</strong> The link can be used up to ${slotCount} time${slotCount === 1 ? '' : 's'} before it expires</li>
+                <li><strong>Tracks usage:</strong> Each time a family completes registration, one slot is used</li>
+                <li><strong>Time slots:</strong> Families will select their preferred time slot during registration</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <h3 style="margin-top: 0; color: #f59e0b;">⚠️ Important - Maintain a Waitlist</h3>
+            <p><strong>Please keep a waitlist of additional clients who may need assistance.</strong></p>
+            <p>If more slots become available later in the season, we may be able to send you additional registration links. Having a waitlist ready will help us serve more families quickly if spots open up.</p>
+        </div>
+
+        <p><strong>Questions?</strong> Please contact us or simply reply to this email. We're here to help!</p>
+
+        <p>Thank you for your partnership in serving our community.</p>
+
+        <p><strong>With gratitude,<br>The ${config.locationName || 'Pathway Christmas Store'} Team</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>This agency link was sent to: ${invite.email}</p>
+        <p>Agency: ${invite.agencyName || 'N/A'}</p>
     </div>
 </body>
 </html>

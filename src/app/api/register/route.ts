@@ -51,6 +51,7 @@ const RegistrationSchema = z.object({
   timeSlot: z.string().trim().min(1),
   referredBy: z.string().optional(),
   inviteToken: z.string().optional(),
+  agencyName: z.string().optional(),
   children: z.array(ChildSchema).optional(),
 });
 
@@ -97,7 +98,7 @@ export async function POST(req: Request) {
     }
     
     console.log('Received registration data:', validation.data);
-    const { firstName, lastName, email, phone: rawPhone, streetAddress, zipCode, city, state, numberOfKids, timeSlot, referredBy, inviteToken, children = [] } = validation.data;
+    const { firstName, lastName, email, phone: rawPhone, streetAddress, zipCode, city, state, numberOfKids, timeSlot, referredBy, inviteToken, agencyName, children = [] } = validation.data;
     
     // Format phone number to E.164 format for database storage
     const phone = formatPhoneForStorage(rawPhone);
@@ -176,8 +177,22 @@ export async function POST(req: Request) {
       if (inviteToken) {
         const { data: invites } = await (await getClient()).models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
         const invite = invites?.[0];
-        if (!invite || invite.isUsed) {
-          return createErrorResponse('Invalid or already used invite token', 'INVALID_INVITE', 400);
+        if (!invite) {
+          return createErrorResponse('Invalid invite token', 'INVALID_INVITE', 400);
+        }
+
+        // For non-agency invites, check if already used
+        if (!invite.isAgencyInvite && invite.isUsed) {
+          return createErrorResponse('This invite link has already been used', 'INVITE_ALREADY_USED', 400);
+        }
+
+        // For agency invites, check usage count
+        if (invite.isAgencyInvite) {
+          const currentUsage = invite.currentUsageCount || 0;
+          const maxUsage = invite.maxUsageCount || 1;
+          if (currentUsage >= maxUsage) {
+            return createErrorResponse(`This agency invite link has reached its maximum usage limit (${maxUsage} registrations)`, 'INVITE_LIMIT_REACHED', 400);
+          }
         }
       }
 
@@ -212,6 +227,7 @@ export async function POST(req: Request) {
           needsChildcare: false, // Temporary: until schema migration completes
           referredBy: referredBy || undefined,
           inviteToken,
+          agencyName: agencyName || undefined,
           registrationDate: now,
           registrationStatus: 'registered',
         });
@@ -250,12 +266,28 @@ export async function POST(req: Request) {
         return createErrorResponse('This time slot just filled up. Please choose another.', 'TIMESLOT_FILLED', 409);
       }
 
-      // Mark invite as used (best effort) if applicable
+      // Mark invite as used or increment usage count (best effort) if applicable
       if (inviteToken) {
         const { data: invites2 } = await (await getClient()).models.InviteLink.list({ filter: { token: { eq: inviteToken } } });
         const invite2 = invites2?.[0];
-        if (invite2 && !invite2.isUsed) {
-          await (await getClient()).models.InviteLink.update({ id: invite2.id, isUsed: true, usedAt: now });
+        if (invite2) {
+          if (invite2.isAgencyInvite) {
+            // For agency invites, increment the usage count
+            const newUsageCount = (invite2.currentUsageCount || 0) + 1;
+            const maxUsage = invite2.maxUsageCount || 1;
+            await (await getClient()).models.InviteLink.update({
+              id: invite2.id,
+              currentUsageCount: newUsageCount,
+              // Mark as used if we've reached the maximum
+              isUsed: newUsageCount >= maxUsage,
+              usedAt: newUsageCount >= maxUsage ? now : invite2.usedAt
+            });
+          } else {
+            // For regular invites, just mark as used
+            if (!invite2.isUsed) {
+              await (await getClient()).models.InviteLink.update({ id: invite2.id, isUsed: true, usedAt: now });
+            }
+          }
         }
       }
 
