@@ -51,7 +51,7 @@ async function processRegistrationWithDelay(registration: any, index: number) {
       return { success: false, id: registration.id, error: 'Failed to update registration' };
     }
 
-    const confirmationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/confirm-final/${finalConfirmationToken}`;
+    const confirmationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3004'}/confirm-final/${finalConfirmationToken}`;
 
     // Send email confirmation
     try {

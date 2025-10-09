@@ -36,6 +36,7 @@ export const sendConfirmationEmail = defineFunction({
   resourceGroupName: 'data',
   environment: {
     FROM_EMAIL: 'Pathway Vineyard Christmas Store <christmas-store@pathwayvineyard.com>',
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3004',
     // LOCATION_NAME and LOCATION_ADDRESS are now fetched from database via GraphQL
     CONTACT_EMAIL: currentLocationConfig.CONTACT_EMAIL,
     CONTACT_PHONE: currentLocationConfig.CONTACT_PHONE,

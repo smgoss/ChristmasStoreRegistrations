@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
       console.log(`✅ Successfully updated registration ${registrationId} to unconfirmed status`);
       console.log(`✅ Updated registration data:`, updateResult.data);
 
-      const confirmationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'}/confirm-final/${finalConfirmationToken}`;
+      const confirmationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3004'}/confirm-final/${finalConfirmationToken}`;
 
       // Send email confirmation
       let emailSuccess = false;

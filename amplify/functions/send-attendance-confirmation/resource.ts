@@ -5,6 +5,6 @@ export const sendAttendanceConfirmation = defineFunction({
   entry: './handler.ts',
   environment: {
     FROM_EMAIL: 'christmas-store@pathwayvineyard.com',
-    FRONTEND_URL: 'http://localhost:3004' // Update this for production
+    FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:3004'
   }
 });

@@ -589,7 +589,7 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
         ${registrationId ? `
         <div style="text-align: center; margin: 20px 0; padding: 15px; background: #f0f9ff; border-radius: 8px;">
           <h4 style="color: #0369a1; margin-top: 0;">📅 Add to Your Calendar</h4>
-          <a href="${process.env.NEXT_PUBLIC_URL || 'https://christmas-store.pathwayvineyard.com'}/api/generate-ical?id=${registrationId}" 
+          <a href="${process.env.FRONTEND_URL || 'http://localhost:3004'}/api/generate-ical?id=${registrationId}" 
              style="background: #0369a1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
             📅 Download Calendar Event
           </a>
@@ -869,7 +869,7 @@ function generateEmailContent(registration: RegistrationData, config: Partial<Re
         <div style="text-align: center; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; border: 2px solid #0369a1;">
           <h3 style="color: #0369a1; margin-top: 0; font-size: 20px;">📅 Add to Your Calendar</h3>
           <p style="color: #334155; margin: 10px 0;">Never miss your appointment! Download a calendar event with all the details.</p>
-          <a href="${process.env.NEXT_PUBLIC_URL || 'https://christmas-store.pathwayvineyard.com'}/api/generate-ical?id=${registrationId}" 
+          <a href="${process.env.FRONTEND_URL || 'http://localhost:3004'}/api/generate-ical?id=${registrationId}" 
              style="background: linear-gradient(135deg, #0369a1, #0284c7); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin: 10px 0; box-shadow: 0 4px 6px rgba(3, 105, 161, 0.3); transition: all 0.3s ease;">
             📅 Download Calendar Event (.ics)
           </a>
