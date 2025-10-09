@@ -119,8 +119,10 @@ async function sendSmsNotificationWithDelay(registration: any, index: number): P
 
 export async function POST(request: NextRequest) {
   try {
-    // Apply strict rate limiting - 1 request per 2 minutes for bulk emails
-    const rateLimitResponse = applyRateLimit(request, 1, 120000);
+    // Apply rate limiting - shorter window for testing on gray branch
+    const isGrayBranch = process.env.NEXT_PUBLIC_LOCATION === 'gray';
+    const rateLimitWindow = isGrayBranch ? 30000 : 120000; // 30 seconds for gray, 2 minutes for production
+    const rateLimitResponse = applyRateLimit(request, 1, rateLimitWindow);
     if (rateLimitResponse) {
       return rateLimitResponse;
     }
