@@ -223,7 +223,8 @@ const schema = a.schema({
         numberOfKids: a.integer().required(),
         referredBy: a.string(),
         children: a.json(),
-      })
+      }),
+      registrationId: a.string()
     })
     .returns(a.customType({
       success: a.boolean().required(),

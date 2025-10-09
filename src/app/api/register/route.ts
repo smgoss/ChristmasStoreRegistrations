@@ -356,7 +356,8 @@ export async function POST(req: Request) {
           numberOfKids,
           referredBy: referredBy || '',
           children: JSON.stringify(children)
-        }
+        },
+        registrationId: reg.id
       }).then(result => {
         console.log('📧 Email mutation result received:', JSON.stringify(result, null, 2));
         if (result.data?.success) {

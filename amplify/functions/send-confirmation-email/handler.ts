@@ -3,6 +3,21 @@ import type { Handler } from 'aws-lambda';
 
 const ses = new SESClient({ region: process.env.AWS_REGION });
 
+// Helper function to get default frontend URL based on branch
+function getDefaultFrontendUrl(): string {
+  const branch = process.env.AMPLIFY_BRANCH || 'main';
+  switch (branch) {
+    case 'lewiston':
+      return 'https://lew-christmas-store.pathwayvineyard.com';
+    case 'brunswick':
+      return 'https://brun-christmas-store.pathwayvineyard.com';
+    case 'gray':
+      return 'https://gng-christmas-store.pathwayvineyard.com';
+    default:
+      return 'https://lew-christmas-store.pathwayvineyard.com';
+  }
+}
+
 interface RegistrationData {
   id?: string;
   firstName: string;
@@ -26,6 +41,7 @@ interface RegistrationConfig {
   eventAddress?: string;
   replyToEmail?: string;
   contactPhone?: string;
+  frontendUrl?: string;
 }
 
 interface GraphQLResponse {
@@ -72,7 +88,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         locationName: undefined,
         eventAddress: undefined,
         replyToEmail: undefined,
-        contactPhone: undefined
+        contactPhone: undefined,
+        frontendUrl: undefined
       };
     }
 
@@ -89,6 +106,7 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
             eventAddress
             replyToEmail
             contactPhone
+            frontendUrl
           }
         }
       }
@@ -114,7 +132,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         locationName: undefined,
         eventAddress: undefined,
         replyToEmail: undefined,
-        contactPhone: undefined
+        contactPhone: undefined,
+        frontendUrl: undefined
       };
     }
 
@@ -129,7 +148,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
         locationName: config.locationName,
         eventAddress: config.eventAddress,
         replyToEmail: config.replyToEmail,
-        contactPhone: config.contactPhone
+        contactPhone: config.contactPhone,
+        frontendUrl: config.frontendUrl
       };
     }
 
@@ -139,7 +159,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       locationName: undefined,
       eventAddress: undefined,
       replyToEmail: undefined,
-      contactPhone: undefined
+      contactPhone: undefined,
+      frontendUrl: undefined
     };
   } catch (error) {
     console.error('❌ Error fetching registration config:', error);
@@ -148,7 +169,8 @@ async function getRegistrationConfig(): Promise<RegistrationConfig> {
       locationName: undefined,
       eventAddress: undefined,
       replyToEmail: undefined,
-      contactPhone: undefined
+      contactPhone: undefined,
+      frontendUrl: undefined
     };
   }
 }
@@ -480,14 +502,15 @@ function generateWaitlistEmailContent(waitlistEntry: {firstName: string; lastNam
 
 function generateFinalConfirmationEmailContent(registration: RegistrationData, config: Partial<RegistrationConfig> = {}, registrationId?: string): string {
   console.log('📧 generateFinalConfirmationEmailContent called');
-  
+
   // Get location config
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
   const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || 'Event Location TBD';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
   const locationEmoji = process.env.LOCATION_EMOJI || '';
-  
+  const frontendUrl = config.frontendUrl || getDefaultFrontendUrl();
+
   // Format time slot for display
   const displayTimeSlot = formatTimeSlot(registration.timeSlot);
   
@@ -589,7 +612,7 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
         ${registrationId ? `
         <div style="text-align: center; margin: 20px 0; padding: 15px; background: #f0f9ff; border-radius: 8px;">
           <h4 style="color: #0369a1; margin-top: 0;">📅 Add to Your Calendar</h4>
-          <a href="${process.env.FRONTEND_URL || 'http://localhost:3004'}/api/generate-ical?id=${registrationId}" 
+          <a href="${frontendUrl}/api/generate-ical?id=${registrationId}"
              style="background: #0369a1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
             📅 Download Calendar Event
           </a>
@@ -718,19 +741,20 @@ function generateCustomEmailContent(registration: RegistrationData, subject: str
 
 function generateEmailContent(registration: RegistrationData, config: Partial<RegistrationConfig> = {}, registrationId?: string): string {
   console.log('📧 generateEmailContent called with config:', JSON.stringify(config, null, 2));
-  
+
   // Check if this is a final confirmation email
   if (registration.confirmationUrl) {
     return generateFinalConfirmationEmailContent(registration, config, registrationId);
   }
-  
+
   // Get location config from database with fallbacks to environment variables and defaults
   const locationName = config.locationName || process.env.LOCATION_NAME || 'Pathway Christmas Store';
   const locationAddress = config.eventAddress || process.env.LOCATION_ADDRESS || 'Event Location TBD';
   const contactEmail = config.replyToEmail || process.env.CONTACT_EMAIL || 'office@pathwayvineyard.com';
   const contactPhone = config.contactPhone || process.env.CONTACT_PHONE || '(208) 746-9089';
   const locationEmoji = process.env.LOCATION_EMOJI || '';
-  
+  const frontendUrl = config.frontendUrl || getDefaultFrontendUrl();
+
   console.log('📧 Using locationName:', locationName);
   console.log('📧 Using locationAddress:', locationAddress);
   console.log('📧 Using contactEmail:', contactEmail);
@@ -869,7 +893,7 @@ function generateEmailContent(registration: RegistrationData, config: Partial<Re
         <div style="text-align: center; margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 10px; border: 2px solid #0369a1;">
           <h3 style="color: #0369a1; margin-top: 0; font-size: 20px;">📅 Add to Your Calendar</h3>
           <p style="color: #334155; margin: 10px 0;">Never miss your appointment! Download a calendar event with all the details.</p>
-          <a href="${process.env.FRONTEND_URL || 'http://localhost:3004'}/api/generate-ical?id=${registrationId}" 
+          <a href="${frontendUrl}/api/generate-ical?id=${registrationId}"
              style="background: linear-gradient(135deg, #0369a1, #0284c7); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; margin: 10px 0; box-shadow: 0 4px 6px rgba(3, 105, 161, 0.3); transition: all 0.3s ease;">
             📅 Download Calendar Event (.ics)
           </a>
