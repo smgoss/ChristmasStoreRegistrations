@@ -2763,7 +2763,7 @@ function AdminDashboard() {
                                     👤 {invite.agencyContact}
                                   </div>
                                 )}
-                                <div className="text-sm font-semibold mt-2">
+                                <div className="text-sm font-semibold mt-2 text-gray-900">
                                   Slots: {invite.currentUsageCount || 0} / {invite.maxUsageCount || 1} used
                                   {(invite.currentUsageCount || 0) >= (invite.maxUsageCount || 1) && (
                                     <span className="ml-2 text-red-600">✓ All slots used</span>
