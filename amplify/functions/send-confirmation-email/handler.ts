@@ -577,25 +577,23 @@ function generateFinalConfirmationEmailContent(registration: RegistrationData, c
         <p>You must <strong>confirm your Christmas Store registration</strong> to keep your time slot. <strong>Failure to confirm may result in your time slot being given to someone else.</strong></p>
         
         <div style="text-align: left; margin: 30px 0;">
-          <a href="${registration.confirmationUrl}" class="confirm-button">
-            ✅ CONFIRM MY REGISTRATION NOW
+          <a href="${registration.confirmationUrl}"
+             style="background: #059669; color: white; padding: 20px 40px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: bold; display: inline-block; margin: 10px 0;">
+            ✅ I Will Be There
           </a>
         </div>
-        
+
         <div style="text-align: left; margin: 20px 0;">
-          <p style="font-size: 16px; color: #333; margin-bottom: 10px;">
-            <strong>Can't attend your time slot?</strong>
-          </p>
-          <a href="${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : '#'}" 
-             style="background: #6b7280; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; display: inline-block;">
-            ❌ Cancel My Registration
+          <a href="${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : '#'}"
+             style="background: #6b7280; color: white; padding: 20px 40px; text-decoration: none; border-radius: 8px; font-size: 18px; font-weight: bold; display: inline-block; margin: 10px 0;">
+            ❌ I Can't Make It
           </a>
         </div>
         
         <p style="font-size: 14px; color: #666;">
           Can't click the buttons? Copy and paste these links into your browser:<br>
-          <strong>Confirm:</strong> <a href="${registration.confirmationUrl}">${registration.confirmationUrl}</a><br>
-          <strong>Cancel:</strong> <a href="${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : '#'}">${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : 'Not available'}</a>
+          <strong>I Will Be There:</strong> <a href="${registration.confirmationUrl}">${registration.confirmationUrl}</a><br>
+          <strong>I Can't Make It:</strong> <a href="${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : '#'}">${registration.confirmationUrl ? registration.confirmationUrl.replace('/confirm-final/', '/cancel-registration/') : 'Not available'}</a>
         </p>
       </div>
       
