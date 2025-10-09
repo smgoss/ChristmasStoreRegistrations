@@ -217,17 +217,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Filter registrations based on target status
-    const eligibleRegistrations = validRegistrations
-      .filter(reg => {
-        if (targetStatus === 'all') return true;
-        if (targetStatus === 'registered') return !reg.registrationStatus || reg.registrationStatus === 'registered';
-        if (targetStatus === 'unconfirmed') return reg.registrationStatus === 'unconfirmed';
-        if (targetStatus === 'confirmed') return reg.registrationStatus === 'confirmed';
-        return false;
-      })
-      .filter(reg => reg.email); // Only include registrations with email addresses
+    const statusFilteredRegistrations = validRegistrations.filter(reg => {
+      if (targetStatus === 'all') return true;
+      if (targetStatus === 'registered') return !reg.registrationStatus || reg.registrationStatus === 'registered';
+      if (targetStatus === 'unconfirmed') return reg.registrationStatus === 'unconfirmed';
+      if (targetStatus === 'confirmed') return reg.registrationStatus === 'confirmed';
+      return false;
+    });
 
-    console.log(`📋 Filtered ${allRegistrations.length} total registrations (${nullCount} null) to ${eligibleRegistrations.length} eligible for email broadcast (status: ${targetStatus})`);
+    // Filter out registrations without email addresses
+    const eligibleRegistrations = statusFilteredRegistrations.filter(reg => reg.email);
+    const noEmailCount = statusFilteredRegistrations.length - eligibleRegistrations.length;
+
+    if (noEmailCount > 0) {
+      console.warn(`⚠️ Skipping ${noEmailCount} registrations with no email address`);
+    }
+
+    console.log(`📋 Filtered ${allRegistrations.length} total registrations (${nullCount} null, ${noEmailCount} no email) to ${eligibleRegistrations.length} eligible for email broadcast (status: ${targetStatus})`);
 
     if (eligibleRegistrations.length === 0) {
       return createSuccessResponse({
