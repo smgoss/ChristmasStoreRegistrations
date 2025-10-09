@@ -116,6 +116,7 @@ interface Registration {
   numberOfKids: number;
   children?: Array<{ age: string; gender: 'boy' | 'girl' }>;
   referredBy?: string;
+  agencyName?: string;
   registrationDate: string;
   attendanceConfirmed?: boolean;
   attendanceConfirmedAt?: string;
@@ -140,6 +141,7 @@ interface RegistrationConfig {
   textingNumber?: string;
   locationName?: string;
   eventAddress?: string;
+  frontendUrl?: string;
   finalConfirmationDeadline?: string;
   finalConfirmationEnabled?: boolean;
   updatedBy?: string;
@@ -153,6 +155,12 @@ interface InviteLink {
   isUsed?: boolean;
   createdAt?: string;
   usedAt?: string;
+  isAgencyInvite?: boolean;
+  agencyName?: string;
+  agencyEmail?: string;
+  agencyContact?: string;
+  maxUsageCount?: number;
+  currentUsageCount?: number;
 }
 
 // TIME_SLOTS is now imported from locationConfig
