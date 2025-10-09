@@ -2793,11 +2793,20 @@ function AdminDashboard() {
                               >
                                 📧 Resend Email
                               </button>
+                              {(invite.currentUsageCount || 0) < (invite.maxUsageCount || 1) && (
+                                <button
+                                  onClick={() => invalidateInviteLink(invite.id)}
+                                  disabled={loading}
+                                  className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 font-bold disabled:opacity-50 text-sm"
+                                >
+                                  ❌ Invalidate
+                                </button>
+                              )}
                               {(invite.currentUsageCount || 0) >= (invite.maxUsageCount || 1) && (
                                 <button
                                   onClick={() => deleteInviteLink(invite.id)}
                                   disabled={loading}
-                                  className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 font-bold disabled:opacity-50 text-sm"
+                                  className="bg-gray-600 text-white px-3 py-2 rounded-lg hover:bg-gray-700 font-bold disabled:opacity-50 text-sm"
                                 >
                                   🗑️ Delete
                                 </button>
