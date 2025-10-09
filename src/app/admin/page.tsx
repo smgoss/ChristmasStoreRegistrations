@@ -190,6 +190,14 @@ function AdminDashboard() {
   const [agencyContact, setAgencyContact] = useState('');
   const [agencySlots, setAgencySlots] = useState(5);
 
+  // Transfer modal state
+  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [transferInvite, setTransferInvite] = useState<InviteLink | null>(null);
+  const [transferAgencyName, setTransferAgencyName] = useState('');
+  const [transferAgencyEmail, setTransferAgencyEmail] = useState('');
+  const [transferAgencyContact, setTransferAgencyContact] = useState('');
+  const [transferSlots, setTransferSlots] = useState(0);
+
   const [waitlistEntries, setWaitlistEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -1019,7 +1027,7 @@ function AdminDashboard() {
     }
   };
 
-  const transferRemainingSlots = async (invite: InviteLink) => {
+  const openTransferModal = (invite: InviteLink) => {
     const remainingSlots = (invite.maxUsageCount || 1) - (invite.currentUsageCount || 0);
 
     if (remainingSlots <= 0) {
@@ -1027,25 +1035,54 @@ function AdminDashboard() {
       return;
     }
 
-    if (!confirm(`Transfer ${remainingSlots} remaining slot${remainingSlots > 1 ? 's' : ''} to a new invite link? The current link will be marked as fully used.`)) {
+    // Pre-populate the modal with current agency details and remaining slots
+    setTransferInvite(invite);
+    setTransferAgencyName(invite.agencyName || '');
+    setTransferAgencyEmail(invite.agencyEmail || '');
+    setTransferAgencyContact(invite.agencyContact || '');
+    setTransferSlots(remainingSlots);
+    setShowTransferModal(true);
+  };
+
+  const closeTransferModal = () => {
+    setShowTransferModal(false);
+    setTransferInvite(null);
+    setTransferAgencyName('');
+    setTransferAgencyEmail('');
+    setTransferAgencyContact('');
+    setTransferSlots(0);
+  };
+
+  const submitTransfer = async () => {
+    if (!transferInvite) return;
+
+    if (!transferAgencyName.trim() || !transferAgencyEmail.trim() || !transferAgencyContact.trim()) {
+      setMessage('❌ Please fill in all fields (agency name, email, and contact person).');
+      return;
+    }
+
+    if (transferSlots <= 0) {
+      setMessage('❌ Number of slots must be greater than 0.');
       return;
     }
 
     setLoading(true);
+    setShowTransferModal(false);
+
     try {
       // Generate new token
       const newToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       const now = new Date().toISOString();
 
-      // Create new agency invite with remaining slots
+      // Create new agency invite with specified details
       const newInviteResult = await (await getClient()).models.InviteLink.create({
         token: newToken,
-        email: invite.agencyEmail,
+        email: transferAgencyEmail,
         isAgencyInvite: true,
-        agencyName: invite.agencyName,
-        agencyEmail: invite.agencyEmail,
-        agencyContact: invite.agencyContact,
-        maxUsageCount: remainingSlots,
+        agencyName: transferAgencyName,
+        agencyEmail: transferAgencyEmail,
+        agencyContact: transferAgencyContact,
+        maxUsageCount: transferSlots,
         currentUsageCount: 0,
         isUsed: false,
         createdAt: now,
@@ -1059,9 +1096,9 @@ function AdminDashboard() {
 
       // Mark old invite as fully used
       const updateResult = await (await getClient()).models.InviteLink.update({
-        id: invite.id,
+        id: transferInvite.id,
         isUsed: true,
-        currentUsageCount: invite.maxUsageCount,
+        currentUsageCount: transferInvite.maxUsageCount,
         usedAt: now
       });
 
@@ -1071,31 +1108,30 @@ function AdminDashboard() {
         return;
       }
 
-      // Send email with new link if agency email exists
-      if (invite.agencyEmail) {
-        const inviteUrl = `${window.location.origin}/register/${newToken}`;
+      // Send email with new link
+      const inviteUrl = `${window.location.origin}/register/${newToken}`;
 
-        try {
-          const emailResult = await (await getClient()).mutations.sendInviteEmail({
-            invite: {
-              email: invite.agencyEmail,
-              token: newToken,
-              inviteUrl: inviteUrl,
-              isAgencyInvite: true,
-              agencyName: invite.agencyName || '',
-              agencyContact: invite.agencyContact || '',
-              maxUsageCount: remainingSlots
-            }
-          });
+      try {
+        const emailResult = await (await getClient()).mutations.sendInviteEmail({
+          invite: {
+            email: transferAgencyEmail,
+            token: newToken,
+            inviteUrl: inviteUrl,
+            isAgencyInvite: true,
+            agencyName: transferAgencyName,
+            agencyContact: transferAgencyContact,
+            maxUsageCount: transferSlots
+          }
+        });
 
-          console.log('📧 Email result:', emailResult);
-        } catch (emailError) {
-          console.error('📧 Email failed (non-blocking):', emailError);
-        }
+        console.log('📧 Email result:', emailResult);
+      } catch (emailError) {
+        console.error('📧 Email failed (non-blocking):', emailError);
       }
 
-      setMessage(`✅ Successfully transferred ${remainingSlots} slot${remainingSlots > 1 ? 's' : ''} to new invite link!`);
+      setMessage(`✅ Successfully transferred ${transferSlots} slot${transferSlots > 1 ? 's' : ''} to ${transferAgencyName}!`);
       loadData(); // Reload to show new invite
+      closeTransferModal();
     } catch (error) {
       console.error('❌ Error transferring slots:', error);
       setMessage('❌ Error transferring slots: ' + (error instanceof Error ? error.message : 'Unknown error'));
@@ -2925,7 +2961,7 @@ function AdminDashboard() {
                               </button>
                               {(invite.currentUsageCount || 0) < (invite.maxUsageCount || 1) && (
                                 <button
-                                  onClick={() => transferRemainingSlots(invite)}
+                                  onClick={() => openTransferModal(invite)}
                                   disabled={loading}
                                   className="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 font-bold disabled:opacity-50 text-sm"
                                 >
@@ -4032,6 +4068,97 @@ function AdminDashboard() {
                   </button>
                 </div>
                 <p className="text-sm text-black mt-2">Saves both contact and location settings</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Transfer Remaining Slots Modal */}
+        {showTransferModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="bg-gradient-to-r from-blue-600 to-green-600 text-white p-6 rounded-t-lg">
+                <h2 className="text-2xl font-bold">🔄 Transfer Remaining Slots</h2>
+                <p className="text-white opacity-90 mt-1">Create a new invite link for unused slots</p>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Agency Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={transferAgencyName}
+                    onChange={(e) => setTransferAgencyName(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter agency name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Agency Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    value={transferAgencyEmail}
+                    onChange={(e) => setTransferAgencyEmail(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter agency email"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Contact Person <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={transferAgencyContact}
+                    onChange={(e) => setTransferAgencyContact(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    placeholder="Enter contact person name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Number of Slots <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={transferSlots}
+                    onChange={(e) => setTransferSlots(parseInt(e.target.value) || 0)}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    min="1"
+                    max={transferInvite ? (transferInvite.maxUsageCount || 1) - (transferInvite.currentUsageCount || 0) : 1}
+                    required
+                  />
+                  <p className="text-sm text-gray-600 mt-1">
+                    Available slots: {transferInvite ? (transferInvite.maxUsageCount || 1) - (transferInvite.currentUsageCount || 0) : 0}
+                  </p>
+                </div>
+
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    onClick={submitTransfer}
+                    disabled={loading || !transferAgencyName || !transferAgencyEmail || !transferAgencyContact || transferSlots < 1}
+                    className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? '⏳ Creating...' : '✅ Create Transfer'}
+                  </button>
+                  <button
+                    onClick={closeTransferModal}
+                    disabled={loading}
+                    className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 font-bold disabled:opacity-50"
+                  >
+                    ❌ Cancel
+                  </button>
+                </div>
               </div>
             </div>
           </div>
