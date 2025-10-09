@@ -30,7 +30,8 @@ async function sendEmailWithDelay(registration: any, index: number, subject: str
   
   try {
     console.log(`📧 Sending email ${index + 1} to ${registration.firstName} ${registration.lastName} (${registration.email})`);
-    
+    console.log(`📧 Email params:`, { subject, messageLength: emailMessage.length, messageId });
+
     const emailResult = await (await getClient()).mutations.sendCustomEmail({
       registration: {
         firstName: registration.firstName,
@@ -45,23 +46,48 @@ async function sendEmailWithDelay(registration: any, index: number, subject: str
       messageId
     });
 
+    console.log(`📧 Email mutation result:`, JSON.stringify(emailResult, null, 2));
+
+    if (emailResult.errors) {
+      console.error(`❌ Email mutation errors:`, emailResult.errors);
+      return {
+        success: false,
+        id: registration.id,
+        name: `${registration.firstName} ${registration.lastName}`,
+        email: registration.email,
+        error: JSON.stringify(emailResult.errors)
+      };
+    }
+
+    if (!emailResult.data?.success) {
+      console.error(`❌ Email function returned failure:`, emailResult.data);
+      return {
+        success: false,
+        id: registration.id,
+        name: `${registration.firstName} ${registration.lastName}`,
+        email: registration.email,
+        error: emailResult.data?.message || 'Email function failed'
+      };
+    }
+
     console.log(`✅ Email sent successfully to ${registration.firstName} ${registration.lastName}`);
-    
-    return { 
-      success: true, 
-      id: registration.id, 
+
+    return {
+      success: true,
+      id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       email: registration.email,
       messageId
     };
   } catch (error) {
-    console.error(`❌ Email failed for ${registration.firstName} ${registration.lastName}:`, error);
-    return { 
-      success: false, 
-      id: registration.id, 
+    console.error(`❌ Email exception for ${registration.firstName} ${registration.lastName}:`, error);
+    console.error(`❌ Error stack:`, error instanceof Error ? error.stack : 'No stack trace');
+    return {
+      success: false,
+      id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       email: registration.email,
-      error: error instanceof Error ? error.message : 'Unknown error' 
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
@@ -81,9 +107,12 @@ async function sendSmsNotificationWithDelay(registration: any, index: number): P
   
   try {
     console.log(`📱 Sending SMS notification ${index + 1} to ${registration.firstName} ${registration.lastName} (${registration.phone})`);
-    
+
     const smsMessage = `Hi ${registration.firstName}! Please check your email for an important message from the Christmas Store. 🎄`;
-    
+    const smsMessageId = Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+
+    console.log(`📱 SMS params:`, { message: smsMessage, messageId: smsMessageId });
+
     const smsResult = await (await getClient()).mutations.sendCustomSms({
       registration: {
         firstName: registration.firstName,
@@ -94,25 +123,50 @@ async function sendSmsNotificationWithDelay(registration: any, index: number): P
         numberOfKids: registration.numberOfKids
       },
       message: smsMessage,
-      messageId: Math.random().toString(36).substring(2, 15) + Date.now().toString(36)
+      messageId: smsMessageId
     });
 
+    console.log(`📱 SMS mutation result:`, JSON.stringify(smsResult, null, 2));
+
+    if (smsResult.errors) {
+      console.error(`❌ SMS mutation errors:`, smsResult.errors);
+      return {
+        success: false,
+        id: registration.id,
+        name: `${registration.firstName} ${registration.lastName}`,
+        phone: registration.phone,
+        error: JSON.stringify(smsResult.errors)
+      };
+    }
+
+    if (!smsResult.data?.success) {
+      console.error(`❌ SMS function returned failure:`, smsResult.data);
+      return {
+        success: false,
+        id: registration.id,
+        name: `${registration.firstName} ${registration.lastName}`,
+        phone: registration.phone,
+        error: smsResult.data?.message || 'SMS function failed'
+      };
+    }
+
     console.log(`✅ SMS notification sent successfully to ${registration.firstName} ${registration.lastName}`);
-    
-    return { 
-      success: true, 
-      id: registration.id, 
+
+    return {
+      success: true,
+      id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       phone: registration.phone
     };
   } catch (error) {
-    console.error(`❌ SMS notification failed for ${registration.firstName} ${registration.lastName}:`, error);
-    return { 
-      success: false, 
-      id: registration.id, 
+    console.error(`❌ SMS exception for ${registration.firstName} ${registration.lastName}:`, error);
+    console.error(`❌ Error stack:`, error instanceof Error ? error.stack : 'No stack trace');
+    return {
+      success: false,
+      id: registration.id,
       name: `${registration.firstName} ${registration.lastName}`,
       phone: registration.phone,
-      error: error instanceof Error ? error.message : 'Unknown error' 
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
