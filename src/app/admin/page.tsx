@@ -2108,12 +2108,15 @@ function AdminDashboard() {
       if (result.success !== false) {
         setBulkEmailResults(result);
 
-        let successMessage = `✅ Bulk email completed! ${result.emailsSent} emails sent`;
-        if (result.smsNotificationsSent > 0) {
-          successMessage += `, ${result.smsNotificationsSent} SMS notifications sent`;
+        // Extract data from API response wrapper
+        const data = result.data || result;
+
+        let successMessage = `✅ Bulk email completed! ${data.emailsSent} emails sent`;
+        if (data.smsNotificationsSent > 0) {
+          successMessage += `, ${data.smsNotificationsSent} SMS notifications sent`;
         }
-        if (result.smsSkippedNoPhone > 0) {
-          successMessage += ` (${result.smsSkippedNoPhone} SMS skipped - no phone number)`;
+        if (data.smsSkippedNoPhone > 0) {
+          successMessage += ` (${data.smsSkippedNoPhone} SMS skipped - no phone number)`;
         }
         successMessage += '.';
 
