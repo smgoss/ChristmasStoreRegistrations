@@ -2106,16 +2106,20 @@ function AdminDashboard() {
       }
 
       if (result.success !== false) {
+        console.log('✅ Bulk email API response:', result);
         setBulkEmailResults(result);
 
         // Extract data from API response wrapper
         const data = result.data || result;
+        console.log('📊 Extracted data:', data);
+        console.log('📊 emailsSent:', data.emailsSent);
+        console.log('📊 smsNotificationsSent:', data.smsNotificationsSent);
 
-        let successMessage = `✅ Bulk email completed! ${data.emailsSent} emails sent`;
-        if (data.smsNotificationsSent > 0) {
+        let successMessage = `✅ Bulk email completed! ${data.emailsSent || 0} emails sent`;
+        if ((data.smsNotificationsSent || 0) > 0) {
           successMessage += `, ${data.smsNotificationsSent} SMS notifications sent`;
         }
-        if (data.smsSkippedNoPhone > 0) {
+        if ((data.smsSkippedNoPhone || 0) > 0) {
           successMessage += ` (${data.smsSkippedNoPhone} SMS skipped - no phone number)`;
         }
         successMessage += '.';
