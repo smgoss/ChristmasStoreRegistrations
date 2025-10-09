@@ -40,11 +40,27 @@ export default function InviteRegistrationPage() {
         setIsValidToken(false);
       } else {
         const invite = inviteLinks[0];
-        if (invite.isUsed) {
+
+        // Check if invite is still valid
+        let isValid = false;
+        if (invite.isAgencyInvite) {
+          // For agency invites, check usage counter
+          const currentUsage = invite.currentUsageCount || 0;
+          const maxUsage = invite.maxUsageCount || 1;
+          isValid = currentUsage < maxUsage;
+        } else {
+          // For individual invites, check isUsed flag
+          isValid = !invite.isUsed;
+        }
+
+        if (!isValid) {
           setIsValidToken(false);
         } else {
           setIsValidToken(true);
-          setInviteEmail(invite.email || '');
+          // Only pre-populate email for individual invites, not agency invites
+          if (!invite.isAgencyInvite) {
+            setInviteEmail(invite.email || '');
+          }
         }
       }
     } catch (error) {
@@ -63,11 +79,16 @@ export default function InviteRegistrationPage() {
 
       if (inviteLinks.length > 0) {
         const invite = inviteLinks[0];
-        await (await getClient()).models.InviteLink.update({
-          id: invite.id,
-          isUsed: true,
-          usedAt: new Date().toISOString()
-        });
+
+        // Agency invites are handled by the registration API (usage counter)
+        // Only mark individual invites as used here
+        if (!invite.isAgencyInvite) {
+          await (await getClient()).models.InviteLink.update({
+            id: invite.id,
+            isUsed: true,
+            usedAt: new Date().toISOString()
+          });
+        }
       }
     } catch (error) {
       console.error('Error marking token as used:', error);
