@@ -3055,7 +3055,7 @@ function AdminDashboard() {
                 <select
                   value={targetStatus}
                   onChange={(e) => setTargetStatus(e.target.value as 'all' | 'registered' | 'unconfirmed' | 'confirmed')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 !text-gray-900"
                   disabled={bulkEmailSending}
                 >
                   <option value="all">All Non-Cancelled Registrations</option>
@@ -3075,7 +3075,7 @@ function AdminDashboard() {
                   value={bulkEmailSubject}
                   onChange={(e) => setBulkEmailSubject(e.target.value)}
                   placeholder="e.g., Important Update from Christmas Store"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 !text-gray-900"
                   disabled={bulkEmailSending}
                   maxLength={100}
                 />
@@ -3092,7 +3092,7 @@ function AdminDashboard() {
                   onChange={(e) => setBulkEmailMessage(e.target.value)}
                   placeholder="Enter your message here. You can include HTML formatting if needed."
                   rows={10}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 !text-gray-900"
                   disabled={bulkEmailSending}
                   maxLength={5000}
                 />
