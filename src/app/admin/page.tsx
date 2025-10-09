@@ -2074,25 +2074,53 @@ function AdminDashboard() {
         })
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Extract detailed error information from API response
+        const errorCode = result.code || 'UNKNOWN_ERROR';
+        const errorMessage = result.error || `HTTP error! status: ${response.status}`;
+        const errorDetails = result.details ? JSON.stringify(result.details, null, 2) : '';
+
+        console.error('❌ Bulk email API error:', {
+          status: response.status,
+          code: errorCode,
+          error: errorMessage,
+          details: result.details,
+          timestamp: result.timestamp
+        });
+
+        // Show detailed error to user
+        let userMessage = `❌ Error (${response.status}): ${errorMessage}`;
+        if (errorCode === 'RATE_LIMIT_EXCEEDED' && result.details?.resetTime) {
+          const resetTime = new Date(result.details.resetTime).toLocaleTimeString();
+          userMessage += `\n\nPlease wait until ${resetTime} before trying again.`;
+        }
+        if (errorDetails) {
+          userMessage += `\n\nDetails: ${errorDetails}`;
+        }
+
+        setMessage(userMessage);
+        setBulkEmailSending(false);
+        return;
       }
 
-      const result = await response.json();
-      
       if (result.success !== false) {
         setBulkEmailResults(result);
         setMessage(`✅ Bulk email completed! ${result.emailsSent} emails sent${result.smsNotificationsSent > 0 ? `, ${result.smsNotificationsSent} SMS notifications sent` : ''}.`);
-        
+
         // Clear form
         setBulkEmailSubject('');
         setBulkEmailMessage('');
       } else {
-        throw new Error(result.error || 'Failed to send bulk email');
+        const errorMessage = result.error || 'Failed to send bulk email';
+        const errorDetails = result.details ? `\n\nDetails: ${JSON.stringify(result.details, null, 2)}` : '';
+        console.error('❌ Bulk email failed:', result);
+        setMessage(`❌ ${errorMessage}${errorDetails}`);
       }
     } catch (error) {
       console.error('Error sending bulk email:', error);
-      setMessage(`❌ Error sending bulk email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setMessage(`❌ Error sending bulk email: ${error instanceof Error ? error.message : 'Unknown error'}\n\nCheck browser console for details.`);
     } finally {
       setBulkEmailSending(false);
     }
