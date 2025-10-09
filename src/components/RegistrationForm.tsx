@@ -175,9 +175,11 @@ export default function RegistrationForm({
         const invite = inviteData[0];
         setAgencyInvite(invite);
 
-        // If it's an agency invite, store the agency name
+        // If it's an agency invite, store the agency name and pre-populate referral field
         if (invite.isAgencyInvite && invite.agencyName) {
           setAgencyName(invite.agencyName);
+          // Pre-populate the "referred by" field with the agency name
+          setFormData(prev => ({ ...prev, referredBy: invite.agencyName || '' }));
         }
       }
     } catch (error) {
