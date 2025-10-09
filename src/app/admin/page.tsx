@@ -1019,6 +1019,91 @@ function AdminDashboard() {
     }
   };
 
+  const transferRemainingSlots = async (invite: InviteLink) => {
+    const remainingSlots = (invite.maxUsageCount || 1) - (invite.currentUsageCount || 0);
+
+    if (remainingSlots <= 0) {
+      setMessage('❌ No remaining slots to transfer.');
+      return;
+    }
+
+    if (!confirm(`Transfer ${remainingSlots} remaining slot${remainingSlots > 1 ? 's' : ''} to a new invite link? The current link will be marked as fully used.`)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Generate new token
+      const newToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      const now = new Date().toISOString();
+
+      // Create new agency invite with remaining slots
+      const newInviteResult = await (await getClient()).models.InviteLink.create({
+        token: newToken,
+        email: invite.agencyEmail,
+        isAgencyInvite: true,
+        agencyName: invite.agencyName,
+        agencyEmail: invite.agencyEmail,
+        agencyContact: invite.agencyContact,
+        maxUsageCount: remainingSlots,
+        currentUsageCount: 0,
+        isUsed: false,
+        createdAt: now,
+      });
+
+      if (newInviteResult.errors) {
+        console.error('❌ Error creating new invite:', newInviteResult.errors);
+        setMessage('❌ Error creating new invite: ' + JSON.stringify(newInviteResult.errors));
+        return;
+      }
+
+      // Mark old invite as fully used
+      const updateResult = await (await getClient()).models.InviteLink.update({
+        id: invite.id,
+        isUsed: true,
+        currentUsageCount: invite.maxUsageCount,
+        usedAt: now
+      });
+
+      if (updateResult.errors) {
+        console.error('❌ Error updating old invite:', updateResult.errors);
+        setMessage('❌ Error updating old invite: ' + JSON.stringify(updateResult.errors));
+        return;
+      }
+
+      // Send email with new link if agency email exists
+      if (invite.agencyEmail) {
+        const inviteUrl = `${window.location.origin}/register/${newToken}`;
+
+        try {
+          const emailResult = await (await getClient()).mutations.sendInviteEmail({
+            invite: {
+              email: invite.agencyEmail,
+              token: newToken,
+              inviteUrl: inviteUrl,
+              isAgencyInvite: true,
+              agencyName: invite.agencyName || '',
+              agencyContact: invite.agencyContact || '',
+              maxUsageCount: remainingSlots
+            }
+          });
+
+          console.log('📧 Email result:', emailResult);
+        } catch (emailError) {
+          console.error('📧 Email failed (non-blocking):', emailError);
+        }
+      }
+
+      setMessage(`✅ Successfully transferred ${remainingSlots} slot${remainingSlots > 1 ? 's' : ''} to new invite link!`);
+      loadData(); // Reload to show new invite
+    } catch (error) {
+      console.error('❌ Error transferring slots:', error);
+      setMessage('❌ Error transferring slots: ' + (error instanceof Error ? error.message : 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const resendInviteEmail = async (invite: any) => {
     if (!invite.email) {
       setMessage('❌ Cannot resend: No email address associated with this invite.');
@@ -2793,6 +2878,15 @@ function AdminDashboard() {
                               >
                                 📧 Resend Email
                               </button>
+                              {(invite.currentUsageCount || 0) < (invite.maxUsageCount || 1) && (invite.currentUsageCount || 0) > 0 && (
+                                <button
+                                  onClick={() => transferRemainingSlots(invite)}
+                                  disabled={loading}
+                                  className="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 font-bold disabled:opacity-50 text-sm"
+                                >
+                                  🔄 Transfer Remaining
+                                </button>
+                              )}
                               {(invite.currentUsageCount || 0) < (invite.maxUsageCount || 1) && (
                                 <button
                                   onClick={() => invalidateInviteLink(invite.id)}
