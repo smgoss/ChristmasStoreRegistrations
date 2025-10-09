@@ -208,16 +208,26 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Filter registrations based on target status
-    const eligibleRegistrations = allRegistrations.filter(reg => {
-      if (targetStatus === 'all') return true;
-      if (targetStatus === 'registered') return !reg.registrationStatus || reg.registrationStatus === 'registered';
-      if (targetStatus === 'unconfirmed') return reg.registrationStatus === 'unconfirmed';
-      if (targetStatus === 'confirmed') return reg.registrationStatus === 'confirmed';
-      return false;
-    }).filter(reg => reg.email); // Only include registrations with email addresses
+    // Filter out null/undefined registrations first
+    const validRegistrations = allRegistrations.filter(reg => reg != null);
+    const nullCount = allRegistrations.length - validRegistrations.length;
 
-    console.log(`📋 Filtered ${allRegistrations.length} total registrations to ${eligibleRegistrations.length} eligible for email broadcast (status: ${targetStatus})`);
+    if (nullCount > 0) {
+      console.warn(`⚠️ Found ${nullCount} null/undefined registrations in database - these will be skipped`);
+    }
+
+    // Filter registrations based on target status
+    const eligibleRegistrations = validRegistrations
+      .filter(reg => {
+        if (targetStatus === 'all') return true;
+        if (targetStatus === 'registered') return !reg.registrationStatus || reg.registrationStatus === 'registered';
+        if (targetStatus === 'unconfirmed') return reg.registrationStatus === 'unconfirmed';
+        if (targetStatus === 'confirmed') return reg.registrationStatus === 'confirmed';
+        return false;
+      })
+      .filter(reg => reg.email); // Only include registrations with email addresses
+
+    console.log(`📋 Filtered ${allRegistrations.length} total registrations (${nullCount} null) to ${eligibleRegistrations.length} eligible for email broadcast (status: ${targetStatus})`);
 
     if (eligibleRegistrations.length === 0) {
       return createSuccessResponse({
