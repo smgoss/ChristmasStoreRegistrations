@@ -198,6 +198,10 @@ function AdminDashboard() {
   const [transferAgencyContact, setTransferAgencyContact] = useState('');
   const [transferSlots, setTransferSlots] = useState(0);
 
+  // Agency invite filters
+  const [agencyInviteSearch, setAgencyInviteSearch] = useState('');
+  const [showUnusedOnlyAgency, setShowUnusedOnlyAgency] = useState(false);
+
   const [waitlistEntries, setWaitlistEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -2900,12 +2904,57 @@ function AdminDashboard() {
                   Existing Agency Invite Links ({inviteLinks.filter(inv => inv.isAgencyInvite).length})
                 </h3>
 
+                {/* Filter Controls */}
+                <div className="mb-4 space-y-3">
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="🔍 Search by agency name, email, or contact person..."
+                      value={agencyInviteSearch}
+                      onChange={(e) => setAgencyInviteSearch(e.target.value)}
+                      className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 !text-gray-900"
+                    />
+                  </div>
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="showUnusedOnlyAgency"
+                      checked={showUnusedOnlyAgency}
+                      onChange={(e) => setShowUnusedOnlyAgency(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <label htmlFor="showUnusedOnlyAgency" className="ml-2 text-sm font-medium text-gray-700">
+                      Show only invites with unused slots
+                    </label>
+                  </div>
+                </div>
+
                 {inviteLinks.filter(inv => inv.isAgencyInvite).length === 0 ? (
                   <p className="text-black italic text-center py-8">No agency invite links have been generated yet.</p>
                 ) : (
                   <div className="space-y-3 max-h-96 overflow-y-auto">
                     {inviteLinks
                       .filter(invite => invite.isAgencyInvite)
+                      .filter(invite => {
+                        // Apply search filter
+                        if (agencyInviteSearch) {
+                          const searchLower = agencyInviteSearch.toLowerCase();
+                          const matchesAgencyName = invite.agencyName?.toLowerCase().includes(searchLower);
+                          const matchesEmail = (invite.agencyEmail || invite.email)?.toLowerCase().includes(searchLower);
+                          const matchesContact = invite.agencyContact?.toLowerCase().includes(searchLower);
+                          if (!matchesAgencyName && !matchesEmail && !matchesContact) {
+                            return false;
+                          }
+                        }
+                        // Apply unused slots filter
+                        if (showUnusedOnlyAgency) {
+                          const hasUnusedSlots = (invite.currentUsageCount || 0) < (invite.maxUsageCount || 1);
+                          if (!hasUnusedSlots) {
+                            return false;
+                          }
+                        }
+                        return true;
+                      })
                       .map((invite) => (
                         <div
                           key={invite.id}
