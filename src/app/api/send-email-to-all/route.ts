@@ -263,11 +263,17 @@ export async function POST(request: NextRequest) {
     let smsResults: any[] = [];
     if (sendSmsNotification && successfulEmails.length > 0) {
       console.log('📱 Phase 2: Sending SMS notifications...');
-      
+
       const emailRecipientsWithPhones = successfulEmails.filter(result => {
         const registration = eligibleRegistrations.find(reg => reg.id === result.id);
         return registration && registration.phone;
       });
+
+      const noPhoneCount = successfulEmails.length - emailRecipientsWithPhones.length;
+
+      if (noPhoneCount > 0) {
+        console.log(`📱 Skipping SMS for ${noPhoneCount} recipients without phone numbers (email was sent successfully)`);
+      }
 
       if (emailRecipientsWithPhones.length > 0) {
         smsResults = await Promise.all(
@@ -281,8 +287,9 @@ export async function POST(request: NextRequest) {
 
     const successfulSms = smsResults.filter(r => r.success).length;
     const failedSms = smsResults.filter(r => !r.success).length;
+    const smsSkippedNoPhone = sendSmsNotification ? (successfulEmails.length - smsResults.length) : 0;
 
-    console.log(`📊 SMS notification phase completed: ${successfulSms} sent, ${failedSms} failed`);
+    console.log(`📊 SMS notification phase completed: ${successfulSms} sent, ${failedSms} failed${smsSkippedNoPhone > 0 ? `, ${smsSkippedNoPhone} skipped (no phone)` : ''}`);
 
     // Compile final results
     const totalTime = eligibleRegistrations.length; // seconds for emails
@@ -301,7 +308,15 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    console.log(`✅ Email broadcast completed! ${successfulEmails.length} emails sent, ${successfulSms} SMS notifications sent`);
+    let summaryMessage = `✅ Email broadcast completed! ${successfulEmails.length} emails sent`;
+    if (sendSmsNotification) {
+      summaryMessage += `, ${successfulSms} SMS notifications sent`;
+      if (smsSkippedNoPhone > 0) {
+        summaryMessage += ` (${smsSkippedNoPhone} skipped - no phone number)`;
+      }
+    }
+
+    console.log(summaryMessage);
 
     return createSuccessResponse({
       message: 'Email broadcast completed successfully',
@@ -309,6 +324,7 @@ export async function POST(request: NextRequest) {
       emailsFailed: failedEmails.length,
       smsNotificationsSent: successfulSms,
       smsNotificationsFailed: failedSms,
+      smsSkippedNoPhone,
       totalRecipients: eligibleRegistrations.length,
       estimatedDurationSeconds: totalTime,
       results: results

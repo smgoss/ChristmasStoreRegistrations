@@ -2107,7 +2107,17 @@ function AdminDashboard() {
 
       if (result.success !== false) {
         setBulkEmailResults(result);
-        setMessage(`✅ Bulk email completed! ${result.emailsSent} emails sent${result.smsNotificationsSent > 0 ? `, ${result.smsNotificationsSent} SMS notifications sent` : ''}.`);
+
+        let successMessage = `✅ Bulk email completed! ${result.emailsSent} emails sent`;
+        if (result.smsNotificationsSent > 0) {
+          successMessage += `, ${result.smsNotificationsSent} SMS notifications sent`;
+        }
+        if (result.smsSkippedNoPhone > 0) {
+          successMessage += ` (${result.smsSkippedNoPhone} SMS skipped - no phone number)`;
+        }
+        successMessage += '.';
+
+        setMessage(successMessage);
 
         // Clear form
         setBulkEmailSubject('');
