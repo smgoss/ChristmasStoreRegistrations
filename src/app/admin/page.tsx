@@ -2878,7 +2878,7 @@ function AdminDashboard() {
                               >
                                 📧 Resend Email
                               </button>
-                              {(invite.currentUsageCount || 0) < (invite.maxUsageCount || 1) && (invite.currentUsageCount || 0) > 0 && (
+                              {(invite.currentUsageCount || 0) < (invite.maxUsageCount || 1) && (
                                 <button
                                   onClick={() => transferRemainingSlots(invite)}
                                   disabled={loading}
