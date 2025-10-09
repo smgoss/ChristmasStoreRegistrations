@@ -39,6 +39,22 @@ function getCurrentConfig(): LocationConfig {
   }
 }
 
+// Function to get default frontend URL based on location
+export function getDefaultFrontendUrl(): string {
+  const location = process.env.NEXT_PUBLIC_LOCATION || 'lewiston';
+
+  switch (location) {
+    case 'lewiston':
+      return 'https://lew-christmas-store.pathwayvineyard.com';
+    case 'brunswick':
+      return 'https://brun-christmas-store.pathwayvineyard.com';
+    case 'gray':
+      return 'https://gng-christmas-store.pathwayvineyard.com';
+    default:
+      return 'https://lew-christmas-store.pathwayvineyard.com';
+  }
+}
+
 // Get current config
 export const config = getCurrentConfig();
 
@@ -51,3 +67,4 @@ export const CONTACT_EMAIL = config.contactEmail;
 export const FROM_EMAIL = config.fromEmail;
 export const BRANDING = config.branding;
 export const CHURCH_INFO = config.churchInfo;
+export const DEFAULT_FRONTEND_URL = getDefaultFrontendUrl();

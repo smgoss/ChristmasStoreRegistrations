@@ -172,7 +172,7 @@ const schema = a.schema({
       textingNumber: a.string().default('(208) 746-9089'),
       locationName: a.string().default('Christmas Store'),
       eventAddress: a.string().default(''),
-      frontendUrl: a.string().default('http://localhost:3004'),
+      frontendUrl: a.string(), // No default - will be set based on branch via admin settings
       updatedBy: a.string(),
       updatedAt: a.datetime(),
     })

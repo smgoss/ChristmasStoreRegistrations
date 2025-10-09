@@ -4,6 +4,7 @@ import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 import { z } from 'zod';
 import { createErrorResponse, createSuccessResponse, validateRequestBody, applyRateLimit } from '@/lib/api-utils';
+import { DEFAULT_FRONTEND_URL } from '@/config/locationConfig';
 
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 
@@ -162,8 +163,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Get frontendUrl from config
-    const frontendUrl = config.frontendUrl || 'http://localhost:3004';
+    // Get frontendUrl from config, fallback to location-specific default
+    const frontendUrl = config.frontendUrl || DEFAULT_FRONTEND_URL;
 
     // Process only eligible registrations with rate limiting (1 per second)
     const results = await Promise.all(

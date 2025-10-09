@@ -8,6 +8,7 @@ interface LocationConfig {
   defaultCapacity: number;
   contactEmail: string;
   fromEmail: string;
+  defaultFrontendUrl: string;
   branding: {
     primaryColor: string;
     secondaryColor: string;
@@ -25,8 +26,18 @@ import lewistonConfig from '../../config/lewiston.json';
 import brunswickConfig from '../../config/brunswick.json';
 import grayConfig from '../../config/gray.json';
 
+// Frontend URL mapping
+const frontendUrlMap: Record<string, string> = {
+  'lewiston': 'https://lew-christmas-store.pathwayvineyard.com',
+  'brunswick': 'https://brun-christmas-store.pathwayvineyard.com',
+  'gray': 'https://gng-christmas-store.pathwayvineyard.com'
+};
+
 export function useLocationConfig(): LocationConfig {
-  const [config, setConfig] = useState<LocationConfig>(lewistonConfig);
+  const [config, setConfig] = useState<LocationConfig>({
+    ...lewistonConfig,
+    defaultFrontendUrl: frontendUrlMap['lewiston']
+  });
 
   useEffect(() => {
     // Get location from environment variable or URL parameter or localStorage
@@ -53,19 +64,19 @@ export function useLocationConfig(): LocationConfig {
     };
 
     const location = getLocationFromEnvironment();
-    
+
     switch (location) {
       case 'lewiston':
-        setConfig(lewistonConfig);
+        setConfig({ ...lewistonConfig, defaultFrontendUrl: frontendUrlMap['lewiston'] });
         break;
       case 'brunswick':
-        setConfig(brunswickConfig);
+        setConfig({ ...brunswickConfig, defaultFrontendUrl: frontendUrlMap['brunswick'] });
         break;
       case 'gray':
-        setConfig(grayConfig);
+        setConfig({ ...grayConfig, defaultFrontendUrl: frontendUrlMap['gray'] });
         break;
       default:
-        setConfig(lewistonConfig);
+        setConfig({ ...lewistonConfig, defaultFrontendUrl: frontendUrlMap['lewiston'] });
     }
   }, []);
 

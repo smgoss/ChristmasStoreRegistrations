@@ -159,12 +159,13 @@ interface InviteLink {
 
 function AdminDashboard() {
   const locationConfig = useLocationConfig();
-  const { 
-    timeSlots: TIME_SLOTS, 
+  const {
+    timeSlots: TIME_SLOTS,
     locationName: LOCATION_NAME,
     locationAddress: LOCATION_ADDRESS,
     branding: BRANDING,
-    defaultCapacity: DEFAULT_CAPACITY 
+    defaultCapacity: DEFAULT_CAPACITY,
+    defaultFrontendUrl: DEFAULT_FRONTEND_URL
   } = locationConfig;
 
   // Tab state
@@ -207,7 +208,7 @@ function AdminDashboard() {
     locationName: LOCATION_NAME,
     eventPhone: '',
     eventAddress: '',
-    frontendUrl: 'http://localhost:3004',
+    frontendUrl: DEFAULT_FRONTEND_URL,
     finalConfirmationDeadline: '',
     finalConfirmationEnabled: false
   });

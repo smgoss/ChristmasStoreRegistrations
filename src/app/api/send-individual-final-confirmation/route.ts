@@ -4,6 +4,7 @@ import type { Schema } from '../../../../amplify/data/resource';
 import { ensureAmplifyConfigured } from '@/lib/amplify';
 import { z } from 'zod';
 import { createErrorResponse, createSuccessResponse, validateRequestBody, applyRateLimit } from '@/lib/api-utils';
+import { DEFAULT_FRONTEND_URL } from '@/config/locationConfig';
 
 let client: ReturnType<typeof generateClient<Schema>> | null = null;
 
@@ -98,8 +99,8 @@ export async function POST(request: NextRequest) {
       console.log(`✅ Successfully updated registration ${registrationId} to unconfirmed status`);
       console.log(`✅ Updated registration data:`, updateResult.data);
 
-      // Use frontendUrl from config instead of environment variable
-      const frontendUrl = config.frontendUrl || 'http://localhost:3004';
+      // Use frontendUrl from config, fallback to location-specific default
+      const frontendUrl = config.frontendUrl || DEFAULT_FRONTEND_URL;
       const confirmationUrl = `${frontendUrl}/confirm-final/${finalConfirmationToken}`;
 
       // Send email confirmation
