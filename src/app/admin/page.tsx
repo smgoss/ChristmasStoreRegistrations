@@ -50,6 +50,22 @@ const getAdminClient = async () => {
   return adminClient;
 };
 
+// Helper function to extract detailed error information from API responses
+const extractErrorDetails = (response: Response, result: any): string => {
+  const errorMsg = result?.error || result?.message || result?.data?.message || result?.data?.error || 'Unknown error';
+  const errorCode = result?.code || result?.data?.code || '';
+  const errorDetails = result?.details ? ` | Details: ${JSON.stringify(result.details)}` : '';
+  return `(HTTP ${response.status}${errorCode ? ` - ${errorCode}` : ''}): ${errorMsg}${errorDetails}`;
+};
+
+// Helper function to extract error from exceptions
+const extractExceptionError = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return 'Unknown error';
+};
+
 const christmasTheme: Theme = ({
   name: 'christmas-theme',
   tokens: {
@@ -601,7 +617,11 @@ function AdminDashboard() {
       setTimeout(() => loadData(), 500);
     } catch (error) {
       console.error('❌ Error updating capacity:', error);
-      setMessage('❌ Error updating capacity: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error updating capacity: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -644,7 +664,11 @@ function AdminDashboard() {
       loadData();
     } catch (error) {
       console.error('❌ Error adding time slot:', error);
-      setMessage('❌ Error adding time slot: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error adding time slot: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -697,7 +721,11 @@ function AdminDashboard() {
       loadData();
     } catch (error) {
       console.error('❌ Error deleting time slot:', error);
-      setMessage('❌ Error deleting time slot: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error deleting time slot: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -770,10 +798,15 @@ function AdminDashboard() {
         setMessage('ℹ️ No duplicate time slots found to clean up.');
         setTimeout(() => setMessage(''), 3000);
       }
-      
+
+
     } catch (error) {
       console.error('❌ Error cleaning up duplicates:', error);
-      setMessage('❌ Error cleaning up duplicates: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error cleaning up duplicates: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -965,8 +998,12 @@ function AdminDashboard() {
       // Reload invite links to show the new one
       loadData();
     } catch (error) {
-      console.error('Error generating agency invite link:', error);
-      setMessage('Error generating agency invite link: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception generating agency invite link:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error generating agency invite link: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -997,8 +1034,12 @@ function AdminDashboard() {
         loadData(); // Reload to update the list
       }
     } catch (error) {
-      console.error('❌ Error invalidating invite link:', error);
-      setMessage('❌ Error invalidating invite link: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception invalidating invite link:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error invalidating invite link: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1030,8 +1071,12 @@ function AdminDashboard() {
       setMessage('✅ Invite deleted permanently.');
       loadData(); // Reload to update the list
     } catch (error) {
-      console.error('❌ Error deleting invite:', error);
-      setMessage('❌ Error deleting invite: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception deleting invite:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error deleting invite: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1143,8 +1188,12 @@ function AdminDashboard() {
       loadData(); // Reload to show new invite
       closeTransferModal();
     } catch (error) {
-      console.error('❌ Error transferring slots:', error);
-      setMessage('❌ Error transferring slots: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception transferring slots:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error transferring slots: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1160,15 +1209,15 @@ function AdminDashboard() {
       setLoading(true);
       console.log('📧 Resending invite email to:', invite.email);
       console.log('📧 Invite object:', invite);
-      
+
       const inviteUrl = `${window.location.origin}/register/${invite.token}`;
       console.log('📧 Invite URL:', inviteUrl);
-      
+
       // Use GraphQL mutation (same as initial invite creation)
       console.log('📧 Getting GraphQL client...');
       const client = await getClient();
       console.log('📧 GraphQL client obtained:', !!client);
-      
+
       console.log('📧 Calling sendInviteEmail mutation...');
       const emailResult = await client.mutations.sendInviteEmail({
         invite: {
@@ -1178,20 +1227,36 @@ function AdminDashboard() {
         },
         inviteId: invite.id
       });
-      
+
       console.log('📧 Resend email result (full):', emailResult);
       console.log('📧 Result data:', emailResult.data);
       console.log('📧 Result errors:', emailResult.errors);
-      
+
       if (emailResult.data?.success) {
         setMessage(`✅ Invite email resent successfully to ${invite.email}!`);
+        setTimeout(() => setMessage(''), 3000);
       } else {
-        console.error('📧 Email failed - data:', emailResult.data, 'errors:', emailResult.errors);
-        setMessage(`⚠️ Failed to resend invite email: ${emailResult.data?.message || emailResult.errors?.[0]?.message || 'Unknown error'}`);
+        console.error('📧 Invite email failed - Full result:', {
+          data: emailResult.data,
+          errors: emailResult.errors
+        });
+
+        // Extract error from GraphQL response (cast to any to access dynamic properties)
+        const data = emailResult.data as any;
+        const errorMsg = data?.message || data?.error || emailResult.errors?.[0]?.message || 'Unknown error';
+        const errorCode = data?.code || emailResult.errors?.[0]?.errorType || '';
+        const errorDetails = data?.details ? ` | Details: ${JSON.stringify(data.details)}` : '';
+
+        setMessage(`⚠️ Failed to resend invite email${errorCode ? ` (${errorCode})` : ''}: ${errorMsg}${errorDetails}`);
+        setTimeout(() => setMessage(''), 10000);
       }
     } catch (error) {
-      console.error('❌ Error resending invite email:', error);
-      setMessage('❌ Error resending invite email: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception resending invite email:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error resending invite email: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1434,8 +1499,12 @@ function AdminDashboard() {
       
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      console.error('❌ Error saving contact settings:', error);
-      setMessage('❌ Failed to save contact settings: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception saving contact settings:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Failed to save contact settings: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1567,8 +1636,12 @@ function AdminDashboard() {
       setMessage('✅ All settings saved successfully! Both contact and location settings have been updated.');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      console.error('❌ Error saving all settings:', error);
-      setMessage('❌ Failed to save all settings: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception saving all settings:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Failed to save all settings: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1662,21 +1735,38 @@ function AdminDashboard() {
         }),
       });
 
+      const result = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to start final confirmation process');
+        console.error('❌ Bulk final confirmation failed - Full response:', {
+          status: response.status,
+          statusText: response.statusText,
+          result,
+          headers: Object.fromEntries(response.headers.entries())
+        });
+
+        const errorInfo = extractErrorDetails(response, result);
+        setMessage(`❌ Failed to start final confirmation process ${errorInfo}`);
+        setTimeout(() => setMessage(''), 10000);
+        return;
       }
 
-      const result = await response.json();
-      setMessage(`✅ Final confirmation process started! ${result.sent || 0} requests sent.`);
-      
+      const data = result.data || result;
+      setMessage(`✅ Final confirmation process started! ${data.sent || 0} requests sent.`);
+
       // Refresh data to show updated statuses (delayed to avoid overwriting individual confirmations)
       setTimeout(async () => {
         await loadData();
       }, 3000);
+      setTimeout(() => setMessage(''), 5000);
 
     } catch (error) {
-      console.error('Error starting final confirmation process:', error);
-      setMessage('❌ Error starting final confirmation process. Please try again.');
+      console.error('Exception starting final confirmation process:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error starting final confirmation process: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1736,7 +1826,12 @@ function AdminDashboard() {
         setMessage(`✅ Final confirmation sent successfully! ${data.emailSent ? 'Email' : ''}${data.emailSent && data.smsSent ? ' and ' : ''}${data.smsSent ? 'SMS' : ''} sent.`);
         setTimeout(() => setMessage(''), 5000);
       } else {
-        console.error('❌ Failed to send individual final confirmation:', result);
+        console.error('❌ Failed to send individual final confirmation - Full response:', {
+          status: response.status,
+          statusText: response.statusText,
+          result,
+          headers: Object.fromEntries(response.headers.entries())
+        });
 
         // Check for rate limit error
         if (result.code === 'RATE_LIMIT_EXCEEDED' || response.status === 429) {
@@ -1744,14 +1839,23 @@ function AdminDashboard() {
           const resetMsg = resetTime ? ` Please wait until ${new Date(resetTime).toLocaleTimeString()}.` : ' Please wait a moment and try again.';
           setMessage(`⏰ Rate limit exceeded.${resetMsg}`);
         } else {
-          setMessage(`❌ Failed to send final confirmation: ${result.error || result.message || 'Unknown error'}`);
+          // Extract error message from various possible response formats
+          const errorMsg = result.error || result.message || result.data?.message || result.data?.error || 'Unknown error';
+          const errorCode = result.code || result.data?.code || '';
+          const errorDetails = result.details ? ` | Details: ${JSON.stringify(result.details)}` : '';
+
+          setMessage(`❌ Failed to send final confirmation (HTTP ${response.status}${errorCode ? ` - ${errorCode}` : ''}): ${errorMsg}${errorDetails}`);
+          console.error('Extracted error info:', { errorMsg, errorCode, errorDetails });
         }
-        setTimeout(() => setMessage(''), 8000);
+        setTimeout(() => setMessage(''), 10000);
       }
     } catch (error) {
-      console.error('Error sending individual final confirmation:', error);
-      setMessage('❌ Error sending individual final confirmation.');
-      setTimeout(() => setMessage(''), 5000);
+      console.error('Exception sending individual final confirmation:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error sending individual final confirmation: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -1899,8 +2003,12 @@ function AdminDashboard() {
       setMessage('Registration deleted successfully!');
       console.log('🎉 Delete completed successfully');
     } catch (error) {
-      console.error('❌ Error deleting registration:', error);
-      setMessage('Error deleting registration: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Exception deleting registration:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error deleting registration: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     }
   };
 
@@ -1935,37 +2043,43 @@ function AdminDashboard() {
 
       if (type === 'email' || type === 'both') {
         console.log('📧 Attempting to resend email for registration:', registration.id);
-        
+
         const response = await fetch('/api/resend-confirmation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             registrationId: registration.id,
             type: 'email',
             email: registration.email,
             firstName: registration.firstName
           }),
         });
-        
-        console.log('📧 Email resend response status:', response.status);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('❌ Email resend failed:', response.status, errorText);
-          throw new Error(`Failed to resend email: ${response.status} - ${errorText}`);
-        }
-        
+
         const result = await response.json();
-        console.log('✅ Email resend result:', result);
+        console.log('📧 Email resend response:', { status: response.status, result });
+
+        if (!response.ok) {
+          console.error('❌ Email resend failed - Full response:', {
+            status: response.status,
+            statusText: response.statusText,
+            result,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+
+          const errorInfo = extractErrorDetails(response, result);
+          throw new Error(`Failed to resend email ${errorInfo}`);
+        }
+
+        console.log('✅ Email resend successful');
       }
 
       if (type === 'sms' || type === 'both') {
         console.log('📱 Attempting to resend SMS for registration:', registration.id);
-        
+
         const response = await fetch('/api/resend-confirmation', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             registrationId: registration.id,
             type: 'sms',
             phone: registration.phone,
@@ -1973,24 +2087,34 @@ function AdminDashboard() {
             timeSlot: registration.timeSlot
           }),
         });
-        
-        console.log('📱 SMS resend response status:', response.status);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('❌ SMS resend failed:', response.status, errorText);
-          throw new Error(`Failed to resend SMS: ${response.status} - ${errorText}`);
-        }
-        
+
         const result = await response.json();
-        console.log('✅ SMS resend result:', result);
+        console.log('📱 SMS resend response:', { status: response.status, result });
+
+        if (!response.ok) {
+          console.error('❌ SMS resend failed - Full response:', {
+            status: response.status,
+            statusText: response.statusText,
+            result,
+            headers: Object.fromEntries(response.headers.entries())
+          });
+
+          const errorInfo = extractErrorDetails(response, result);
+          throw new Error(`Failed to resend SMS ${errorInfo}`);
+        }
+
+        console.log('✅ SMS resend successful');
       }
 
       setMessage(`✅ ${type === 'both' ? 'Email and SMS' : type.toUpperCase()} confirmation resent successfully!`);
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      console.error('Error resending confirmation:', error);
-      setMessage('❌ Failed to resend confirmation. Please try again.');
+      console.error('Exception resending confirmation:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Failed to resend confirmation: ${errorMessage}`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setLoading(false);
     }
@@ -2155,31 +2279,27 @@ function AdminDashboard() {
       const result = await response.json();
 
       if (!response.ok) {
-        // Extract detailed error information from API response
-        const errorCode = result.code || 'UNKNOWN_ERROR';
-        const errorMessage = result.error || `HTTP error! status: ${response.status}`;
-        const errorDetails = result.details ? JSON.stringify(result.details, null, 2) : '';
-
-        console.error('❌ Bulk email API error:', {
+        console.error('❌ Bulk email API error - Full response:', {
           status: response.status,
-          code: errorCode,
-          error: errorMessage,
-          details: result.details,
-          timestamp: result.timestamp
+          statusText: response.statusText,
+          result,
+          headers: Object.fromEntries(response.headers.entries())
         });
 
-        // Show detailed error to user
-        let userMessage = `❌ Error (${response.status}): ${errorMessage}`;
-        if (errorCode === 'RATE_LIMIT_EXCEEDED' && result.details?.resetTime) {
-          const resetTime = new Date(result.details.resetTime).toLocaleTimeString();
-          userMessage += `\n\nPlease wait until ${resetTime} before trying again.`;
-        }
-        if (errorDetails) {
-          userMessage += `\n\nDetails: ${errorDetails}`;
+        // Check for rate limit error
+        if (result.code === 'RATE_LIMIT_EXCEEDED' || response.status === 429) {
+          const resetTime = result.details?.resetTime;
+          const resetMsg = resetTime ? ` Please wait until ${new Date(resetTime).toLocaleTimeString()}.` : ' Please wait a moment and try again.';
+          setMessage(`⏰ Rate limit exceeded.${resetMsg}`);
+        } else {
+          // Use helper to extract detailed error
+          const errorInfo = extractErrorDetails(response, result);
+          setMessage(`❌ Failed to send bulk email ${errorInfo}`);
+          console.error('Extracted error info:', errorInfo);
         }
 
-        setMessage(userMessage);
         setBulkEmailSending(false);
+        setTimeout(() => setMessage(''), 10000);
         return;
       }
 
@@ -2214,8 +2334,12 @@ function AdminDashboard() {
         setMessage(`❌ ${errorMessage}${errorDetails}`);
       }
     } catch (error) {
-      console.error('Error sending bulk email:', error);
-      setMessage(`❌ Error sending bulk email: ${error instanceof Error ? error.message : 'Unknown error'}\n\nCheck browser console for details.`);
+      console.error('Exception sending bulk email:', error);
+      const errorMessage = extractExceptionError(error);
+      const errorStack = error instanceof Error ? error.stack : '';
+      console.error('Error stack:', errorStack);
+      setMessage(`❌ Error sending bulk email: ${errorMessage}\n\nCheck browser console for full details.`);
+      setTimeout(() => setMessage(''), 10000);
     } finally {
       setBulkEmailSending(false);
     }
@@ -3696,7 +3820,7 @@ function AdminDashboard() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(adminRegData)
                       });
-                      
+
                       const result = await response.json();
 
                       if (result.success) {
@@ -3722,16 +3846,35 @@ function AdminDashboard() {
                         });
                         // Reload data to show the new registration or waitlist entry
                         loadData();
+                        setTimeout(() => setMessage(''), 5000);
                       } else {
-                        let errorMessage = result.message || 'Failed to create registration';
+                        console.error('❌ Admin registration failed - Full response:', {
+                          status: response.status,
+                          statusText: response.statusText,
+                          result,
+                          headers: Object.fromEntries(response.headers.entries())
+                        });
+
+                        const errorInfo = extractErrorDetails(response, result);
+                        let errorMessage = `❌ Failed to ${adminRegData.addToWaitlist ? 'add to waitlist' : 'create registration'} ${errorInfo}`;
+
                         if (result.availableSlots) {
                           errorMessage += `\n\nAvailable time slots:\n${result.availableSlots}`;
                         }
-                        setMessage('❌ ' + errorMessage);
+                        if (result.errors && Array.isArray(result.errors)) {
+                          errorMessage += `\n\nValidation errors:\n${result.errors.join('\n')}`;
+                        }
+
+                        setMessage(errorMessage);
+                        setTimeout(() => setMessage(''), 10000);
                       }
                     } catch (error) {
-                      console.error('Error creating registration:', error);
-                      setMessage('❌ Error creating registration');
+                      console.error('Exception creating registration:', error);
+                      const errorMessage = extractExceptionError(error);
+                      const errorStack = error instanceof Error ? error.stack : '';
+                      console.error('Error stack:', errorStack);
+                      setMessage(`❌ Error ${adminRegData.addToWaitlist ? 'adding to waitlist' : 'creating registration'}: ${errorMessage}`);
+                      setTimeout(() => setMessage(''), 10000);
                     } finally {
                       setAddingRegistration(false);
                     }
