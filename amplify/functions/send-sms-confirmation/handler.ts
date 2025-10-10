@@ -349,18 +349,19 @@ async function sendClearstreamSms(phone: string, message: string) {
 
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
+      const isFirstChunk = i === 0;
       const partInfo = chunks.length > 1 ? ` (${i + 1}/${chunks.length})` : '';
-      console.log(`Sending chunk ${i + 1}/${chunks.length} (${chunk.length} chars)${partInfo}`);
+      console.log(`Sending chunk ${i + 1}/${chunks.length} (${chunk.length} chars)${partInfo}${isFirstChunk ? ' with header' : ' without header'}`);
 
       // Log the exact body being sent to Clearstream
       const requestBody = new URLSearchParams({
         to: phone,
-        text_header: textHeader,
+        text_header: isFirstChunk ? textHeader : '',
         text_body: chunk,
       });
       console.log('Clearstream request body:', requestBody.toString());
 
-      const result = await sendSingleSms(phone, chunk, apiKey);
+      const result = await sendSingleSms(phone, chunk, apiKey, isFirstChunk);
       results.push(result);
 
       if (!result.success) {
@@ -426,8 +427,8 @@ async function getApiKey(): Promise<string> {
 }
 
 // Helper function to send a single SMS chunk
-async function sendSingleSms(phone: string, message: string, apiKey: string) {
-  const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway GNG Christmas Store';
+async function sendSingleSms(phone: string, message: string, apiKey: string, includeHeader: boolean = true) {
+  const textHeader = includeHeader ? (process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway GNG Christmas Store') : '';
 
   const response = await fetch('https://api.getclearstream.com/v1/texts', {
     method: 'POST',
@@ -454,8 +455,9 @@ async function sendSingleSms(phone: string, message: string, apiKey: string) {
 }
 
 // Helper function to split message into chunks
-// maxLength should account for the header and separator that Clearstream adds
-// Default set to 290 chars to ensure we stay under Clearstream's 335 char limit
+// maxLength is for the first chunk which includes the header (30 chars + 2 separator)
+// Subsequent chunks are sent without header, so they could be longer, but we keep them at same length for consistency
+// Default set to 290 chars to ensure first chunk stays under Clearstream's 335 char limit
 function splitMessage(message: string, maxLength: number = 290): string[] {
   if (message.length <= maxLength) {
     return [message];
