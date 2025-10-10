@@ -202,6 +202,11 @@ function AdminDashboard() {
   const [agencyInviteSearch, setAgencyInviteSearch] = useState('');
   const [showUnusedOnlyAgency, setShowUnusedOnlyAgency] = useState(false);
 
+  // Move waitlist modal state
+  const [showMoveWaitlistModal, setShowMoveWaitlistModal] = useState(false);
+  const [moveWaitlistEntry, setMoveWaitlistEntry] = useState<{id: string, name: string} | null>(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
+
   const [waitlistEntries, setWaitlistEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -1297,32 +1302,52 @@ function AdminDashboard() {
     }
   };
 
-  const moveWaitlistToRegistered = async (waitlistId: string, name: string) => {
-    const timeSlot = prompt(`Select time slot for ${name}:\n\nAvailable time slots:\n${timeSlots.map(slot => `• ${slot.timeSlot} (${slot.currentRegistrations}/${slot.maxCapacity})`).join('\n')}\n\nEnter the exact time slot name:`);
-    
-    if (!timeSlot) return;
+  // Open move waitlist modal
+  const openMoveWaitlistModal = (waitlistId: string, name: string) => {
+    setMoveWaitlistEntry({ id: waitlistId, name });
+    setSelectedTimeSlot('');
+    setShowMoveWaitlistModal(true);
+  };
 
-    const validTimeSlot = timeSlots.find(slot => slot.timeSlot === timeSlot);
+  // Close move waitlist modal
+  const closeMoveWaitlistModal = () => {
+    setShowMoveWaitlistModal(false);
+    setMoveWaitlistEntry(null);
+    setSelectedTimeSlot('');
+  };
+
+  // Submit move waitlist to registered
+  const submitMoveWaitlist = async () => {
+    if (!moveWaitlistEntry || !selectedTimeSlot) {
+      setMessage('❌ Please select a time slot');
+      return;
+    }
+
+    const validTimeSlot = timeSlots.find(slot => slot.timeSlot === selectedTimeSlot);
     if (!validTimeSlot) {
       setMessage('❌ Invalid time slot selected. Please try again.');
       return;
     }
 
     const increaseCapacity = validTimeSlot.currentRegistrations >= validTimeSlot.maxCapacity;
-    const confirmMessage = increaseCapacity 
-      ? `This will move ${name} to ${timeSlot} and increase the capacity by 1 (currently ${validTimeSlot.currentRegistrations}/${validTimeSlot.maxCapacity}). Continue?`
-      : `This will move ${name} to ${timeSlot} (${validTimeSlot.currentRegistrations + 1}/${validTimeSlot.maxCapacity}). Continue?`;
+    const confirmMessage = increaseCapacity
+      ? `This will move ${moveWaitlistEntry.name} to ${selectedTimeSlot} and increase the capacity by 1 (currently ${validTimeSlot.currentRegistrations}/${validTimeSlot.maxCapacity}). Continue?`
+      : `This will move ${moveWaitlistEntry.name} to ${selectedTimeSlot} (${validTimeSlot.currentRegistrations + 1}/${validTimeSlot.maxCapacity}). Continue?`;
 
     if (!confirm(confirmMessage)) return;
 
     try {
       setLoading(true);
-      console.log('🔄 Moving waitlist to registered:', { waitlistId, timeSlot, increaseCapacity });
+      console.log('🔄 Moving waitlist to registered:', { waitlistId: moveWaitlistEntry.id, timeSlot: selectedTimeSlot, increaseCapacity });
 
       const response = await fetch('/api/move-waitlist-to-registered', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ waitlistId, timeSlot, increaseCapacity }),
+        body: JSON.stringify({
+          waitlistId: moveWaitlistEntry.id,
+          timeSlot: selectedTimeSlot,
+          increaseCapacity
+        }),
       });
 
       if (!response.ok) {
@@ -1332,6 +1357,7 @@ function AdminDashboard() {
 
       const result = await response.json();
       setMessage(`✅ ${result.message}`);
+      closeMoveWaitlistModal();
       loadData(); // Reload data to reflect changes
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
@@ -3947,7 +3973,7 @@ function AdminDashboard() {
                             ✏️ Edit
                           </button>
                           <button
-                            onClick={() => moveWaitlistToRegistered(entry.id, `${entry.firstName} ${entry.lastName}`)}
+                            onClick={() => openMoveWaitlistModal(entry.id, `${entry.firstName} ${entry.lastName}`)}
                             disabled={loading}
                             className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 font-semibold text-sm whitespace-nowrap"
                           >
@@ -4202,6 +4228,69 @@ function AdminDashboard() {
                   </button>
                   <button
                     onClick={closeTransferModal}
+                    disabled={loading}
+                    className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 font-bold disabled:opacity-50"
+                  >
+                    ❌ Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Move Waitlist to Time Slot Modal */}
+        {showMoveWaitlistModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+              <div className="bg-gradient-to-r from-green-600 to-blue-600 text-white p-6 rounded-t-lg">
+                <h2 className="text-2xl font-bold">✅ Move to Registered</h2>
+                <p className="text-white opacity-90 mt-1">
+                  {moveWaitlistEntry && `Move ${moveWaitlistEntry.name} to a time slot`}
+                </p>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Time Slot <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={selectedTimeSlot}
+                    onChange={(e) => setSelectedTimeSlot(e.target.value)}
+                    className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
+                    required
+                  >
+                    <option value="">-- Choose a time slot --</option>
+                    {timeSlots.map((slot) => (
+                      <option key={slot.timeSlot} value={slot.timeSlot}>
+                        {slot.timeSlot} ({slot.currentRegistrations}/{slot.maxCapacity})
+                        {slot.currentRegistrations >= slot.maxCapacity ? ' - FULL (will increase capacity)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {selectedTimeSlot && timeSlots.find(s => s.timeSlot === selectedTimeSlot) && (
+                      <span>
+                        {timeSlots.find(s => s.timeSlot === selectedTimeSlot)!.currentRegistrations >= timeSlots.find(s => s.timeSlot === selectedTimeSlot)!.maxCapacity
+                          ? '⚠️ This slot is full. Capacity will be increased by 1.'
+                          : `✓ ${timeSlots.find(s => s.timeSlot === selectedTimeSlot)!.maxCapacity - timeSlots.find(s => s.timeSlot === selectedTimeSlot)!.currentRegistrations} spot(s) available`
+                        }
+                      </span>
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex space-x-3 pt-4">
+                  <button
+                    onClick={submitMoveWaitlist}
+                    disabled={loading || !selectedTimeSlot}
+                    className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? '⏳ Moving...' : '✅ Move to Registered'}
+                  </button>
+                  <button
+                    onClick={closeMoveWaitlistModal}
                     disabled={loading}
                     className="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 font-bold disabled:opacity-50"
                   >
