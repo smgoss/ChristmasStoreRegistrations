@@ -321,7 +321,8 @@ Questions? ${contactPhone}
 
 async function sendClearstreamSms(phone: string, message: string) {
   try {
-    const textHeader = 'Pathway Christmas Store';
+    // Get header from environment - could be location-specific (e.g., "Pathway Brunswick Christmas Store")
+    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
 
     const apiKey = await getApiKey();
 
@@ -334,14 +335,15 @@ async function sendClearstreamSms(phone: string, message: string) {
 
     // Split message into chunks if needed
     // Clearstream limit is 335 chars total (header + body)
-    // Account for header length and separator
+    // Account for actual header length and separator
     const CLEARSTREAM_TOTAL_LIMIT = 335;
     const headerLength = textHeader.length;
     const separatorLength = 2; // Clearstream adds separator between header and body
     const maxBodyLength = CLEARSTREAM_TOTAL_LIMIT - headerLength - separatorLength;
 
+    console.log(`Header length: ${headerLength}, Max body length: ${maxBodyLength}`);
     const chunks = splitMessage(message, maxBodyLength);
-    console.log(`Message split into ${chunks.length} chunk(s) (max body length: ${maxBodyLength} chars)`);
+    console.log(`Message split into ${chunks.length} chunk(s)`);
 
     const results = [];
 
@@ -453,7 +455,8 @@ async function sendSingleSms(phone: string, message: string, apiKey: string) {
 
 // Helper function to split message into chunks
 // maxLength should account for the header and separator that Clearstream adds
-function splitMessage(message: string, maxLength: number = 309): string[] {
+// Default assumes longest header (Brunswick: 37 chars) + separator (2 chars) = 296 max body
+function splitMessage(message: string, maxLength: number = 296): string[] {
   if (message.length <= maxLength) {
     return [message];
   }
