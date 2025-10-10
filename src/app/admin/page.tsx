@@ -259,7 +259,8 @@ function AdminDashboard() {
     timeSlot: '',
     numberOfKids: 0,
     children: [] as Array<{ age: string; gender: 'boy' | 'girl' }>,
-    referredBy: ''
+    referredBy: '',
+    addToWaitlist: false
   });
   const [addingRegistration, setAddingRegistration] = useState(false);
 
@@ -3542,19 +3543,22 @@ function AdminDashboard() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Time Slot *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Time Slot {!adminRegData.addToWaitlist && '*'}
+                    {adminRegData.addToWaitlist && <span className="text-sm font-normal text-gray-500"> (optional for waitlist)</span>}
+                  </label>
                   <select
                     value={adminRegData.timeSlot}
                     onChange={(e) => setAdminRegData(prev => ({ ...prev, timeSlot: e.target.value }))}
                     className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:border-blue-500 text-black"
-                    required
+                    required={!adminRegData.addToWaitlist}
                   >
                     <option value="">Select time slot</option>
                     {timeSlots.map(slot => {
                       const isFull = slot.currentRegistrations >= slot.maxCapacity;
                       return (
                         <option key={slot.timeSlot} value={slot.timeSlot}>
-                          {slot.timeSlot} ({slot.currentRegistrations}/{slot.maxCapacity}){isFull ? ' - FULL (will increase capacity)' : ''}
+                          {slot.timeSlot} ({slot.currentRegistrations}/{slot.maxCapacity}){isFull ? ' - FULL' : ''}
                         </option>
                       );
                     })}
@@ -3590,6 +3594,24 @@ function AdminDashboard() {
                     placeholder="Enter who referred them (optional)"
                   />
                 </div>
+              </div>
+
+              {/* Add to Waitlist Checkbox */}
+              <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
+                <label className="flex items-center space-x-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={adminRegData.addToWaitlist}
+                    onChange={(e) => setAdminRegData(prev => ({ ...prev, addToWaitlist: e.target.checked }))}
+                    className="w-5 h-5 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                  />
+                  <span className="text-gray-900 font-semibold">
+                    📋 Add to Waitlist instead of registering
+                  </span>
+                </label>
+                <p className="text-sm text-gray-600 mt-2 ml-8">
+                  Check this box to add this person to the waitlist instead of creating a registration. Time slot selection is optional for waitlist entries.
+                </p>
               </div>
 
               {/* Children Information */}
@@ -3667,7 +3689,10 @@ function AdminDashboard() {
                       const result = await response.json();
 
                       if (result.success) {
-                        setMessage('✅ Registration created successfully! Email and SMS sent.');
+                        const successMsg = adminRegData.addToWaitlist
+                          ? '✅ Added to waitlist successfully!'
+                          : '✅ Registration created successfully! Email and SMS sent.';
+                        setMessage(successMsg);
                         // Reset form
                         setAdminRegData({
                           firstName: '',
@@ -3681,9 +3706,10 @@ function AdminDashboard() {
                           timeSlot: '',
                           numberOfKids: 0,
                           children: [],
-                          referredBy: ''
+                          referredBy: '',
+                          addToWaitlist: false
                         });
-                        // Reload data to show the new registration
+                        // Reload data to show the new registration or waitlist entry
                         loadData();
                       } else {
                         let errorMessage = result.message || 'Failed to create registration';
@@ -3699,10 +3725,12 @@ function AdminDashboard() {
                       setAddingRegistration(false);
                     }
                   }}
-                  disabled={addingRegistration || !adminRegData.firstName || !adminRegData.lastName || !adminRegData.email || !adminRegData.phone || !adminRegData.timeSlot}
+                  disabled={addingRegistration || !adminRegData.firstName || !adminRegData.lastName || !adminRegData.email || !adminRegData.phone || (!adminRegData.addToWaitlist && !adminRegData.timeSlot)}
                   className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold text-lg"
                 >
-                  {addingRegistration ? '⏳ Creating Registration...' : '➕ Create Registration'}
+                  {addingRegistration
+                    ? (adminRegData.addToWaitlist ? '⏳ Adding to Waitlist...' : '⏳ Creating Registration...')
+                    : (adminRegData.addToWaitlist ? '📋 Add to Waitlist' : '➕ Create Registration')}
                 </button>
               </div>
             </div>

@@ -14,13 +14,14 @@ const AdminRegistrationSchema = z.object({
   city: z.string().min(1, 'City is required').max(50, 'City must be 50 characters or less'),
   state: z.string().min(2, 'State is required').max(2, 'State must be 2 characters'),
   zipCode: z.string().min(5, 'Zip code must be at least 5 digits').max(10, 'Zip code must be 10 characters or less'),
-  timeSlot: z.string().min(1, 'Time slot is required'),
+  timeSlot: z.string().optional(), // Optional for waitlist
   numberOfKids: z.number().min(0, 'Number of kids must be 0 or more').max(20, 'Number of kids must be 20 or less'),
   children: z.array(z.object({
     age: z.string().min(1, 'Child age is required'),
     gender: z.enum(['boy', 'girl'], { required_error: 'Child gender is required' })
   })).optional(),
-  referredBy: z.string().max(100, 'Referred by must be 100 characters or less').optional()
+  referredBy: z.string().max(100, 'Referred by must be 100 characters or less').optional(),
+  addToWaitlist: z.boolean().optional()
 });
 
 export async function POST(request: NextRequest) {
@@ -102,6 +103,60 @@ export async function POST(request: NextRequest) {
       }
     } catch (waitlistError) {
       console.log('ℹ️ Waitlist model not available for duplicate checking:', waitlistError);
+    }
+
+    // Handle waitlist option
+    if (validatedData.addToWaitlist) {
+      console.log('📋 Adding to waitlist instead of registration');
+
+      try {
+        // Create waitlist entry
+        const { data: waitlistEntry } = await client.models.Waitlist.create({
+          firstName: validatedData.firstName,
+          lastName: validatedData.lastName,
+          email: validatedData.email,
+          phone: validatedData.phone,
+          streetAddress: validatedData.streetAddress,
+          city: validatedData.city,
+          state: validatedData.state,
+          zipCode: validatedData.zipCode,
+          numberOfKids: validatedData.numberOfKids,
+          preferredTimeSlots: validatedData.timeSlot || undefined,
+          referredBy: validatedData.referredBy || undefined,
+          children: validatedData.children ? JSON.stringify(validatedData.children) : undefined,
+          waitlistDate: new Date().toISOString(),
+          isActive: true
+        });
+
+        if (!waitlistEntry) {
+          throw new Error('Failed to create waitlist entry');
+        }
+
+        console.log('✅ Waitlist entry created successfully');
+        return NextResponse.json({
+          success: true,
+          message: 'Added to waitlist successfully',
+          waitlistId: waitlistEntry.id
+        });
+      } catch (error) {
+        console.error('❌ Error creating waitlist entry:', error);
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Failed to add to waitlist',
+            error: error instanceof Error ? error.message : 'Unknown error'
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    // Validate time slot is required for registration
+    if (!validatedData.timeSlot) {
+      return NextResponse.json(
+        { success: false, message: 'Time slot is required for registration' },
+        { status: 400 }
+      );
     }
 
     // Get current time slot configuration
