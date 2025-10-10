@@ -3444,8 +3444,9 @@ function AdminDashboard() {
             
             <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 mb-6">
               <p className="text-blue-800 font-semibold">
-                💡 Admin Registration: This form allows you to manually add registrations to the system. 
-                Email and phone numbers must be unique. If you select a full time slot, its capacity will be increased by 1.
+                💡 Admin Registration: This form allows you to manually add registrations to the system.
+                Email and phone numbers must be unique. If you select a full time slot, you will be required to choose an available slot instead.
+                Capacity will only be increased if ALL time slots are full.
               </p>
             </div>
 
@@ -3664,7 +3665,7 @@ function AdminDashboard() {
                       });
                       
                       const result = await response.json();
-                      
+
                       if (result.success) {
                         setMessage('✅ Registration created successfully! Email and SMS sent.');
                         // Reset form
@@ -3685,7 +3686,11 @@ function AdminDashboard() {
                         // Reload data to show the new registration
                         loadData();
                       } else {
-                        setMessage('❌ ' + (result.message || 'Failed to create registration'));
+                        let errorMessage = result.message || 'Failed to create registration';
+                        if (result.availableSlots) {
+                          errorMessage += `\n\nAvailable time slots:\n${result.availableSlots}`;
+                        }
+                        setMessage('❌ ' + errorMessage);
                       }
                     } catch (error) {
                       console.error('Error creating registration:', error);

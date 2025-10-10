@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     });
 
     const timeSlotConfig = timeSlotData?.[0];
-    
+
     if (!timeSlotConfig) {
       return NextResponse.json(
         { success: false, message: 'Selected time slot not found' },
@@ -118,14 +118,38 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if time slot is at capacity and increase if needed
+    // Check if time slot is at capacity
     const currentRegistrations = timeSlotConfig.currentRegistrations || 0;
     const maxCapacity = timeSlotConfig.maxCapacity || 0;
-    
+
     if (currentRegistrations >= maxCapacity) {
-      console.log(`📈 Time slot ${validatedData.timeSlot} is at capacity (${currentRegistrations}/${maxCapacity}). Increasing capacity by 1.`);
-      
-      // Increase capacity by 1
+      console.log(`⚠️ Time slot ${validatedData.timeSlot} is at capacity (${currentRegistrations}/${maxCapacity})`);
+
+      // Check if ALL time slots are full
+      const { data: allTimeSlots } = await client.models.TimeSlotConfig.list();
+      const allSlotsFull = allTimeSlots?.every(slot =>
+        (slot.currentRegistrations || 0) >= (slot.maxCapacity || 0)
+      );
+
+      if (!allSlotsFull) {
+        // There are available slots, don't allow increasing capacity
+        const availableSlots = allTimeSlots?.filter(slot =>
+          (slot.currentRegistrations || 0) < (slot.maxCapacity || 0)
+        ).map(slot => slot.timeSlot).join(', ');
+
+        return NextResponse.json(
+          {
+            success: false,
+            message: `This time slot is full. Please select an available time slot instead.`,
+            availableSlots: availableSlots
+          },
+          { status: 409 }
+        );
+      }
+
+      // All slots are full, increase capacity by 1
+      console.log(`📈 ALL time slots are full. Increasing capacity for ${validatedData.timeSlot} by 1.`);
+
       await client.models.TimeSlotConfig.update({
         id: timeSlotConfig.id,
         maxCapacity: maxCapacity + 1
