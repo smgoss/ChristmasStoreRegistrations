@@ -22,8 +22,8 @@ const SendIndividualFinalConfirmationSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Apply rate limiting
-    const rateLimitResponse = applyRateLimit(request, 1, 5000); // 1 request per 5 seconds
+    // Apply rate limiting - allow 3 requests per 10 seconds to handle retries
+    const rateLimitResponse = applyRateLimit(request, 3, 10000);
     if (rateLimitResponse) {
       return rateLimitResponse;
     }

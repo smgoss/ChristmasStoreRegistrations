@@ -1715,27 +1715,38 @@ function AdminDashboard() {
 
       if (response.ok && result.success) {
         console.log('✅ Individual final confirmation sent successfully:', result);
-        
+
+        // Extract data from wrapper if present
+        const data = result.data || result;
+
         // Update the local state to reflect the status change
-        setRegistrations(prevRegs => 
-          prevRegs.map(r => 
-            r.id === registrationId 
-              ? { 
-                  ...r, 
+        setRegistrations(prevRegs =>
+          prevRegs.map(r =>
+            r.id === registrationId
+              ? {
+                  ...r,
                   registrationStatus: 'unconfirmed',
                   finalConfirmationSentAt: new Date().toISOString(),
-                  finalConfirmationToken: result.confirmationToken
+                  finalConfirmationToken: data.confirmationToken || result.confirmationToken
                 }
               : r
           )
         );
-        
-        setMessage(`✅ Final confirmation sent successfully! ${result.emailSent ? 'Email' : ''}${result.emailSent && result.smsSent ? ' and ' : ''}${result.smsSent ? 'SMS' : ''} sent.`);
+
+        setMessage(`✅ Final confirmation sent successfully! ${data.emailSent ? 'Email' : ''}${data.emailSent && data.smsSent ? ' and ' : ''}${data.smsSent ? 'SMS' : ''} sent.`);
         setTimeout(() => setMessage(''), 5000);
       } else {
         console.error('❌ Failed to send individual final confirmation:', result);
-        setMessage(`❌ Failed to send final confirmation: ${result.message || 'Unknown error'}`);
-        setTimeout(() => setMessage(''), 5000);
+
+        // Check for rate limit error
+        if (result.code === 'RATE_LIMIT_EXCEEDED' || response.status === 429) {
+          const resetTime = result.details?.resetTime;
+          const resetMsg = resetTime ? ` Please wait until ${new Date(resetTime).toLocaleTimeString()}.` : ' Please wait a moment and try again.';
+          setMessage(`⏰ Rate limit exceeded.${resetMsg}`);
+        } else {
+          setMessage(`❌ Failed to send final confirmation: ${result.error || result.message || 'Unknown error'}`);
+        }
+        setTimeout(() => setMessage(''), 8000);
       }
     } catch (error) {
       console.error('Error sending individual final confirmation:', error);
