@@ -239,7 +239,7 @@ function formatTimeSlot(timeSlot: string): string {
   // Handle formats like "09:30" -> "9:30 AM" or "13:30" -> "1:30 PM"
   const timeParts = timeSlot.split(':');
   if (timeParts.length === 2) {
-    let hour = parseInt(timeParts[0], 10);
+    const hour = parseInt(timeParts[0], 10);
     const minute = timeParts[1];
     
     if (hour === 0) {
@@ -333,8 +333,15 @@ async function sendClearstreamSms(phone: string, message: string) {
     console.log('Final API Key first 10 chars:', JSON.stringify(apiKey?.substring(0, 10)));
 
     // Split message into chunks if needed
-    const chunks = splitMessage(message);
-    console.log(`Message split into ${chunks.length} chunk(s)`);
+    // Clearstream limit is 335 chars total (header + body)
+    // Account for header length and separator
+    const CLEARSTREAM_TOTAL_LIMIT = 335;
+    const headerLength = textHeader.length;
+    const separatorLength = 2; // Clearstream adds separator between header and body
+    const maxBodyLength = CLEARSTREAM_TOTAL_LIMIT - headerLength - separatorLength;
+
+    const chunks = splitMessage(message, maxBodyLength);
+    console.log(`Message split into ${chunks.length} chunk(s) (max body length: ${maxBodyLength} chars)`);
 
     const results = [];
 
@@ -445,7 +452,8 @@ async function sendSingleSms(phone: string, message: string, apiKey: string) {
 }
 
 // Helper function to split message into chunks
-function splitMessage(message: string, maxLength: number = 330): string[] {
+// maxLength should account for the header and separator that Clearstream adds
+function splitMessage(message: string, maxLength: number = 309): string[] {
   if (message.length <= maxLength) {
     return [message];
   }
