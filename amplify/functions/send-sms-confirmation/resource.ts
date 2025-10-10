@@ -11,7 +11,7 @@ const locationConfigs = {
     CONTACT_EMAIL: 'office@pathwayvineyard.com',
     CONTACT_PHONE: '(207) 784-9500',
     LOCATION_EMOJI: '🎄',
-    SMS_HEADER: 'Pathway GNG Lewiston Christmas Store'
+    SMS_HEADER: 'Pathway Lewiston Christmas Store'
   },
   brunswick: {
     LOCATION_NAME: 'Pathway Vineyard Brunswick Campus',
@@ -19,7 +19,7 @@ const locationConfigs = {
     CONTACT_EMAIL: 'office@pathwayvineyard.com',
     CONTACT_PHONE: '(207) 784-9500',
     LOCATION_EMOJI: '🎄',
-    SMS_HEADER: 'Pathway GNG Brunswick Christmas Store'
+    SMS_HEADER: 'Pathway Brunswick Christmas Store'
   },
   gray: {
     LOCATION_NAME: 'Pathway Vineyard Gray-New Gloucester Campus',
@@ -27,7 +27,7 @@ const locationConfigs = {
     CONTACT_EMAIL: 'office@pathwayvineyard.com',
     CONTACT_PHONE: '(207) 784-9500',
     LOCATION_EMOJI: '🎄',
-    SMS_HEADER: 'Pathway GNG Gray Christmas Store'
+    SMS_HEADER: 'Pathway GNG Christmas Store'
   }
 };
 

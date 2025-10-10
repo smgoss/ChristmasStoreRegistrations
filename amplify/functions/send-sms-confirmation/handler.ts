@@ -455,8 +455,8 @@ async function sendSingleSms(phone: string, message: string, apiKey: string) {
 
 // Helper function to split message into chunks
 // maxLength should account for the header and separator that Clearstream adds
-// Default assumes longest header (GNG Brunswick: 42 chars) + separator (2 chars) = 291 max body
-function splitMessage(message: string, maxLength: number = 291): string[] {
+// Default set to 290 chars to ensure we stay under Clearstream's 335 char limit
+function splitMessage(message: string, maxLength: number = 290): string[] {
   if (message.length <= maxLength) {
     return [message];
   }
