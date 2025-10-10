@@ -370,8 +370,11 @@ export default function RegistrationForm({
     try {
       const response = await fetch(`/api/lookup-zip?zip=${zipCode}`);
       if (response.ok) {
-        const data = await response.json();
-        
+        const apiResponse = await response.json();
+
+        // API response is wrapped in { success: true, data: {...} }
+        const data = apiResponse.data || apiResponse;
+
         // Validate that data.results exists and is an array
         if (data && data.results && Array.isArray(data.results)) {
           const options = data.results.map((result: { city: string; stateAbbreviation: string }) => ({
@@ -379,7 +382,7 @@ export default function RegistrationForm({
             state: result.stateAbbreviation
           }));
           setCityOptions(options);
-          
+
           // Auto-fill if there's only one option
           if (options.length === 1) {
             setFormData(prev => ({
@@ -396,7 +399,7 @@ export default function RegistrationForm({
             }));
           }
         } else {
-          console.error('Invalid zip code response format:', data);
+          console.error('Invalid zip code response format:', apiResponse);
           setCityOptions([]);
           // Clear city/state if no valid results
           setFormData(prev => ({
