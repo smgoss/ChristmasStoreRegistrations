@@ -321,8 +321,8 @@ Questions? ${contactPhone}
 
 async function sendClearstreamSms(phone: string, message: string) {
   try {
-    // Get header from environment - could be location-specific (e.g., "Pathway Brunswick Christmas Store")
-    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
+    // Get header from environment - could be location-specific (e.g., "Pathway GNG Brunswick Christmas Store")
+    const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway GNG Christmas Store';
 
     const apiKey = await getApiKey();
 
@@ -427,7 +427,7 @@ async function getApiKey(): Promise<string> {
 
 // Helper function to send a single SMS chunk
 async function sendSingleSms(phone: string, message: string, apiKey: string) {
-  const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway Christmas Store';
+  const textHeader = process.env.CLEARSTREAM_TEXT_HEADER || 'Pathway GNG Christmas Store';
 
   const response = await fetch('https://api.getclearstream.com/v1/texts', {
     method: 'POST',
@@ -455,8 +455,8 @@ async function sendSingleSms(phone: string, message: string, apiKey: string) {
 
 // Helper function to split message into chunks
 // maxLength should account for the header and separator that Clearstream adds
-// Default assumes longest header (Brunswick: 37 chars) + separator (2 chars) = 296 max body
-function splitMessage(message: string, maxLength: number = 296): string[] {
+// Default assumes longest header (GNG Brunswick: 42 chars) + separator (2 chars) = 291 max body
+function splitMessage(message: string, maxLength: number = 291): string[] {
   if (message.length <= maxLength) {
     return [message];
   }
